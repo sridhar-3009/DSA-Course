@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>NeetCode 150 — DSA Illustrated</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .prob-section{background:var(--surface-1);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.5rem 1rem;margin-bottom:2.5rem;}
+    .prob-title{font-size:1.15rem;font-weight:700;color:var(--text);margin:0 0 0.3rem;}
+    .prob-meta{display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;margin-bottom:0.9rem;}
+    .prob-tag{font-size:0.72rem;padding:0.18rem 0.6rem;border-radius:20px;font-family:var(--font-mono);font-weight:600;}
+    .prob-tag.easy{background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3);}
+    .prob-tag.medium{background:rgba(245,158,11,0.15);color:#F59E0B;border:1px solid rgba(245,158,11,0.3);}
+    .prob-tag.hard{background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3);}
+    .prob-tag.topic{background:rgba(139,92,246,0.12);color:#A78BFA;border:1px solid rgba(139,92,246,0.25);}
+    .prob-approach-bar{display:flex;gap:0.4rem;margin-bottom:0.8rem;flex-wrap:wrap;}
+    .prob-approach{font-family:var(--font-mono);font-size:0.74rem;padding:0.28rem 0.9rem;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
+    .prob-approach:hover{border-color:var(--primary);color:var(--primary-soft);}
+    .prob-approach.active{background:rgba(139,92,246,0.18);border-color:var(--primary);color:#A78BFA;}
+    .prob-canvas-wrap{margin-bottom:0.5rem;}
+    .prob-controls{display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0;border-top:1px solid var(--border);margin-top:0.4rem;}
+    .prob-btn{font-family:var(--font-mono);font-size:0.76rem;padding:0.3rem 0.8rem;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
+    .prob-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary-soft);}
+    .prob-btn:disabled{opacity:0.4;cursor:not-allowed;}
+    .prob-counter{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted);margin-left:0.3rem;}
+    .prob-speed-wrap{display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;color:var(--text-muted);font-family:var(--font-mono);}
+    .prob-speed-wrap input{width:64px;}
+    .prob-status{font-family:var(--font-mono);font-size:0.76rem;color:var(--text-muted);padding:0.4rem 0.8rem;background:var(--surface-2);border-top:1px solid var(--border);border-radius:0 0 8px 8px;min-height:28px;}
+    .prob-input-row{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0;border-top:1px solid var(--border);}
+    .prob-input-lbl{font-size:0.72rem;color:var(--text-muted);font-family:var(--font-mono);}
+    .prob-desc{font-size:0.84rem;color:var(--text-muted);margin:0 0 0.9rem;line-height:1.55;}
+    .prob-approaches-explain{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.7rem;margin-bottom:0.9rem;}
+    .prob-approach-card{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:0.7rem 0.9rem;}
+    .prob-approach-card h5{margin:0 0 0.25rem;font-size:0.8rem;font-family:var(--font-mono);}
+    .prob-approach-card p{margin:0;font-size:0.74rem;color:var(--text-muted);line-height:1.45;}
+    .prob-approach-card.brute h5{color:#F59E0B;}
+    .prob-approach-card.avg h5{color:#A78BFA;}
+    .prob-approach-card.optimal h5{color:#34D399;}
+    .prob-play{background:rgba(139,92,246,0.18);border-color:var(--primary);color:#A78BFA;}
+  </style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links">
+      <a href="index.html#topics">All Topics</a>
+      <a href="problems.html" style="color:var(--primary-soft)">Problems</a>
+      <a href="topics/12-interview-guide.html">Interview Guide</a>
+    </div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span><span>NeetCode 150 — Animated</span>
+  </div>
+  <div class="topic-header">
+    <div class="topic-badge">Problems</div>
+    <h1>NeetCode 150 — <span class="accent">Animated</span></h1>
+    <p class="subtitle">8 essential problems from NeetCode 150. Each shows <strong>Brute Force → Average → Optimal</strong> with animated step-by-step demos and custom user inputs. See exactly why O(n) beats O(n²) — not just in theory, but in step count.</p>
+    <div class="company-badges"><span class="badge">Array</span><span class="badge">String</span><span class="badge">DP</span><span class="badge">Graph</span><span class="badge">Stack</span></div>
+  </div>
+
+  <!-- ── 1. Two Sum ─────────────────────────────────────────── -->
+  <div class="prob-section" id="prob-two-sum">
+    <div class="prob-title">1. Two Sum</div>
+    <div class="prob-meta">
+      <span class="prob-tag easy">Easy</span>
+      <span class="prob-tag topic">Array</span>
+      <span class="prob-tag topic">HashMap</span>
+    </div>
+    <p class="prob-desc">Given an array of integers and a target, return indices of two numbers that add up to target. Each input has exactly one solution.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card brute"><h5>Brute Force O(n²)</h5><p>Nested loops — try every pair (i,j). Simple but slow.</p></div>
+      <div class="prob-approach-card optimal"><h5>Optimal O(n)</h5><p>HashMap: store seen values. For each element, check if complement exists in map.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="brute">Brute O(n²)</button>
+      <button class="prob-approach" data-approach="optimal">Optimal O(n)</button>
+    </div>
+    <div class="prob-input-row">
+      <span class="prob-input-lbl">Array:</span>
+      <input class="demo-input" style="width:180px" placeholder="2,7,11,15,3,6" value="2,7,11,15,3,6" class="prob-input-arr">
+      <span class="prob-input-lbl">Target:</span>
+      <input class="demo-input" style="width:60px" placeholder="9" value="9" class="prob-input-target">
+      <button class="prob-btn prob-input-apply">Apply</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Pick approach then Play / Step.</div>
+  </div>
+
+  <!-- ── 2. Best Time to Buy and Sell Stock ──────────────────── -->
+  <div class="prob-section" id="prob-best-stock">
+    <div class="prob-title">2. Best Time to Buy and Sell Stock</div>
+    <div class="prob-meta">
+      <span class="prob-tag easy">Easy</span>
+      <span class="prob-tag topic">Array</span>
+      <span class="prob-tag topic">Sliding Window</span>
+    </div>
+    <p class="prob-desc">Given an array of prices where prices[i] is the price on day i, find the max profit by buying on one day and selling on a later day.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card brute"><h5>Brute Force O(n²)</h5><p>Try every (buy, sell) pair. O(n²) comparisons.</p></div>
+      <div class="prob-approach-card optimal"><h5>Optimal O(n)</h5><p>Slide: track min price seen, compute profit at each day.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="brute">Brute O(n²)</button>
+      <button class="prob-approach" data-approach="optimal">Optimal O(n)</button>
+    </div>
+    <div class="prob-input-row">
+      <span class="prob-input-lbl">Prices:</span>
+      <input class="demo-input prob-input-arr" style="width:220px" value="7,1,5,3,6,4" placeholder="7,1,5,3,6,4">
+      <button class="prob-btn prob-input-apply">Apply</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Ready.</div>
+  </div>
+
+  <!-- ── 3. Valid Parentheses ───────────────────────────────── -->
+  <div class="prob-section" id="prob-valid-parens">
+    <div class="prob-title">3. Valid Parentheses</div>
+    <div class="prob-meta">
+      <span class="prob-tag easy">Easy</span>
+      <span class="prob-tag topic">Stack</span>
+      <span class="prob-tag topic">String</span>
+    </div>
+    <p class="prob-desc">Given a string with characters <code>(</code> <code>)</code> <code>{</code> <code>}</code> <code>[</code> <code>]</code>, determine if it is valid. Every open bracket must close in the correct order.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card optimal"><h5>Stack O(n)</h5><p>Push open brackets; on close bracket, pop and verify match. Single pass.</p></div>
+    </div>
+    <div class="prob-input-row">
+      <span class="prob-input-lbl">String:</span>
+      <input class="demo-input prob-input-arr" style="width:160px" value="({[]})" placeholder="({[]})">
+      <button class="prob-btn prob-input-apply">Apply</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Ready.</div>
+  </div>
+
+  <!-- ── 4. Longest Substring Without Repeating Characters ──── -->
+  <div class="prob-section" id="prob-longest-substr">
+    <div class="prob-title">4. Longest Substring Without Repeating Characters</div>
+    <div class="prob-meta">
+      <span class="prob-tag medium">Medium</span>
+      <span class="prob-tag topic">Sliding Window</span>
+      <span class="prob-tag topic">HashMap</span>
+    </div>
+    <p class="prob-desc">Find the length of the longest substring without duplicate characters. Classic two-pointer / sliding window problem.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card brute"><h5>Brute Force O(n²)</h5><p>For every starting index, extend until duplicate found. O(n²) substrings.</p></div>
+      <div class="prob-approach-card optimal"><h5>Sliding Window O(n)</h5><p>Two pointers L,R. Map tracks last seen index. Skip L forward on duplicate.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="brute">Brute O(n²)</button>
+      <button class="prob-approach" data-approach="optimal">Sliding Window O(n)</button>
+    </div>
+    <div class="prob-input-row">
+      <span class="prob-input-lbl">String:</span>
+      <input class="demo-input prob-input-arr" style="width:180px" value="abcabcbb" placeholder="abcabcbb">
+      <button class="prob-btn prob-input-apply">Apply</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Ready.</div>
+  </div>
+
+  <!-- ── 5. Climbing Stairs ─────────────────────────────────── -->
+  <div class="prob-section" id="prob-climbing-stairs">
+    <div class="prob-title">5. Climbing Stairs</div>
+    <div class="prob-meta">
+      <span class="prob-tag easy">Easy</span>
+      <span class="prob-tag topic">DP</span>
+      <span class="prob-tag topic">Recursion</span>
+    </div>
+    <p class="prob-desc">You can climb 1 or 2 steps at a time. How many distinct ways can you reach the top of n stairs? The answer is the Fibonacci sequence.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card brute"><h5>Brute Force O(2ⁿ)</h5><p>Naive recursion — exponentially redundant calls. Watch the call counter explode.</p></div>
+      <div class="prob-approach-card avg"><h5>DP Table O(n)</h5><p>Fill dp[0..n] bottom-up. dp[i] = dp[i-1] + dp[i-2].</p></div>
+      <div class="prob-approach-card optimal"><h5>Space-Opt O(n) O(1)</h5><p>Two variables only. Slide prev2, prev1 forward.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="brute">Brute O(2ⁿ)</button>
+      <button class="prob-approach" data-approach="dp">DP Table O(n)</button>
+      <button class="prob-approach" data-approach="space">Space O(1)</button>
+    </div>
+    <div class="prob-input-row">
+      <span class="prob-input-lbl">n (stairs):</span>
+      <input class="demo-input prob-input-arr" style="width:60px" value="7" placeholder="7">
+      <button class="prob-btn prob-input-apply">Apply</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Ready.</div>
+  </div>
+
+  <!-- ── 6. Coin Change ─────────────────────────────────────── -->
+  <div class="prob-section" id="prob-coin-change">
+    <div class="prob-title">6. Coin Change</div>
+    <div class="prob-meta">
+      <span class="prob-tag medium">Medium</span>
+      <span class="prob-tag topic">DP</span>
+      <span class="prob-tag topic">BFS</span>
+    </div>
+    <p class="prob-desc">Given coin denominations and an amount, find the minimum number of coins to make the amount. Greedy fails for non-standard denominations.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card brute"><h5>Greedy (Wrong!)</h5><p>Always pick the largest coin. Fast but gives wrong answer for coins like [10,7,1].</p></div>
+      <div class="prob-approach-card optimal"><h5>DP O(amount×coins)</h5><p>dp[i] = min coins for amount i. Fill from 0 up.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="brute">Greedy (may fail)</button>
+      <button class="prob-approach" data-approach="optimal">DP O(n×k)</button>
+    </div>
+    <div class="prob-input-row">
+      <span class="prob-input-lbl">Coins:</span>
+      <input class="demo-input prob-input-arr" style="width:130px" value="1,2,5" placeholder="1,2,5">
+      <span class="prob-input-lbl">Amount:</span>
+      <input class="demo-input prob-input-target" style="width:60px" value="11" placeholder="11">
+      <button class="prob-btn prob-input-apply">Apply</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Try coins=10,7,1 amount=14 to see greedy fail vs DP succeed.</div>
+  </div>
+
+  <!-- ── 7. Merge Intervals ─────────────────────────────────── -->
+  <div class="prob-section" id="prob-merge-intervals">
+    <div class="prob-title">7. Merge Intervals</div>
+    <div class="prob-meta">
+      <span class="prob-tag medium">Medium</span>
+      <span class="prob-tag topic">Array</span>
+      <span class="prob-tag topic">Sorting</span>
+    </div>
+    <p class="prob-desc">Given a list of intervals, merge all overlapping intervals. Return the minimal non-overlapping list.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card brute"><h5>Brute Force O(n²)</h5><p>Repeatedly scan for any overlapping pair and merge. Until none remain.</p></div>
+      <div class="prob-approach-card optimal"><h5>Sort + Scan O(n log n)</h5><p>Sort by start time. Single linear scan — merge adjacent overlaps.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="brute">Brute O(n²)</button>
+      <button class="prob-approach" data-approach="optimal">Sort+Scan O(n log n)</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Ready.</div>
+  </div>
+
+  <!-- ── 8. Number of Islands ───────────────────────────────── -->
+  <div class="prob-section" id="prob-num-islands">
+    <div class="prob-title">8. Number of Islands</div>
+    <div class="prob-meta">
+      <span class="prob-tag medium">Medium</span>
+      <span class="prob-tag topic">Graph</span>
+      <span class="prob-tag topic">DFS</span>
+      <span class="prob-tag topic">BFS</span>
+    </div>
+    <p class="prob-desc">Given a 2D binary grid of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and formed by connecting adjacent lands horizontally or vertically.</p>
+    <div class="prob-approaches-explain">
+      <div class="prob-approach-card avg"><h5>DFS O(m×n)</h5><p>For each unvisited land cell, DFS recursively marks all connected land. Count roots.</p></div>
+      <div class="prob-approach-card optimal"><h5>BFS O(m×n)</h5><p>Same complexity — use a queue instead of recursion. Avoids stack overflow on large grids.</p></div>
+    </div>
+    <div class="prob-approach-bar">
+      <button class="prob-approach active" data-approach="dfs">DFS</button>
+      <button class="prob-approach" data-approach="bfs">BFS</button>
+    </div>
+    <div class="prob-canvas-wrap"></div>
+    <div class="prob-controls">
+      <button class="prob-btn prob-play">Play</button>
+      <button class="prob-btn prob-pause" disabled>Pause</button>
+      <button class="prob-btn prob-step">Step</button>
+      <button class="prob-btn prob-reset">Reset</button>
+      <label class="prob-speed-wrap">Speed <input type="range" class="prob-speed" min="0.5" max="4" step="0.5" value="1"> <span>1x</span></label>
+      <span class="prob-counter">Step 0 / 0</span>
+    </div>
+    <div class="prob-status">Ready.</div>
+  </div>
+
+</div><!-- /container -->
+
+<footer class="site-footer" style="margin-top:0">
+  <p class="footer-sub"><a href="index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/problems.js"></script>
+</body>
+</html>
