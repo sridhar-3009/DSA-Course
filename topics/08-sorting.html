@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Sorting Algorithms — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#F97316}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Sorting</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 08</div>
+    <h1>Sorting <span class="accent">Algorithms</span></h1>
+    <p class="subtitle">Six sorting algorithms. Each makes different trade-offs between comparisons, swaps, memory, and stability. Knowing which to use — and why — is a fundamental engineering skill.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span><span class="badge">Apple</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Comparison sort lower bound</strong> — any algorithm that sorts by comparing elements needs at least O(n log n) comparisons in the worst case. This is provably optimal.</li>
+      <li><strong>Quicksort in practice</strong> — O(n log n) average, O(n^2) worst case (sorted input + bad pivot). Random pivot or median-of-three avoids worst case. Best cache performance in practice.</li>
+      <li><strong>Merge sort</strong> — O(n log n) guaranteed, stable, but requires O(n) extra space. Standard for linked lists and external sorting.</li>
+      <li><strong>Stability</strong> — a stable sort preserves the relative order of equal elements. Merge sort is stable; quicksort (standard) is not.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Bubble Sort</h4><p>Compare adjacent pairs, swap if out of order. Repeat n times. O(n^2) comparisons and swaps. Only useful for nearly sorted data (O(n) with early termination). Stable.</p></div>
+    <div class="mini-card"><h4>Merge Sort</h4><p>Divide array in half recursively until size 1. Merge two sorted halves — O(n) per merge. T(n) = 2T(n/2) + O(n) = O(n log n). Stable. O(n) space. Best for linked lists.</p></div>
+    <div class="mini-card"><h4>Quick Sort</h4><p>Choose pivot. Partition: elements &lt; pivot left, &gt; pivot right. Recurse. Average O(n log n), worst O(n^2). Not stable. In-place. Best cache performance — widely used in practice.</p></div>
+    <div class="mini-card"><h4>Counting / Radix Sort</h4><p>Non-comparison sorts. Counting: O(n+k) where k = range of values. Radix: O(d(n+k)) where d = digits. Break the O(n log n) barrier when element range is limited.</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># Merge sort — O(n log n), stable, O(n) space</span>
+<span class="kw">def</span> <span class="fn">merge_sort</span>(arr):
+    <span class="kw">if</span> len(arr) <= <span class="num">1</span>: <span class="kw">return</span> arr
+    mid = len(arr) // <span class="num">2</span>
+    L = <span class="fn">merge_sort</span>(arr[:mid])
+    R = <span class="fn">merge_sort</span>(arr[mid:])
+    result, i, j = [], <span class="num">0</span>, <span class="num">0</span>
+    <span class="kw">while</span> i < len(L) <span class="kw">and</span> j < len(R):
+        <span class="kw">if</span> L[i] <= R[j]: result.append(L[i]); i += <span class="num">1</span>
+        <span class="kw">else</span>: result.append(R[j]); j += <span class="num">1</span>
+    <span class="kw">return</span> result + L[i:] + R[j:]
+
+<span class="cmt"># Quick sort — O(n log n) avg, in-place</span>
+<span class="kw">def</span> <span class="fn">quick_sort</span>(arr, lo, hi):
+    <span class="kw">if</span> lo >= hi: <span class="kw">return</span>
+    pivot = arr[hi]
+    i = lo - <span class="num">1</span>
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(lo, hi):
+        <span class="kw">if</span> arr[j] <= pivot:
+            i += <span class="num">1</span>
+            arr[i], arr[j] = arr[j], arr[i]
+    arr[i+<span class="num">1</span>], arr[hi] = arr[hi], arr[i+<span class="num">1</span>]
+    <span class="fn">quick_sort</span>(arr, lo, i)
+    <span class="fn">quick_sort</span>(arr, i+<span class="num">2</span>, hi)</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Sorting Visualizer — 20 bars</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Animated Sorting — Bubble / Quick / Insertion / Selection</h3></div>
+    <div id="demo-sort"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Select an algorithm. Press Play to animate. Yellow = comparing, Green = sorted, Red = pivot. Comparisons and swap counters update in real time.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr></thead>
+      <tbody>
+        <tr><td>Bubble Sort</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td><td>Yes</td></tr>
+        <tr><td>Selection Sort</td><td>O(n^2)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td><td>No</td></tr>
+        <tr><td>Insertion Sort</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td><td>Yes</td></tr>
+        <tr><td>Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+        <tr><td>Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n^2)</td><td>O(log n)</td><td>No</td></tr>
+        <tr><td>Heap Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>No</td></tr>
+        <tr><td>Counting Sort</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(k)</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">Why is quicksort faster than merge sort in practice despite the same average complexity?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Quicksort is not always O(n log n) — it degrades to O(n^2) on sorted input with a bad pivot."><span class="opt-letter">A</span>Quicksort is always O(n log n) while merge sort is sometimes slower</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Quicksort operates in-place — better cache locality. Merge sort allocates O(n) extra space and accesses memory less sequentially. The constant factors matter in practice."><span class="opt-letter">B</span>Quicksort has better cache locality (in-place) and lower constant factors</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Merge sort is stable; quicksort is not."><span class="opt-letter">C</span>Quicksort is stable, allowing optimized comparisons</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Quicksort uses O(log n) stack space in the average case."><span class="opt-letter">D</span>Quicksort uses no extra memory at all</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Which sorting algorithm would you choose for sorting a linked list? Why?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Quicksort on a linked list has poor performance — random access to find pivots requires O(n)."><span class="opt-letter">A</span>Quicksort — best average case</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Merge sort naturally splits the list at the middle (using slow/fast pointers) and merges in O(n). No random access needed. Stable. O(n log n) guaranteed."><span class="opt-letter">B</span>Merge sort — works without random access, stable, O(n log n) guaranteed</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Bubble sort on a linked list is O(n^2) — very slow."><span class="opt-letter">C</span>Bubble sort — easy to implement on linked lists</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Counting sort requires array-like indexing."><span class="opt-letter">D</span>Counting sort — linear time</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">What is the theoretical lower bound for comparison-based sorting?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n) is achievable only with non-comparison sorts (counting, radix) under specific constraints."><span class="opt-letter">A</span>O(n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Any comparison-based sort needs at least n! possible orderings to distinguish, requiring at least log2(n!) = O(n log n) comparisons. This is the information-theoretic lower bound."><span class="opt-letter">B</span>O(n log n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) is achievable but not the lower bound — better algorithms exist."><span class="opt-letter">C</span>O(n^2)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^1.5) is not the theoretical lower bound."><span class="opt-letter">D</span>O(n^1.5)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">When is insertion sort a good choice?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Insertion sort excels on small arrays (n &lt; 20) and nearly-sorted arrays. O(n) on sorted input (best case). Low overhead — no recursion, no extra space. Java's Arrays.sort and Python's Timsort use insertion sort for small subarrays within their merge sort implementations. Also useful in online settings where elements arrive one at a time.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is Timsort and why does Python use it?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Timsort (Tim Peters, 2002) is a hybrid of merge sort and insertion sort. It finds already-sorted "runs" in the input (exploiting natural ordering), sorts small runs with insertion sort, then merges runs. O(n) on nearly sorted data, O(n log n) worst case. Stable. This pattern is extremely common in real-world data — database results, log files, user input. Python's list.sort() and Java's Arrays.sort() for objects use Timsort.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="07-graphs.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Graphs</div></div></a>
+    <a href="09-binary-search.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Binary Search</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

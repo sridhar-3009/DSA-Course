@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Illustrated — Interactive Data Structures &amp; Algorithms Course</title>
+  <meta name="description" content="Learn DSA through animated canvas demos. 12 topics, every algorithm visualized, step by step. No frameworks.">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="reading-progress" id="reading-progress"></div>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="index.html">
+      <span class="brand-icon" style="font-size:1.1rem;color:var(--primary-soft)">&#9670;</span>
+      DSA Illustrated
+    </a>
+    <div class="navbar-links">
+      <a href="#topics">Topics</a>
+      <a href="topics/12-interview-guide.html">Interview Guide</a>
+      <a href="https://github.com/sridhar-3009/DSA-Course" target="_blank">GitHub</a>
+    </div>
+    <div class="navbar-actions">
+      <button class="btn-icon" id="theme-toggle" title="Toggle theme">&#9788;</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Every algorithm, animated
+    </div>
+    <h1>Algorithms,<br><em>finally visible.</em></h1>
+    <p class="hero-sub">An original, animation-first course on Data Structures and Algorithms. From arrays to Dijkstra — every operation animated, every trade-off named, every Big-O explained.</p>
+    <div class="hero-ctas">
+      <a href="#topics" class="btn-primary">Start Learning</a>
+      <a href="https://github.com/sridhar-3009/DSA-Course" class="btn-outline" target="_blank">View on GitHub</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val">12</div>
+        <div class="hero-stat-label">Topics</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">12</div>
+        <div class="hero-stat-label">Live Demos</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">60+</div>
+        <div class="hero-stat-label">Interview Q&amp;As</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">0</div>
+        <div class="hero-stat-label">Frameworks</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-3d-panel">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-orbs" aria-hidden="true">
+      <div class="hero-orb orb-1"></div>
+      <div class="hero-orb orb-2"></div>
+      <div class="hero-orb orb-3"></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-num">12</span><span class="stat-txt">Topic Modules</span></div>
+  <div class="stat-item"><span class="stat-num">12</span><span class="stat-txt">Canvas Demos</span></div>
+  <div class="stat-item"><span class="stat-num">48+</span><span class="stat-txt">Quiz Questions</span></div>
+  <div class="stat-item"><span class="stat-num">60+</span><span class="stat-txt">Interview Q&amp;As</span></div>
+  <div class="stat-item"><span class="stat-num">100%</span><span class="stat-txt">Free &amp; Offline</span></div>
+</div>
+
+<section class="curriculum-section" id="topics">
+  <div class="curriculum-label">The Curriculum</div>
+  <h2 class="curriculum-title">Twelve carefully sequenced topics.</h2>
+  <p class="curriculum-sub">Start at the top or jump to what you need. Every topic includes animated demos, step controls, MCQ quiz, and interview Q&amp;A.</p>
+
+  <div class="course-grid">
+
+    <a href="topics/01-arrays.html" class="course-card" style="--card-color:#8B5CF6">
+      <div class="card-num">01 &mdash; Beginner &middot; 25 min</div>
+      <div class="card-title">Arrays &amp; Two Pointers</div>
+      <p class="card-desc">Memory layout, index operations, two-pointer technique, sliding window — with live insert/delete/search animations.</p>
+      <div class="card-meta">
+        <span class="card-tag">Two Pointer Demo</span>
+        <span class="card-tag">Sliding Window</span>
+      </div>
+    </a>
+
+    <a href="topics/02-linked-list.html" class="course-card" style="--card-color:#06B6D4">
+      <div class="card-num">02 &mdash; Beginner &middot; 30 min</div>
+      <div class="card-title">Linked Lists</div>
+      <p class="card-desc">Singly and doubly linked lists — insert, delete, reverse animations. Slow/fast pointer for cycle detection.</p>
+      <div class="card-meta">
+        <span class="card-tag">Reverse Animation</span>
+        <span class="card-tag">Floyd's Cycle</span>
+      </div>
+    </a>
+
+    <a href="topics/03-stack-queue.html" class="course-card" style="--card-color:#10B981">
+      <div class="card-num">03 &mdash; Beginner &middot; 25 min</div>
+      <div class="card-title">Stacks &amp; Queues</div>
+      <p class="card-desc">Push/pop/enqueue/dequeue with animated LIFO/FIFO visualization. Balanced brackets demo included.</p>
+      <div class="card-meta">
+        <span class="card-tag">LIFO/FIFO Demo</span>
+        <span class="card-tag">Balanced Brackets</span>
+      </div>
+    </a>
+
+    <a href="topics/04-trees.html" class="course-card" style="--card-color:#F59E0B">
+      <div class="card-num">04 &mdash; Intermediate &middot; 35 min</div>
+      <div class="card-title">Trees &amp; BST</div>
+      <p class="card-desc">Binary search tree insert, delete, traversals (InOrder/PreOrder/PostOrder) with node-by-node highlight. AVL rotation demo.</p>
+      <div class="card-meta">
+        <span class="card-tag">Traversal Animation</span>
+        <span class="card-tag">AVL Rotation</span>
+      </div>
+    </a>
+
+    <a href="topics/05-heaps.html" class="course-card" style="--card-color:#EF4444">
+      <div class="card-num">05 &mdash; Intermediate &middot; 30 min</div>
+      <div class="card-title">Heaps &amp; Priority Queues</div>
+      <p class="card-desc">Min/max heap — bubble-up on insert, bubble-down on extract. Tree and array views stay synchronized.</p>
+      <div class="card-meta">
+        <span class="card-tag">Bubble-Up/Down</span>
+        <span class="card-tag">Dual View</span>
+      </div>
+    </a>
+
+    <a href="topics/06-hash-tables.html" class="course-card" style="--card-color:#EC4899">
+      <div class="card-num">06 &mdash; Intermediate &middot; 30 min</div>
+      <div class="card-title">Hash Tables</div>
+      <p class="card-desc">ASCII hash animation, separate chaining, open addressing, load factor gauge, and animated resize/rehash.</p>
+      <div class="card-meta">
+        <span class="card-tag">Hash Visualizer</span>
+        <span class="card-tag">Collision Handling</span>
+      </div>
+    </a>
+
+    <a href="topics/07-graphs.html" class="course-card" style="--card-color:#3B82F6">
+      <div class="card-num">07 &mdash; Advanced &middot; 40 min</div>
+      <div class="card-title">Graphs</div>
+      <p class="card-desc">BFS, DFS, Dijkstra shortest path, and topological sort — all step-by-step on an 8-node weighted graph.</p>
+      <div class="card-meta">
+        <span class="card-tag">Dijkstra Demo</span>
+        <span class="card-tag">BFS/DFS</span>
+      </div>
+    </a>
+
+    <a href="topics/08-sorting.html" class="course-card" style="--card-color:#F97316">
+      <div class="card-num">08 &mdash; Intermediate &middot; 35 min</div>
+      <div class="card-title">Sorting Algorithms</div>
+      <p class="card-desc">Bubble, Selection, Insertion, Merge, Quick, Heap sort — animated bars with comparison/swap counters and race mode.</p>
+      <div class="card-meta">
+        <span class="card-tag">6 Algorithms</span>
+        <span class="card-tag">Race Mode</span>
+      </div>
+    </a>
+
+    <a href="topics/09-binary-search.html" class="course-card" style="--card-color:#84CC16">
+      <div class="card-num">09 &mdash; Beginner &middot; 25 min</div>
+      <div class="card-title">Binary Search</div>
+      <p class="card-desc">Binary vs linear vs jump search — boundary animations, comparison counter, and side-by-side bar chart.</p>
+      <div class="card-meta">
+        <span class="card-tag">L/R Boundaries</span>
+        <span class="card-tag">Comparison Chart</span>
+      </div>
+    </a>
+
+    <a href="topics/10-dynamic-programming.html" class="course-card" style="--card-color:#A855F7">
+      <div class="card-num">10 &mdash; Advanced &middot; 45 min</div>
+      <div class="card-title">Dynamic Programming</div>
+      <p class="card-desc">Fibonacci memoization tree showing call-count collapse. Knapsack 2D grid fills with backtrack arrows.</p>
+      <div class="card-meta">
+        <span class="card-tag">Memo Tree</span>
+        <span class="card-tag">Knapsack Grid</span>
+      </div>
+    </a>
+
+    <a href="topics/11-greedy.html" class="course-card" style="--card-color:#14B8A6">
+      <div class="card-num">11 &mdash; Advanced &middot; 35 min</div>
+      <div class="card-title">Greedy Algorithms</div>
+      <p class="card-desc">Coin change greedy vs DP comparison. Activity selection on animated timeline. Failure cases flash red.</p>
+      <div class="card-meta">
+        <span class="card-tag">Coin Change</span>
+        <span class="card-tag">Activity Selection</span>
+      </div>
+    </a>
+
+    <a href="topics/12-interview-guide.html" class="course-card" style="--card-color:#E879F9">
+      <div class="card-num">12 &mdash; All Levels &middot; 50 min</div>
+      <div class="card-title">Big-O &amp; Interview Guide</div>
+      <p class="card-desc">Interactive Big-O chart, complexity class curves, space/time tradeoff slider, and custom expression plotter.</p>
+      <div class="card-meta">
+        <span class="card-tag">Big-O Chart</span>
+        <span class="card-tag">Complexity Plotter</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<section class="curriculum-section" style="padding-top:0">
+  <div class="curriculum-label">Why This Course</div>
+  <h2 class="curriculum-title">Built differently.</h2>
+  <div class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
+    <div class="course-card" style="--card-color:#8B5CF6">
+      <div class="card-title">Step-by-Step Controls</div>
+      <p class="card-desc">Every demo has Play, Pause, Step, and Reset. Watch at your own pace. Speed slider from 0.5x to 4x. Step counter always visible.</p>
+    </div>
+    <div class="course-card" style="--card-color:#8B5CF6">
+      <div class="card-title">No Magic Numbers</div>
+      <p class="card-desc">Status bar narrates every action. You see exactly which comparison happens and why — not just the result.</p>
+    </div>
+    <div class="course-card" style="--card-color:#8B5CF6">
+      <div class="card-title">Trade-offs, Not Dogma</div>
+      <p class="card-desc">When two approaches exist, both are shown. No "always use X" — the cost of each decision is made explicit.</p>
+    </div>
+    <div class="course-card" style="--card-color:#8B5CF6">
+      <div class="card-title">Works Offline</div>
+      <p class="card-desc">Vanilla HTML, CSS, and Canvas 2D. No npm, no build step, no frameworks. Open the file — it runs.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-brand">DSA Illustrated</div>
+  <p class="footer-sub">A free, animated, original course on Data Structures and Algorithms. 12 topics. Zero dependencies.</p>
+  <div class="footer-links">
+    <a href="topics/01-arrays.html">Arrays</a>
+    <a href="topics/07-graphs.html">Graphs</a>
+    <a href="topics/08-sorting.html">Sorting</a>
+    <a href="topics/10-dynamic-programming.html">Dynamic Programming</a>
+    <a href="topics/12-interview-guide.html">Interview Guide</a>
+    <a href="https://github.com/sridhar-3009/DSA-Course" target="_blank">GitHub</a>
+  </div>
+  <p style="margin-top:1.4rem;font-size:0.8rem;color:var(--text-muted)">
+    Built with vanilla HTML, CSS, and JavaScript &mdash; no frameworks.
+    Run locally: <code>python3 -m http.server 8080</code>
+  </p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

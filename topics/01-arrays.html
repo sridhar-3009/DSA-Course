@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Arrays &amp; Two Pointers — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#8B5CF6}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle" title="Toggle theme">&#9788;</button></div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Arrays</span></div>
+
+  <div class="topic-header">
+    <div class="topic-badge">Topic 01</div>
+    <h1>Arrays &amp; <span class="accent">Two Pointers</span></h1>
+    <p class="subtitle">The array is the foundation of every data structure. Understanding how memory layout, index access, and traversal patterns work unlocks every algorithm that follows.</p>
+    <div class="company-badges">
+      <span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Apple</span><span class="badge">Microsoft</span>
+    </div>
+  </div>
+
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>O(1) access by index</strong> — arrays store elements in contiguous memory. Index i lives at base_address + i * element_size. No traversal needed.</li>
+      <li><strong>O(n) insert/delete at middle</strong> — inserting at index k shifts every element right of k by one position. Appending to the end is O(1) amortized.</li>
+      <li><strong>Two-pointer technique</strong> — place L at index 0 and R at index n-1. Move them inward based on a condition. Turns O(n^2) brute force into O(n).</li>
+      <li><strong>Sliding window</strong> — maintain a window of fixed or variable size. Slide right, adding one element and removing one. Finds subarray max/min/sum in O(n).</li>
+    </ul>
+  </div>
+
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card">
+      <h4>Contiguous Memory</h4>
+      <p>An array allocates a single block of memory. Element i is at address base + i * sizeof(T). This is why random access is O(1) — no pointer chasing, no cache misses from fragmentation.</p>
+    </div>
+    <div class="mini-card">
+      <h4>Dynamic Arrays</h4>
+      <p>When capacity is exhausted, the array doubles in size (typically 2x). The cost of doubling is O(n) but happens so rarely that amortized cost per append is O(1). Python lists and Java ArrayLists use this trick.</p>
+    </div>
+    <div class="mini-card">
+      <h4>Two Pointers</h4>
+      <p>Classic problems: two-sum on sorted array, container with most water, removing duplicates. Both pointers scan the array once total — O(n) instead of O(n^2) nested loops.</p>
+    </div>
+    <div class="mini-card">
+      <h4>Sliding Window</h4>
+      <p>Finding the maximum sum subarray of length k: slide a window right. Add the incoming element, subtract the outgoing. Single pass. Used in rate limiting, moving averages, and substring problems.</p>
+    </div>
+  </div>
+
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Insert, Delete, Search</h2>
+  <div class="steps">
+    <div class="step-item"><div class="step-num">1</div><div><h4>Insert at Index k</h4><p>Shift all elements from index k to end one position right. Write the new value at k. Cost: O(n-k) shifts. Insert at end: O(1) amortized. Insert at front: O(n) always.</p></div></div>
+    <div class="step-item"><div class="step-num">2</div><div><h4>Delete at Index k</h4><p>Shift all elements from k+1 to end one position left. Shrink the logical size by 1. Physical memory unchanged. Cost: O(n-k). Delete last element: O(1).</p></div></div>
+    <div class="step-item"><div class="step-num">3</div><div><h4>Linear Search</h4><p>Scan from index 0 to n-1. Compare each element with the target. Best case O(1) (found at index 0). Worst case O(n). No assumption about order needed.</p></div></div>
+    <div class="step-item"><div class="step-num">4</div><div><h4>Two-Pointer Inward Scan</h4><p>On a sorted array: place L=0, R=n-1. If arr[L]+arr[R] &lt; target, move L right (need a larger value). If too large, move R left. Stop when L meets R. O(n) total moves.</p></div></div>
+    <div class="step-item"><div class="step-num">5</div><div><h4>Sliding Window</h4><p>Fix window size k. Compute sum of first k elements. For each subsequent position: add arr[right], subtract arr[right-k]. One pass to find max-sum window.</p></div></div>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># Two-pointer: Two Sum on sorted array — O(n)</span>
+<span class="kw">def</span> <span class="fn">two_sum</span>(nums, target):
+    L, R = <span class="num">0</span>, len(nums) - <span class="num">1</span>
+    <span class="kw">while</span> L < R:
+        s = nums[L] + nums[R]
+        <span class="kw">if</span> s == target: <span class="kw">return</span> [L, R]
+        <span class="kw">elif</span> s < target: L += <span class="num">1</span>
+        <span class="kw">else</span>: R -= <span class="num">1</span>
+    <span class="kw">return</span> []
+
+<span class="cmt"># Sliding window: max sum of k consecutive — O(n)</span>
+<span class="kw">def</span> <span class="fn">max_window_sum</span>(nums, k):
+    window = <span class="fn">sum</span>(nums[:k])
+    best = window
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(k, len(nums)):
+        window += nums[i] - nums[i - k]
+        best = <span class="fn">max</span>(best, window)
+    <span class="kw">return</span> best</pre>
+  </div>
+
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Array Visualizer</h2>
+  <p class="section-desc">Insert, delete, and search in a live array. Run the Two Pointer or Sliding Window animations step by step.</p>
+
+  <div class="demo-section">
+    <div class="demo-header"><h3>Array — 10 elements</h3></div>
+    <div id="demo-array">
+      <div class="demo-canvas-wrap"></div>
+    </div>
+    <div class="demo-hint">Use controls to insert/delete/search. Two Pointer shows L/R convergence. Sliding Window shows 3-element sum traversal.</div>
+  </div>
+
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Operation</th><th>Array</th><th>Dynamic Array</th></tr></thead>
+      <tbody>
+        <tr><td>Access by index</td><td>O(1)</td><td>O(1)</td></tr>
+        <tr><td>Search (unsorted)</td><td>O(n)</td><td>O(n)</td></tr>
+        <tr><td>Search (sorted)</td><td>O(log n)</td><td>O(log n)</td></tr>
+        <tr><td>Insert at end</td><td>O(1)</td><td>O(1) amortized</td></tr>
+        <tr><td>Insert at index k</td><td>O(n)</td><td>O(n)</td></tr>
+        <tr><td>Delete at index k</td><td>O(n)</td><td>O(n)</td></tr>
+        <tr><td>Space</td><td>O(n)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Nested loops when two pointers work</h4><p>Finding all pairs with a given sum in a sorted array in O(n^2) is common. If the array is sorted, two pointers solve it in O(n). Always ask: is the data ordered? Can I avoid the inner loop?</p></div>
+    <div class="antipattern"><h4>Recomputing window sums from scratch</h4><p>Recalculating the sum of every window of size k takes O(nk). Sliding window reuses the previous sum — O(n). Recognize the overlap.</p></div>
+    <div class="antipattern"><h4>Forgetting index bounds after shift</h4><p>After deleting element k and shifting left, the logical length is n-1. Accessing index n-1 reads garbage. Always track logical vs. physical size.</p></div>
+  </div>
+
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 4</div>
+      <div class="quiz-q-text">What is the time complexity of inserting an element at index 0 of an array of n elements?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(1) applies only to appending at the end."><span class="opt-letter">A</span>O(1)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(log n) is for binary search — not insertion."><span class="opt-letter">B</span>O(log n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Inserting at index 0 requires shifting all n elements right by one position."><span class="opt-letter">C</span>O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) would require a nested loop — not the case here."><span class="opt-letter">D</span>O(n^2)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 4</div>
+      <div class="quiz-q-text">The sliding window technique reduces the time complexity of finding the max sum subarray of size k from:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) to O(n log n) is not the reduction sliding window provides."><span class="opt-letter">A</span>O(n^2) to O(n log n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Naive recomputation of each window is O(nk). Sliding window reuses previous sums in a single pass — O(n)."><span class="opt-letter">B</span>O(nk) to O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n log n) to O(n) describes other reductions like counting sort."><span class="opt-letter">C</span>O(n log n) to O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^3) to O(n^2) is not a sliding window optimization."><span class="opt-letter">D</span>O(n^3) to O(n^2)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 4</div>
+      <div class="quiz-q-text">Why is random access to arr[i] O(1) for arrays?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Arrays do not use hash functions for index access."><span class="opt-letter">A</span>Arrays use a hash function to map indices to memory</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Elements are stored contiguously. Address = base + i * element_size. One arithmetic operation — no traversal."><span class="opt-letter">B</span>Elements are stored at contiguous memory addresses — address of i is computed directly</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Caching helps but is not the structural reason for O(1) access."><span class="opt-letter">C</span>The CPU caches the entire array on first access</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Arrays do not use pointers between elements."><span class="opt-letter">D</span>Each element stores a pointer to the next element</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Two pointers on a sorted array reduce two-sum from O(n^2) to O(n). What is the key requirement?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Two pointers does not need the array to contain unique elements."><span class="opt-letter">A</span>All elements must be unique</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Two pointers exploit the ordering: if sum is too small, advance L to get a larger value; if too large, retreat R. This only works on a sorted array."><span class="opt-letter">B</span>The array must be sorted</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Two pointers does not require elements to be positive."><span class="opt-letter">C</span>All elements must be positive</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Array size does not determine whether two pointers applies."><span class="opt-letter">D</span>The array must have an even number of elements</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="section-label">Interview Q&amp;A</div>
+  <h2 class="section-title">Common Interview Questions</h2>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">What is the difference between an array and a dynamic array?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">A static array has a fixed size declared at creation time — you cannot grow it. A dynamic array (Python list, Java ArrayList, C++ vector) starts with some capacity and doubles when full. The doubling costs O(n) but happens so rarely that the amortized cost per append is O(1). Trade-off: dynamic arrays waste memory (up to 2x the elements) but provide O(1) amortized push.</div></div></div>
+    <div class="qa-item"><button class="qa-q">When would you use a two-pointer pattern vs a hashmap for two-sum?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner"><strong>Two pointers</strong> require the array to be sorted — then O(n) time, O(1) space. <strong>Hashmap</strong> works on unsorted arrays — O(n) time, O(n) space. Choose two pointers when space is constrained and sorting is cheap or already done. Choose hashmap when you cannot sort (order matters) or need to find indices.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is the maximum subarray problem and how does Kadane's algorithm solve it?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Find the contiguous subarray with the largest sum. Kadane's: maintain <code>cur = max(arr[i], cur + arr[i])</code> and <code>best = max(best, cur)</code>. At each index, decide: extend the previous subarray or start fresh. O(n) time, O(1) space. Key insight: a subarray is worth extending only if the running sum is positive.</div></div></div>
+    <div class="qa-item"><button class="qa-q">Explain how amortized O(1) append works for dynamic arrays.<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Start with capacity 1. Each time the array fills, copy all n elements to a new array of size 2n. Cost of copies across all inserts: 1+2+4+...+n = 2n. Spread over n inserts, that is 2 per insert — O(1) amortized. The doubling strategy ensures the total copy work is bounded by twice the total elements inserted.</div></div></div>
+  </div>
+
+  <div class="topic-nav">
+    <div></div>
+    <a href="02-linked-list.html" class="topic-nav-link next">
+      <div class="topic-nav-arrow">&#8594;</div>
+      <div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Linked Lists</div></div>
+    </a>
+  </div>
+</div>
+
+<footer class="site-footer" style="margin-top:0">
+  <p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p>
+</footer>
+
+<script src="../js/main.js"></script>
+<script src="../js/demos.js"></script>
+</body>
+</html>

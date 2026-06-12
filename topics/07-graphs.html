@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Graphs — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#3B82F6}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Graphs</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 07</div>
+    <h1><span class="accent">Graphs</span></h1>
+    <p class="subtitle">Graphs are the most general structure — trees are a special case. They model networks, dependencies, maps, and social connections. BFS, DFS, and Dijkstra are the three algorithms you must know cold.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Uber</span><span class="badge">LinkedIn</span><span class="badge">Amazon</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>BFS</strong> — explores level by level using a queue. Finds shortest path (fewest edges) in unweighted graphs. O(V+E).</li>
+      <li><strong>DFS</strong> — explores as deep as possible using a stack (or recursion). Detects cycles, topological sort, connected components. O(V+E).</li>
+      <li><strong>Dijkstra</strong> — shortest path in weighted graphs with non-negative edges. Uses a min-heap. O((V+E) log V).</li>
+      <li><strong>Topological sort</strong> — linear ordering of vertices such that every directed edge u-v has u before v. Only valid for DAGs. Used in build systems, course scheduling.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Adjacency List vs Matrix</h4><p>Adjacency list: O(V+E) space, O(degree) to find neighbors — sparse graphs. Adjacency matrix: O(V^2) space, O(1) edge lookup — dense graphs. Most real graphs are sparse — use adjacency list.</p></div>
+    <div class="mini-card"><h4>BFS Shortest Path</h4><p>BFS explores all nodes at distance d before distance d+1. When the target is first visited, the path found is guaranteed to be the shortest (fewest edges). Does not work for weighted edges.</p></div>
+    <div class="mini-card"><h4>Dijkstra</h4><p>Greedy: always relax the unvisited node with the smallest known distance. Min-heap tracks the frontier. Cannot handle negative edge weights (use Bellman-Ford instead).</p></div>
+    <div class="mini-card"><h4>Union-Find</h4><p>Tracks connected components. Union: merge two components. Find: determine component of a node. With path compression and union by rank: nearly O(1) amortized per operation.</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">import</span> heapq
+
+<span class="cmt"># BFS shortest path — O(V+E)</span>
+<span class="kw">def</span> <span class="fn">bfs</span>(graph, start, end):
+    queue = deque([[start]])
+    visited = {start}
+    <span class="kw">while</span> queue:
+        path = queue.popleft()
+        node = path[-<span class="num">1</span>]
+        <span class="kw">if</span> node == end: <span class="kw">return</span> path
+        <span class="kw">for</span> nb <span class="kw">in</span> graph[node]:
+            <span class="kw">if</span> nb <span class="kw">not in</span> visited:
+                visited.add(nb)
+                queue.append(path + [nb])
+    <span class="kw">return</span> []
+
+<span class="cmt"># Dijkstra — O((V+E) log V)</span>
+<span class="kw">def</span> <span class="fn">dijkstra</span>(graph, start):
+    dist = {node: <span class="fn">float</span>(<span class="str">'inf'</span>) <span class="kw">for</span> node <span class="kw">in</span> graph}
+    dist[start] = <span class="num">0</span>
+    heap = [(<span class="num">0</span>, start)]
+    <span class="kw">while</span> heap:
+        d, u = heapq.heappop(heap)
+        <span class="kw">if</span> d > dist[u]: <span class="kw">continue</span>
+        <span class="kw">for</span> v, w <span class="kw">in</span> graph[u]:
+            <span class="kw">if</span> dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                heapq.heappush(heap, (dist[v], v))
+    <span class="kw">return</span> dist</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Graph Algorithm Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>8-node weighted undirected graph</h3></div>
+    <div id="demo-graph"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Press BFS, DFS, or Dijkstra to set the algorithm, then Play to animate from node A. Queue/stack shown below the graph. Distance table updates live for Dijkstra.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Algorithm</th><th>Time</th><th>Space</th><th>Shortest path?</th></tr></thead>
+      <tbody>
+        <tr><td>BFS</td><td>O(V+E)</td><td>O(V)</td><td>Yes (unweighted)</td></tr>
+        <tr><td>DFS</td><td>O(V+E)</td><td>O(V)</td><td>No</td></tr>
+        <tr><td>Dijkstra (heap)</td><td>O((V+E) log V)</td><td>O(V)</td><td>Yes (non-negative weights)</td></tr>
+        <tr><td>Bellman-Ford</td><td>O(VE)</td><td>O(V)</td><td>Yes (negative weights)</td></tr>
+        <tr><td>Floyd-Warshall</td><td>O(V^3)</td><td>O(V^2)</td><td>All pairs</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Not marking nodes visited in BFS/DFS</h4><p>Without a visited set, BFS/DFS will loop forever on a graph with cycles. Always mark a node visited when it is first enqueued (BFS) or when first entered (DFS) — not after processing.</p></div>
+    <div class="antipattern"><h4>Using Dijkstra with negative edges</h4><p>Dijkstra assumes that once a node is extracted from the heap, its shortest distance is finalized. A negative edge can create a shorter path to an already-visited node. Use Bellman-Ford or SPFA for negative edges.</p></div>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">Which algorithm guarantees the shortest path in an unweighted graph?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="true" data-explanation="BFS explores nodes level by level (by hop count). The first time a node is reached, the path length is minimal."><span class="opt-letter">A</span>BFS</div>
+        <div class="quiz-option" data-correct="false" data-explanation="DFS explores deep paths first and does not guarantee shortest paths."><span class="opt-letter">B</span>DFS</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Dijkstra is for weighted graphs; it reduces to BFS when all weights are 1."><span class="opt-letter">C</span>Dijkstra</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Topological sort orders vertices — it is not a shortest path algorithm."><span class="opt-letter">D</span>Topological Sort</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Topological sort requires the graph to be a:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Complete graphs have all edges and can have cycles."><span class="opt-letter">A</span>Complete graph</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Bipartite graphs are about vertex coloring, not ordering."><span class="opt-letter">B</span>Bipartite graph</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Topological ordering only exists for Directed Acyclic Graphs (DAGs). A cycle means there is no valid linear ordering."><span class="opt-letter">C</span>Directed Acyclic Graph (DAG)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Trees are DAGs, but topological sort applies to any DAG, not just trees."><span class="opt-letter">D</span>Tree</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">Adjacency list is preferred over adjacency matrix for sparse graphs because:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Adjacency matrix has O(1) edge lookup — faster than adjacency list."><span class="opt-letter">A</span>Edge lookup is faster</div>
+        <div class="quiz-option" data-correct="true" data-explanation="A sparse graph with V vertices and E &lt;&lt; V^2 edges wastes most of the V^2 matrix. Adjacency list uses O(V+E) space — much smaller for sparse graphs."><span class="opt-letter">B</span>Space is O(V+E) instead of O(V^2) — much smaller for sparse graphs</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Neither structure is inherently easier to implement."><span class="opt-letter">C</span>It is simpler to implement</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Adjacency matrix has better cache locality for dense graphs, not sparse ones."><span class="opt-letter">D</span>It has better cache locality</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">How do you detect a cycle in a directed graph?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">DFS with three states per node: unvisited (white), in-current-path (gray), fully-done (black). If you reach a gray node during DFS, you found a back edge — a cycle exists. Alternatively, topological sort (Kahn's algorithm): if not all nodes are in the topological order, there is a cycle.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How does Dijkstra differ from BFS and Bellman-Ford?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner"><strong>BFS:</strong> unit-weight edges, queue, O(V+E). <strong>Dijkstra:</strong> non-negative weights, min-heap, O((V+E) log V). <strong>Bellman-Ford:</strong> any weights including negative, relaxes all edges V-1 times, O(VE). Also detects negative cycles. Dijkstra is faster but restricted to non-negative weights. Bellman-Ford is slower but handles negative edges. BFS is fastest but only for unweighted graphs.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is Union-Find and when do you use it?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Union-Find (Disjoint Set Union) tracks connected components. Find(x): returns the root of x's component. Union(x,y): merges x and y's components. With path compression (flatten tree on find) and union by rank (attach smaller tree under larger): near-O(1) amortized per operation (inverse Ackermann). Use cases: Kruskal's MST, detecting cycles in undirected graphs, number of connected components, network connectivity queries.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="06-hash-tables.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Hash Tables</div></div></a>
+    <a href="08-sorting.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Sorting Algorithms</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Dynamic Programming — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#A855F7}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Dynamic Programming</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 10</div>
+    <h1>Dynamic <span class="accent">Programming</span></h1>
+    <p class="subtitle">Dynamic programming is not a data structure or an algorithm — it is a design technique. It turns exponential recursion into polynomial computation by storing the results of overlapping subproblems.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span><span class="badge">Netflix</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Overlapping subproblems</strong> — the same subproblem is computed multiple times. DP stores (memoizes) results to avoid redundant work.</li>
+      <li><strong>Optimal substructure</strong> — the optimal solution to a problem contains optimal solutions to its subproblems. Required for DP to work.</li>
+      <li><strong>Top-down vs bottom-up</strong> — top-down: recursion + memoization. Bottom-up: fill a table iteratively from base cases up. Same complexity, different trade-offs.</li>
+      <li><strong>State definition is everything</strong> — the hardest part is defining what dp[i] (or dp[i][j]) represents. Get that right and the recurrence follows.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Memoization (Top-Down)</h4><p>Write the recursive solution. Add a cache (dict/array). Before computing, check cache. After computing, store result. Keeps the recursive structure — easier to think about. Risk: stack overflow on deep recursion.</p></div>
+    <div class="mini-card"><h4>Tabulation (Bottom-Up)</h4><p>Fill a table from base cases upward. No recursion — no stack overflow. Usually slightly faster (no function call overhead). Requires determining the correct fill order.</p></div>
+    <div class="mini-card"><h4>1D DP Patterns</h4><p>Fibonacci, climbing stairs, coin change, word break, longest increasing subsequence. State: dp[i] = answer for first i elements. Transition: dp[i] = f(dp[i-1], dp[i-2], ...).</p></div>
+    <div class="mini-card"><h4>2D DP Patterns</h4><p>Edit distance, longest common subsequence, knapsack, matrix chain multiplication. State: dp[i][j] = answer considering i items with capacity j. Transition considers including or excluding each item.</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># Fibonacci — 3 approaches</span>
+<span class="kw">def</span> <span class="fn">fib_naive</span>(n):          <span class="cmt"># O(2^n)</span>
+    <span class="kw">if</span> n <= <span class="num">1</span>: <span class="kw">return</span> n
+    <span class="kw">return</span> <span class="fn">fib_naive</span>(n-<span class="num">1</span>) + <span class="fn">fib_naive</span>(n-<span class="num">2</span>)
+
+<span class="kw">def</span> <span class="fn">fib_memo</span>(n, memo={}):  <span class="cmt"># O(n)</span>
+    <span class="kw">if</span> n <span class="kw">in</span> memo: <span class="kw">return</span> memo[n]
+    <span class="kw">if</span> n <= <span class="num">1</span>: <span class="kw">return</span> n
+    memo[n] = <span class="fn">fib_memo</span>(n-<span class="num">1</span>) + <span class="fn">fib_memo</span>(n-<span class="num">2</span>)
+    <span class="kw">return</span> memo[n]
+
+<span class="cmt"># Coin change — O(amount * len(coins))</span>
+<span class="kw">def</span> <span class="fn">coin_change</span>(coins, amount):
+    dp = [<span class="fn">float</span>(<span class="str">'inf'</span>)] * (amount + <span class="num">1</span>)
+    dp[<span class="num">0</span>] = <span class="num">0</span>
+    <span class="kw">for</span> a <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, amount + <span class="num">1</span>):
+        <span class="kw">for</span> c <span class="kw">in</span> coins:
+            <span class="kw">if</span> c <= a:
+                dp[a] = <span class="fn">min</span>(dp[a], dp[a-c] + <span class="num">1</span>)
+    <span class="kw">return</span> dp[amount] <span class="kw">if</span> dp[amount] != <span class="fn">float</span>(<span class="str">'inf'</span>) <span class="kw">else</span> -<span class="num">1</span></pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">DP Visualizer — Fibonacci Memo + Knapsack Grid</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Fibonacci memoization &amp; 0/1 Knapsack</h3></div>
+    <div id="demo-dp"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Fibonacci tab: watch call count drop with Toggle Memo. Knapsack tab: grid fills cell by cell — each cell shows the optimal value for that item-count + capacity combination.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Problem</th><th>Without DP</th><th>With DP</th><th>Space</th></tr></thead>
+      <tbody>
+        <tr><td>Fibonacci(n)</td><td>O(2^n)</td><td>O(n)</td><td>O(n) or O(1)</td></tr>
+        <tr><td>0/1 Knapsack</td><td>O(2^n)</td><td>O(n * W)</td><td>O(n * W)</td></tr>
+        <tr><td>Longest Common Subseq.</td><td>O(2^n)</td><td>O(m * n)</td><td>O(m * n)</td></tr>
+        <tr><td>Edit Distance</td><td>O(3^n)</td><td>O(m * n)</td><td>O(m * n)</td></tr>
+        <tr><td>Coin Change</td><td>O(k^n)</td><td>O(n * k)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">What are the two conditions required for dynamic programming to apply?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Sorted input is not required for DP."><span class="opt-letter">A</span>Sorted input and a greedy choice property</div>
+        <div class="quiz-option" data-correct="true" data-explanation="DP requires: (1) overlapping subproblems — the same subproblem recurs — so memoization pays off; (2) optimal substructure — the globally optimal solution is built from optimal subproblem solutions."><span class="opt-letter">B</span>Overlapping subproblems and optimal substructure</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A graph structure is not required — DP applies to sequences, sets, and many other structures."><span class="opt-letter">C</span>A DAG structure and non-negative values</div>
+        <div class="quiz-option" data-correct="false" data-explanation="DP does not require a divide-and-conquer approach."><span class="opt-letter">D</span>Divide-and-conquer decomposition and sorted input</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">What is the time complexity of the 0/1 Knapsack problem solved with DP?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n log n) does not apply to 0/1 Knapsack."><span class="opt-letter">A</span>O(n log n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) applies to some DP problems but not Knapsack with weight W."><span class="opt-letter">B</span>O(n^2)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Fill an n x W table. Each of the n*W cells is computed in O(1). Total: O(n*W). Note: this is pseudo-polynomial — W can be exponential in the number of bits."><span class="opt-letter">C</span>O(n * W) where n = items, W = capacity</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(2^n) is the brute-force approach without DP."><span class="opt-letter">D</span>O(2^n)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">Memoization (top-down) vs tabulation (bottom-up) — which uses recursion?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="true" data-explanation="Memoization adds caching to the recursive solution. Tabulation fills the table iteratively from base cases — no recursion."><span class="opt-letter">A</span>Memoization uses recursion; tabulation fills a table iteratively</div>
+        <div class="quiz-option" data-correct="false" data-explanation="It is the other way around."><span class="opt-letter">B</span>Tabulation uses recursion; memoization fills a table iteratively</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Both do not use recursion — memoization does."><span class="opt-letter">C</span>Both use recursion</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Neither can use recursion is incorrect."><span class="opt-letter">D</span>Neither uses recursion</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">How do you approach a DP problem in an interview?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">(1) Identify the state: what information do you need to represent a subproblem? (2) Define the recurrence: how does the answer for state (i) depend on smaller states? (3) Identify base cases. (4) Determine fill order (tabulation) or confirm acyclic dependencies (memoization). (5) Optimize space if the recurrence only looks back a fixed number of states.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is the difference between coin change (min coins) and 0/1 knapsack?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Coin change allows unlimited use of each coin — it is an unbounded knapsack. 0/1 knapsack allows each item at most once. In the recurrence, unbounded: dp[i] = min(dp[i], dp[i-coin]+1) where you can reuse the same coin. 0/1: iterate items in the outer loop, capacity in the inner loop, and update the table going forward (unbounded) or backward (0/1 — prevents reuse).</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you reduce knapsack space from O(n*W) to O(W)?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Use a 1D array dp[0..W]. For 0/1 knapsack: iterate capacity from W down to item_weight (right to left). This ensures each item is only used once — when you update dp[w], dp[w - item.w] has not been updated yet in this iteration. For unbounded knapsack: iterate left to right — dp[w - coin] is already updated, allowing reuse.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="09-binary-search.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Binary Search</div></div></a>
+    <a href="11-greedy.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Greedy Algorithms</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

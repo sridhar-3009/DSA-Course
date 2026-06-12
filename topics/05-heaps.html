@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Heaps &amp; Priority Queues — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#EF4444}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Heaps</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 05</div>
+    <h1>Heaps &amp; <span class="accent">Priority Queues</span></h1>
+    <p class="subtitle">A heap gives you O(log n) insert and O(log n) extract-min (or max) — with O(1) peek at the minimum. It is the most efficient data structure for repeatedly pulling the next priority item.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Amazon</span><span class="badge">Microsoft</span><span class="badge">Meta</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Complete binary tree stored as array</strong> — parent of index i is at (i-1)/2. Children at 2i+1 and 2i+2. No pointers needed.</li>
+      <li><strong>Heap property</strong> — min-heap: parent &lt;= both children. Max-heap: parent &gt;= both children. Only between parent and child — siblings have no required order.</li>
+      <li><strong>Insert: bubble up</strong> — add to end, swap with parent while heap property is violated. At most O(log n) swaps.</li>
+      <li><strong>Extract-min: bubble down</strong> — replace root with last element, remove last, swap root down with smaller child. O(log n) swaps.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Array Representation</h4><p>For index i: parent = floor((i-1)/2), left child = 2i+1, right child = 2i+2. A complete binary tree stored in level-order in an array — cache-friendly with no pointer overhead.</p></div>
+    <div class="mini-card"><h4>Heapify — O(n)</h4><p>Building a heap from an unordered array in O(n) (not O(n log n)). Start from the last non-leaf (n/2 - 1) and bubble down each node. Lower levels do less work — the math yields a linear sum.</p></div>
+    <div class="mini-card"><h4>K Largest Elements</h4><p>Maintain a min-heap of size k. For each element: if larger than heap min, pop the min and push the new element. Final heap contains k largest. O(n log k) — better than O(n log n) sort when k &lt;&lt; n.</p></div>
+    <div class="mini-card"><h4>Heap Sort</h4><p>Build a max-heap in O(n). Extract max n times, each O(log n). Total: O(n log n). In-place, not stable. Practically slower than quicksort due to cache unfriendliness (jumps around the array).</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="kw">import</span> heapq
+
+<span class="cmt"># Min-heap (Python's default)</span>
+h = []
+heapq.heappush(h, <span class="num">5</span>)
+heapq.heappush(h, <span class="num">1</span>)
+heapq.heappush(h, <span class="num">3</span>)
+<span class="fn">print</span>(heapq.heappop(h))  <span class="cmt"># 1 — always the minimum</span>
+
+<span class="cmt"># K largest elements — O(n log k)</span>
+<span class="kw">def</span> <span class="fn">k_largest</span>(nums, k):
+    heap = nums[:k]
+    heapq.heapify(heap)              <span class="cmt"># O(k)</span>
+    <span class="kw">for</span> n <span class="kw">in</span> nums[k:]:
+        <span class="kw">if</span> n > heap[<span class="num">0</span>]:
+            heapq.heapreplace(heap, n)   <span class="cmt"># O(log k)</span>
+    <span class="kw">return</span> heap
+
+<span class="cmt"># Merge k sorted lists — O(n log k)</span>
+<span class="kw">def</span> <span class="fn">merge_k_sorted</span>(lists):
+    h = [(lst[<span class="num">0</span>], i, <span class="num">0</span>) <span class="kw">for</span> i, lst <span class="kw">in</span> <span class="fn">enumerate</span>(lists) <span class="kw">if</span> lst]
+    heapq.heapify(h)
+    result = []
+    <span class="kw">while</span> h:
+        val, i, j = heapq.heappop(h)
+        result.append(val)
+        <span class="kw">if</span> j + <span class="num">1</span> < len(lists[i]):
+            heapq.heappush(h, (lists[i][j+<span class="num">1</span>], i, j+<span class="num">1</span>))
+    <span class="kw">return</span> result</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Heap Visualizer — Tree + Array</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Min-Heap / Max-Heap — synchronized views</h3></div>
+    <div id="demo-heap"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Insert values to see bubble-up. Extract Root to see bubble-down. Tree and array strip update together. Toggle Min/Max to switch heap type.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Operation</th><th>Binary Heap</th><th>Sorted Array</th><th>BST (balanced)</th></tr></thead>
+      <tbody>
+        <tr><td>Insert</td><td>O(log n)</td><td>O(n)</td><td>O(log n)</td></tr>
+        <tr><td>Extract-min</td><td>O(log n)</td><td>O(1)</td><td>O(log n)</td></tr>
+        <tr><td>Peek-min</td><td>O(1)</td><td>O(1)</td><td>O(log n)</td></tr>
+        <tr><td>Search arbitrary</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+        <tr><td>Build from array</td><td>O(n)</td><td>O(n log n)</td><td>O(n log n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">In a 0-indexed array representation of a binary heap, what are the children of the node at index i?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="i+1 and i+2 would only be correct for the root (i=0)."><span class="opt-letter">A</span>i+1 and i+2</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Left child = 2i+1, right child = 2i+2. Parent = floor((i-1)/2). These formulas assume 0-indexed array."><span class="opt-letter">B</span>2i+1 and 2i+2</div>
+        <div class="quiz-option" data-correct="false" data-explanation="2i and 2i+1 is the 1-indexed formula."><span class="opt-letter">C</span>2i and 2i+1</div>
+        <div class="quiz-option" data-correct="false" data-explanation="i*2 and i*2-1 is incorrect."><span class="opt-letter">D</span>i*2 and i*2-1</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Why is building a heap from an unordered array O(n) and not O(n log n)?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Heapify does more than just swapping adjacent elements."><span class="opt-letter">A</span>Each element is only compared with its direct neighbors</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Heapify starts from leaves (which do no work) to root. Most nodes are at the bottom of the tree and do O(1) work. The sum across all levels converges to O(n) mathematically."><span class="opt-letter">B</span>Lower-level nodes do less work; the total work across all levels sums to O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="The array is not sorted before heapify."><span class="opt-letter">C</span>The array is partially sorted before heapify begins</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Comparison count does depend on the specific input."><span class="opt-letter">D</span>Each element is compared exactly once</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">You need the k largest elements from a stream of n numbers. Which approach is most efficient?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Sorting all n elements is O(n log n) — unnecessary when you only need k."><span class="opt-letter">A</span>Sort all n elements, take last k</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Min-heap of size k: if new element > heap min, replace min. O(n log k). When k &lt;&lt; n, this is much faster than O(n log n) sort."><span class="opt-letter">B</span>Maintain a min-heap of size k</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A max-heap of all elements would be O(n log n) to build and does not help with streaming."><span class="opt-letter">C</span>Build a max-heap of all elements</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Linear scan finds the max in O(n) but only one element, not k elements efficiently."><span class="opt-letter">D</span>Linear scan k times</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">What is the difference between a heap and a BST?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">A heap has the heap property (parent &lt;= children for min-heap) but siblings have no required order. A BST has the BST property (left &lt; node &lt; right) which gives total ordering along any path. Heap: O(1) min, O(log n) insert/extract. BST: O(log n) search/insert/delete, but supports in-order traversal and range queries. Use heap for priority queues; use BST for sorted data with arbitrary search.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How would you find the median of a data stream?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Maintain two heaps: a max-heap for the lower half of numbers, and a min-heap for the upper half. Keep them balanced (sizes differ by at most 1). For each new number: if &lt;= max-heap top, push to max-heap; otherwise push to min-heap. Rebalance if sizes differ by more than 1. Median is the top of the larger heap, or the average of both tops if equal size. O(log n) insert, O(1) median.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="04-trees.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Trees &amp; BST</div></div></a>
+    <a href="06-hash-tables.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Hash Tables</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

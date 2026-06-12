@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Trees &amp; BST — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#F59E0B}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Trees &amp; BST</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 04</div>
+    <h1>Trees &amp; <span class="accent">BST</span></h1>
+    <p class="subtitle">Trees are the most important non-linear structure in computer science. The binary search tree adds an ordering invariant that makes search, insert, and delete O(log n) on balanced trees.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>BST invariant</strong> — every node: all values in left subtree &lt; node.val, all values in right subtree &gt; node.val. Enforced on insert, maintained through rotations on delete.</li>
+      <li><strong>InOrder traversal = sorted order</strong> — traversing a BST inorder gives elements in ascending order. Used to validate BSTs and extract sorted sequences.</li>
+      <li><strong>Height determines complexity</strong> — a balanced BST has height O(log n). A degenerate (sorted-insert) BST degrades to O(n) — effectively a linked list.</li>
+      <li><strong>AVL / Red-Black trees</strong> — self-balancing BSTs. Rotations restore balance after insert/delete. Guarantee O(log n) worst case.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Traversals</h4><p>InOrder (L-Root-R): sorted output. PreOrder (Root-L-R): serialize tree, copy tree. PostOrder (L-R-Root): delete tree, evaluate expression tree. Level-order (BFS): shortest path, level-by-level processing.</p></div>
+    <div class="mini-card"><h4>BST Search</h4><p>At each node: target == val: found. target &lt; val: go left. target &gt; val: go right. Pruning half the tree per step gives O(log n) on balanced trees.</p></div>
+    <div class="mini-card"><h4>BST Delete</h4><p>Three cases: (1) leaf — just remove. (2) one child — replace with child. (3) two children — replace with inorder successor (smallest in right subtree), then delete successor from right subtree.</p></div>
+    <div class="mini-card"><h4>AVL Rotation</h4><p>After insert, recompute heights bottom-up. If balance factor (left_height - right_height) exceeds 1 in magnitude, rotate. Left/right/left-right/right-left rotations restore balance in O(1).</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="kw">class</span> <span class="fn">TreeNode</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, val):
+        self.val=val; self.left=self.right=<span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">insert</span>(root, val):
+    <span class="kw">if not</span> root: <span class="kw">return</span> TreeNode(val)
+    <span class="kw">if</span> val < root.val: root.left = <span class="fn">insert</span>(root.left, val)
+    <span class="kw">else</span>: root.right = <span class="fn">insert</span>(root.right, val)
+    <span class="kw">return</span> root
+
+<span class="kw">def</span> <span class="fn">inorder</span>(root, out=[]):
+    <span class="kw">if</span> root:
+        <span class="fn">inorder</span>(root.left, out)
+        out.append(root.val)
+        <span class="fn">inorder</span>(root.right, out)
+    <span class="kw">return</span> out
+
+<span class="cmt"># Validate BST — O(n)</span>
+<span class="kw">def</span> <span class="fn">is_valid_bst</span>(root, lo=<span class="fn">float</span>(<span class="str">'-inf'</span>), hi=<span class="fn">float</span>(<span class="str">'inf'</span>)):
+    <span class="kw">if not</span> root: <span class="kw">return True</span>
+    <span class="kw">if not</span> (lo < root.val < hi): <span class="kw">return False</span>
+    <span class="kw">return</span> (<span class="fn">is_valid_bst</span>(root.left, lo, root.val) <span class="kw">and</span>
+            <span class="fn">is_valid_bst</span>(root.right, root.val, hi))</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">BST Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Binary Search Tree</h3></div>
+    <div id="demo-tree"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Insert values to build the BST. Run InOrder/PreOrder/PostOrder traversals step by step. Each highlighted node is the current visit.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Operation</th><th>BST (avg)</th><th>BST (worst)</th><th>Balanced BST</th></tr></thead>
+      <tbody>
+        <tr><td>Search</td><td>O(log n)</td><td>O(n)</td><td>O(log n)</td></tr>
+        <tr><td>Insert</td><td>O(log n)</td><td>O(n)</td><td>O(log n)</td></tr>
+        <tr><td>Delete</td><td>O(log n)</td><td>O(n)</td><td>O(log n)</td></tr>
+        <tr><td>Min / Max</td><td>O(log n)</td><td>O(n)</td><td>O(log n)</td></tr>
+        <tr><td>InOrder Traversal</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Inserting sorted data into a BST</h4><p>Inserting [1,2,3,4,5] into a BST creates a right-skewed chain of height n. Every operation becomes O(n). Use a self-balancing BST (AVL, Red-Black) or shuffle input before inserting.</p></div>
+    <div class="antipattern"><h4>Forgetting the inorder successor has at most one child</h4><p>The inorder successor of a node with two children (leftmost node in the right subtree) can only have a right child (never a left child — it is the minimum). Deleting it is always the simpler case 1 or 2.</p></div>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">Which traversal of a BST produces elements in sorted (ascending) order?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="PreOrder (Root-L-R) visits root first — not sorted order."><span class="opt-letter">A</span>PreOrder</div>
+        <div class="quiz-option" data-correct="true" data-explanation="InOrder (L-Root-R) visits the left subtree (smaller), then root, then right subtree (larger) — naturally sorted."><span class="opt-letter">B</span>InOrder</div>
+        <div class="quiz-option" data-correct="false" data-explanation="PostOrder (L-R-Root) visits root last — not sorted order."><span class="opt-letter">C</span>PostOrder</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Level-order visits by depth — not sorted order."><span class="opt-letter">D</span>Level-Order</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Deleting a BST node with two children requires finding the:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="The maximum of the left subtree (inorder predecessor) also works, but inorder successor is the standard."><span class="opt-letter">A</span>Maximum of the left subtree</div>
+        <div class="quiz-option" data-correct="true" data-explanation="The inorder successor (leftmost node in right subtree) is the smallest value greater than the deleted node. Copy its value up and delete it (it has at most one child)."><span class="opt-letter">B</span>Minimum of the right subtree (inorder successor)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="The root is not involved in deletion of a non-root node."><span class="opt-letter">C</span>Root of the tree</div>
+        <div class="quiz-option" data-correct="false" data-explanation="The rightmost node in the left subtree is the inorder predecessor, not successor."><span class="opt-letter">D</span>Rightmost node of the left subtree</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">A BST degrades to O(n) operations in the worst case. What input pattern causes this?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Random input produces roughly balanced trees with O(log n) average height."><span class="opt-letter">A</span>Random insertion order</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Inserting sorted (or reverse sorted) data creates a chain — every node has only a right (or only a left) child, making height = n."><span class="opt-letter">B</span>Already sorted insertion order</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Duplicate insertions cause issues but do not degrade height to n in a standard BST."><span class="opt-letter">C</span>All duplicate values</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Large values are not the issue — the relative order matters."><span class="opt-letter">D</span>Very large values</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">What is the difference between a binary tree and a BST?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">A binary tree is any tree where each node has at most two children — no ordering constraint. A BST adds the invariant: left subtree values &lt; node.val &lt; right subtree values. This ordering enables O(log n) search. Binary heaps are also binary trees but use the heap property (parent &lt;= children for min-heap), not BST ordering.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you check if a binary tree is a valid BST?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Pass valid range [lo, hi] through the recursion. Root has range (-inf, +inf). Left child of a node with value v gets range (lo, v). Right child gets (v, hi). If any node's value is outside its range, return false. This correctly handles cases where a "local" comparison passes but the global BST property is violated — a common mistake is checking only left.val &lt; root.val &lt; right.val without checking subtree ranges.</div></div></div>
+    <div class="qa-item"><button class="qa-q">When would you use a Red-Black tree over an AVL tree?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">AVL trees are more strictly balanced (balance factor limited to 1) — faster lookups but more rotations on insert/delete. Red-Black trees allow slightly more imbalance — slightly slower lookups but fewer rotations. In practice: use Red-Black for write-heavy workloads (Linux kernel, Java TreeMap, C++ std::map use Red-Black). Use AVL for read-heavy workloads where lookup speed matters more than write speed.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="03-stack-queue.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Stacks &amp; Queues</div></div></a>
+    <a href="05-heaps.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Heaps</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

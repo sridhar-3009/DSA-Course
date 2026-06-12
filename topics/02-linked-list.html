@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Linked Lists — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#06B6D4}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Linked Lists</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 02</div>
+    <h1>Linked <span class="accent">Lists</span></h1>
+    <p class="subtitle">A linked list trades O(1) random access for O(1) insert/delete at any known position. Every node points to the next — no contiguous memory required.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>O(1) insert/delete at head</strong> — just update the head pointer. No shifting of other elements.</li>
+      <li><strong>O(n) search</strong> — must traverse from head to find a node. No index arithmetic.</li>
+      <li><strong>Doubly linked list</strong> — each node has prev and next pointers. Enables O(1) delete when you have a pointer to the node.</li>
+      <li><strong>Floyd's cycle detection</strong> — slow pointer moves 1 step, fast moves 2. If there is a cycle, they will meet. O(n) time, O(1) space.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Node Structure</h4><p>Each node holds a value and a pointer (next). In a doubly linked list, also a prev pointer. Nodes live anywhere in memory — not contiguous. The head pointer is your entry point.</p></div>
+    <div class="mini-card"><h4>Insert at Head</h4><p>Create a new node. Set new.next = head. Set head = new. Two pointer assignments — O(1) regardless of list length. No shifting.</p></div>
+    <div class="mini-card"><h4>Reverse a List</h4><p>Keep three pointers: prev = null, cur = head, next = cur.next. Flip cur.next = prev, then advance all three. One pass — O(n).</p></div>
+    <div class="mini-card"><h4>Slow/Fast Pointer</h4><p>Slow moves +1 each step, fast moves +2. If a cycle exists, fast laps slow — they meet inside the cycle. Also finds the middle of a list (slow stops at middle when fast reaches end).</p></div>
+  </div>
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Operations Step by Step</h2>
+  <div class="steps">
+    <div class="step-item"><div class="step-num">1</div><div><h4>Insert at Head — O(1)</h4><p>new.next = head; head = new. That is it. The rest of the list is untouched. Cost is the same whether the list has 5 nodes or 5 million.</p></div></div>
+    <div class="step-item"><div class="step-num">2</div><div><h4>Insert at Tail — O(n)</h4><p>Without a tail pointer: traverse to the last node, then new.last.next = new. With a tail pointer: O(1). Always maintain a tail pointer for queues and append-heavy workloads.</p></div></div>
+    <div class="step-item"><div class="step-num">3</div><div><h4>Delete by Value — O(n)</h4><p>Traverse to find the node whose next.val equals target. Set cur.next = cur.next.next. The garbage collector (or free()) handles the unlinked node. Edge case: deleting the head.</p></div></div>
+    <div class="step-item"><div class="step-num">4</div><div><h4>Reverse — O(n)</h4><p>Three pointers traverse once. At each step: save next = cur.next, flip cur.next = prev, advance prev = cur, advance cur = next. After the loop, set head = prev.</p></div></div>
+    <div class="step-item"><div class="step-num">5</div><div><h4>Cycle Detection (Floyd's)</h4><p>Initialize slow = fast = head. While fast != null and fast.next != null: slow = slow.next; fast = fast.next.next. If slow == fast: cycle detected. Why it works: fast gains 1 step per iteration; in a cycle of length c, it catches up in at most c iterations.</p></div></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="kw">class</span> <span class="fn">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, val):
+        self.val = val
+        self.next = <span class="kw">None</span>
+
+<span class="cmt"># Reverse a singly linked list — O(n)</span>
+<span class="kw">def</span> <span class="fn">reverse</span>(head):
+    prev = <span class="kw">None</span>
+    cur = head
+    <span class="kw">while</span> cur:
+        nxt = cur.next
+        cur.next = prev
+        prev = cur
+        cur = nxt
+    <span class="kw">return</span> prev
+
+<span class="cmt"># Floyd's cycle detection — O(n) time O(1) space</span>
+<span class="kw">def</span> <span class="fn">has_cycle</span>(head):
+    slow = fast = head
+    <span class="kw">while</span> fast <span class="kw">and</span> fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        <span class="kw">if</span> slow <span class="kw">is</span> fast: <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">return</span> <span class="kw">False</span></pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Linked List Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Singly / Doubly Linked List</h3></div>
+    <div id="demo-linkedlist"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Insert Head/Tail, Reverse, Toggle Doubly, or run Slow/Fast pointer. Press Play to animate.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Operation</th><th>Singly LL</th><th>Doubly LL</th><th>Array</th></tr></thead>
+      <tbody>
+        <tr><td>Access by index</td><td>O(n)</td><td>O(n)</td><td>O(1)</td></tr>
+        <tr><td>Insert at head</td><td>O(1)</td><td>O(1)</td><td>O(n)</td></tr>
+        <tr><td>Insert at tail (w/ tail ptr)</td><td>O(1)</td><td>O(1)</td><td>O(1) amortized</td></tr>
+        <tr><td>Delete known node</td><td>O(n)*</td><td>O(1)</td><td>O(n)</td></tr>
+        <tr><td>Search</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+        <tr><td>Space</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="info-box"><h4>*Singly LL delete a known node</h4><p>If you only have a pointer to the node (not its predecessor), you cannot delete it in O(1) with a singly linked list. Trick: copy the next node's value into the current node, then delete the next node. Works unless the node is the tail.</p></div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>No tail pointer on append-heavy lists</h4><p>Appending to a singly linked list without a tail pointer requires traversing to the last node every time — O(n) per append. Maintain a tail pointer; update it on every insert-at-tail and delete-tail.</p></div>
+    <div class="antipattern"><h4>Forgetting edge cases in reversal</h4><p>Reversing must handle: empty list (return null), single node (return it), and the tail becoming the new head. Failing to set old_head.next = null creates a cycle.</p></div>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">What is the time complexity of deleting a node in a doubly linked list when you have a direct pointer to that node?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="true" data-explanation="With a pointer to the node, you can update node.prev.next and node.next.prev in O(1). No traversal needed."><span class="opt-letter">A</span>O(1)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(log n) applies to binary search trees, not linked lists."><span class="opt-letter">B</span>O(log n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n) traversal is needed for singly linked lists where you need the predecessor, not here."><span class="opt-letter">C</span>O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Deletion does not require sorting."><span class="opt-letter">D</span>O(n log n)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Floyd's cycle detection uses slow and fast pointers. What is its space complexity?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n) space would be a visited hashset approach, not Floyd's."><span class="opt-letter">A</span>O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(log n) space is not associated with Floyd's algorithm."><span class="opt-letter">B</span>O(log n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Floyd's uses exactly two pointers — constant space regardless of list length."><span class="opt-letter">C</span>O(1)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) space makes no sense for this algorithm."><span class="opt-letter">D</span>O(n^2)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">In reversing a linked list iteratively, how many pointers do you need simultaneously?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="One pointer is insufficient — you would lose the rest of the list when flipping the next pointer."><span class="opt-letter">A</span>1</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Two pointers (prev + cur) are technically enough if you save next before flipping, making it effectively three."><span class="opt-letter">B</span>2</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Three: prev (reversed portion), cur (current node), next (save before overwriting cur.next)."><span class="opt-letter">C</span>3</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Four pointers would be redundant."><span class="opt-letter">D</span>4</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">When would you choose a linked list over an array?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Choose a linked list when: (1) you frequently insert/delete at the front or middle and have a pointer to the position; (2) you do not need random access by index; (3) the size is unknown and you want to avoid reallocation. Choose an array when you need O(1) index access, better cache performance (contiguous memory), or binary search.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you find the middle of a linked list in one pass?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Use slow and fast pointers both starting at head. Move slow one step, fast two steps per iteration. When fast reaches the end (fast == null or fast.next == null), slow is at the middle. For even-length lists, slow lands on the second-middle node.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you detect the start of a cycle in a linked list?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">After Floyd's algorithm detects a meeting point inside the cycle, reset one pointer to head. Move both pointers one step at a time. They meet at the cycle's entry node. Mathematical proof: if fast traveled 2d and slow traveled d steps to meet, and the cycle starts k steps from head, then the meeting point is k steps from the cycle start — same as the head-to-cycle-start distance.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="01-arrays.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Arrays</div></div></a>
+    <a href="03-stack-queue.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Stacks &amp; Queues</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Hash Tables — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#EC4899}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Hash Tables</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 06</div>
+    <h1>Hash <span class="accent">Tables</span></h1>
+    <p class="subtitle">O(1) average insert, lookup, and delete. The hash table is the single most useful data structure in interview problems — and understanding what makes it fast (and when it fails) separates good answers from great ones.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Stripe</span><span class="badge">Airbnb</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Hash function</strong> — maps a key to a bucket index. Good functions distribute keys uniformly, are fast to compute, and produce the same output for equal keys.</li>
+      <li><strong>Collision handling</strong> — two keys mapping to the same bucket. Separate chaining (linked list per bucket) or open addressing (probe for next empty slot).</li>
+      <li><strong>Load factor</strong> — n_keys / n_buckets. At ~0.75, resize by doubling buckets and rehashing all keys. Keeps chains short and probing fast.</li>
+      <li><strong>Worst case O(n)</strong> — all keys hash to the same bucket. Avoided by good hash functions, random seeds, and resizing.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Hash Function</h4><p>Must be deterministic (same key = same hash), fast (O(key length)), and uniform (spread keys across buckets). Java uses object.hashCode(). Python uses hash(). Cryptographic hashes are too slow for hash tables.</p></div>
+    <div class="mini-card"><h4>Separate Chaining</h4><p>Each bucket is a linked list. Collision: append to the list. Lookup: hash to bucket, scan list for key. Average O(1) with low load factor. Degrades to O(n) if all keys collide.</p></div>
+    <div class="mini-card"><h4>Open Addressing</h4><p>Linear probing: on collision, check next slot. Quadratic probing: check i^2 steps ahead. Double hashing: second hash function determines step size. All keep data in the array — better cache behavior than chaining.</p></div>
+    <div class="mini-card"><h4>Resize &amp; Rehash</h4><p>When load factor exceeds threshold (0.75 typical), create a new array (2x size) and rehash every key into the new array. O(n) work, but amortized O(1) per operation.</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># HashMap patterns — most interview problems use these</span>
+
+<span class="cmt"># Frequency count</span>
+freq = {}
+<span class="kw">for</span> c <span class="kw">in</span> <span class="str">"hello world"</span>:
+    freq[c] = freq.get(c, <span class="num">0</span>) + <span class="num">1</span>
+
+<span class="cmt"># Two-sum using hashmap — O(n) time, O(n) space</span>
+<span class="kw">def</span> <span class="fn">two_sum</span>(nums, target):
+    seen = {}
+    <span class="kw">for</span> i, n <span class="kw">in</span> <span class="fn">enumerate</span>(nums):
+        complement = target - n
+        <span class="kw">if</span> complement <span class="kw">in</span> seen:
+            <span class="kw">return</span> [seen[complement], i]
+        seen[n] = i
+
+<span class="cmt"># Group anagrams — sort key trick</span>
+<span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+<span class="kw">def</span> <span class="fn">group_anagrams</span>(words):
+    groups = defaultdict(list)
+    <span class="kw">for</span> w <span class="kw">in</span> words:
+        groups[<span class="fn">tuple</span>(<span class="fn">sorted</span>(w))].append(w)
+    <span class="kw">return</span> <span class="fn">list</span>(groups.values())</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Hash Table Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>10-bucket hash table — separate chaining</h3></div>
+    <div id="demo-hash"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Type a key and press Insert. Watch the ASCII sum animate, then see the key land in its bucket. Toggle Open Addressing to see linear probing. Load factor bar updates live.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Operation</th><th>Average</th><th>Worst case</th></tr></thead>
+      <tbody>
+        <tr><td>Insert</td><td>O(1)</td><td>O(n)</td></tr>
+        <tr><td>Lookup</td><td>O(1)</td><td>O(n)</td></tr>
+        <tr><td>Delete</td><td>O(1)</td><td>O(n)</td></tr>
+        <tr><td>Space</td><td>O(n)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Using mutable objects as keys</h4><p>Hash tables require keys to be immutable (hashable). In Python, lists are not hashable — use tuples. In Java, if you override equals(), you must override hashCode() with the same fields, or the object will be "lost" in the map after mutation.</p></div>
+    <div class="antipattern"><h4>Assuming O(1) worst case</h4><p>Hash collision attacks can deliberately degrade a hashmap to O(n). Python 3.3+ adds hash randomization by default. Java HashMap uses balanced trees in buckets when chain length exceeds 8.</p></div>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">What happens to a hash table when the load factor exceeds the threshold (typically 0.75)?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Hash tables do not raise an error — they resize automatically."><span class="opt-letter">A</span>Insert operations start failing with an error</div>
+        <div class="quiz-option" data-correct="true" data-explanation="The table doubles in size and all existing keys are rehashed into the new, larger array. This costs O(n) but is amortized O(1) per insert."><span class="opt-letter">B</span>The table resizes (typically doubles) and all keys are rehashed</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Clustering is addressed by probing strategies, not by stopping inserts."><span class="opt-letter">C</span>Inserts are paused until clustering is resolved</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Sorted order is not relevant to hash table operations."><span class="opt-letter">D</span>Keys are sorted and stored in a BST</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">In open addressing with linear probing, what causes "primary clustering"?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Collisions themselves do not create clusters — the probing strategy does."><span class="opt-letter">A</span>Two keys have identical hash values</div>
+        <div class="quiz-option" data-correct="true" data-explanation="When keys collide, they probe forward linearly, building up in the same region. Keys with different original hashes can fall into the same chain — growing the cluster further."><span class="opt-letter">B</span>Filled slots cluster together, making probes for new keys longer over time</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Load factor is monitored separately."><span class="opt-letter">C</span>The load factor exceeds 1.0</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Deletion is handled separately with tombstones."><span class="opt-letter">D</span>Deleted slots are reused too quickly</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">Why must you override hashCode() when you override equals() in Java?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Memory layout is not determined by hashCode."><span class="opt-letter">A</span>To ensure proper memory layout</div>
+        <div class="quiz-option" data-correct="true" data-explanation="The HashMap contract: if a.equals(b) then a.hashCode() == b.hashCode(). Breaking this causes logically-equal objects to hash to different buckets — they will never be found as keys in the map."><span class="opt-letter">B</span>Equal objects must have equal hash codes — otherwise the HashMap contract is broken</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Serialization is a separate concern."><span class="opt-letter">C</span>For serialization to work correctly</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Thread safety is handled by ConcurrentHashMap, not hashCode."><span class="opt-letter">D</span>To make the HashMap thread-safe</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">Separate chaining vs open addressing — when to use each?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner"><strong>Separate chaining:</strong> handles high load factors gracefully, simpler deletion, no clustering. Downside: extra memory for pointers, poor cache locality. <strong>Open addressing:</strong> better cache performance (data stays in the array), lower memory overhead. Downside: performance degrades sharply at high load factors, deletion requires tombstones (or backshifting). Use chaining when load factor may be high or deletions are frequent. Use open addressing when cache performance is critical and load factor is controlled.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you design a hashmap from scratch?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Key decisions: (1) Hash function — key.hashCode() modulo array size. (2) Collision strategy — separate chaining (simpler) or linear probing (faster). (3) Load factor threshold — 0.75 is standard. (4) Resize factor — double on resize. (5) Handling deletions — tombstones for open addressing. Core operations: put(k,v): hash k, find bucket, update or append. get(k): hash k, find bucket, scan for k. remove(k): find and remove, mark tombstone if open addressing.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="05-heaps.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Heaps</div></div></a>
+    <a href="07-graphs.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Graphs</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

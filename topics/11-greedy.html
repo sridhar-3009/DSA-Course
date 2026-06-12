@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Greedy Algorithms — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#14B8A6}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Greedy</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 11</div>
+    <h1>Greedy <span class="accent">Algorithms</span></h1>
+    <p class="subtitle">Greedy algorithms make the locally optimal choice at each step, hoping to reach the globally optimal solution. When they work, they are fast and elegant. When they do not, they give wrong answers — knowing the difference is the skill.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Amazon</span><span class="badge">Meta</span><span class="badge">Uber</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Greedy choice property</strong> — a globally optimal solution can be reached by making locally optimal choices. Must be proven (not assumed) for each problem.</li>
+      <li><strong>Optimal substructure</strong> — the optimal solution to the problem contains optimal solutions to subproblems. Shared with DP — but greedy requires the greedy choice to be safe without exploring alternatives.</li>
+      <li><strong>When greedy fails</strong> — coin change with non-standard denominations (e.g., [10,7,1], target=14: greedy gives 10+1+1+1=4 coins; DP gives 7+7=2 coins). Always verify greedy correctness.</li>
+      <li><strong>Classic greedy problems</strong> — activity selection, fractional knapsack, Huffman coding, Dijkstra, Prim's MST, Kruskal's MST, interval scheduling.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Activity Selection</h4><p>Select maximum non-overlapping intervals. Greedy: always pick the interval with the earliest finish time. Provably optimal — finishing earlier leaves more room for future intervals. O(n log n) to sort, O(n) to select.</p></div>
+    <div class="mini-card"><h4>Fractional Knapsack</h4><p>Items can be split. Greedy: sort by value/weight ratio (descending). Take as much of the highest-ratio item as possible. O(n log n). Unlike 0/1 knapsack, greedy works here because fractions allow exact capacity fill.</p></div>
+    <div class="mini-card"><h4>Huffman Coding</h4><p>Build optimal prefix-free code. Greedy: always merge the two lowest-frequency nodes into a new internal node. Repeat until one tree. Guarantees minimum total encoded length.</p></div>
+    <div class="mini-card"><h4>Interval Scheduling</h4><p>Variant: minimum number of platforms/rooms needed. Sort start and end times separately. Two-pointer scan — when a train arrives (start[i]), increment platforms; when one departs (end[j]), decrement. Peak is the answer.</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># Activity selection — O(n log n)</span>
+<span class="kw">def</span> <span class="fn">activity_selection</span>(activities):
+    <span class="cmt"># activities: list of (start, end)</span>
+    sorted_acts = <span class="fn">sorted</span>(activities, key=<span class="kw">lambda</span> x: x[<span class="num">1</span>])
+    selected = [sorted_acts[<span class="num">0</span>]]
+    <span class="kw">for</span> act <span class="kw">in</span> sorted_acts[<span class="num">1</span>:]:
+        <span class="kw">if</span> act[<span class="num">0</span>] >= selected[-<span class="num">1</span>][<span class="num">1</span>]:
+            selected.append(act)
+    <span class="kw">return</span> selected
+
+<span class="cmt"># Jump game — can reach end? — O(n)</span>
+<span class="kw">def</span> <span class="fn">can_jump</span>(nums):
+    reach = <span class="num">0</span>
+    <span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(nums):
+        <span class="kw">if</span> i > reach: <span class="kw">return False</span>
+        reach = <span class="fn">max</span>(reach, i + v)
+    <span class="kw">return True</span>
+
+<span class="cmt"># Minimum platforms needed — O(n log n)</span>
+<span class="kw">def</span> <span class="fn">min_platforms</span>(arrivals, departures):
+    arrivals.<span class="fn">sort</span>(); departures.<span class="fn">sort</span>()
+    platforms = result = i = j = <span class="num">0</span>
+    <span class="kw">while</span> i < len(arrivals):
+        <span class="kw">if</span> arrivals[i] < departures[j]:
+            platforms += <span class="num">1</span>; i += <span class="num">1</span>
+        <span class="kw">else</span>:
+            platforms -= <span class="num">1</span>; j += <span class="num">1</span>
+        result = <span class="fn">max</span>(result, platforms)
+    <span class="kw">return</span> result</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Greedy Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Coin Change &amp; Activity Selection</h3></div>
+    <div id="demo-greedy"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Coin Change: set target amount, watch greedy pick largest coins. Activity Selection: sorted timeline — green bars selected, red bars skipped. Use tab buttons to switch panels.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Algorithm</th><th>Time</th><th>Optimal?</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Activity Selection</td><td>O(n log n)</td><td>Yes</td><td>Sort by end time</td></tr>
+        <tr><td>Fractional Knapsack</td><td>O(n log n)</td><td>Yes</td><td>Sort by value/weight</td></tr>
+        <tr><td>Coin Change (standard)</td><td>O(n)</td><td>Only for standard denominations</td><td>Fails for arbitrary coins</td></tr>
+        <tr><td>Dijkstra</td><td>O((V+E) log V)</td><td>Yes (non-negative)</td><td>Greedy relaxation</td></tr>
+        <tr><td>Prim's MST</td><td>O((V+E) log V)</td><td>Yes</td><td>Greedy edge selection</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Assuming greedy always works for optimization</h4><p>Greedy works for activity selection and fractional knapsack but not for 0/1 knapsack, coin change with arbitrary denominations, or shortest paths with negative weights. Always ask: does the greedy choice provably not close off better future choices?</p></div>
+    <div class="antipattern"><h4>Forgetting to sort</h4><p>Most greedy algorithms require pre-sorting by a key (end time, ratio, weight). A greedy algorithm that does not sort is either wrong or not truly greedy — it is just a heuristic.</p></div>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">Activity selection greedily picks the interval with the earliest finish time. Why is this correct?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Shortest duration does not guarantee maximum count — a short interval in the middle might block two later ones."><span class="opt-letter">A</span>Shortest-duration intervals have less overlap</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Finishing earliest leaves the maximum remaining time for future activities. Any optimal solution that starts with a different first activity can be modified to use the earliest-ending one without losing activities — an exchange argument proves this."><span class="opt-letter">B</span>Finishing earliest leaves the maximum remaining time for future activities — provably optimal by exchange argument</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Earliest start time can block future activities with long durations."><span class="opt-letter">C</span>Earliest start time minimizes waiting</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Latest finish time would be the worst choice."><span class="opt-letter">D</span>Latest finish time maximizes coverage</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Greedy coin change (always pick largest coin) fails for which denomination set and target?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Standard US coins [25,10,5,1] always work with greedy."><span class="opt-letter">A</span>Coins = [25, 10, 5, 1], target = 30</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Greedy picks 10+1+1+1 = 4 coins. DP finds 7+7 = 2 coins. Greedy fails because 7 and 7 require not picking the 10 first."><span class="opt-letter">B</span>Coins = [10, 7, 1], target = 14</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Powers of 2 denominations are one case where greedy is optimal."><span class="opt-letter">C</span>Coins = [1, 2, 4, 8], target = 15</div>
+        <div class="quiz-option" data-correct="false" data-explanation="With coins [5, 3, 1] and target 7: greedy picks 5+1+1=3 coins; DP picks 5+1+1=3 or 3+3+1=3 — same. Not a failure case."><span class="opt-letter">D</span>Coins = [5, 3, 1], target = 7</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">Fractional knapsack is solvable by greedy while 0/1 knapsack is not. The key reason is:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Sorting works in both cases — it is not the differentiating factor."><span class="opt-letter">A</span>Fractional knapsack can be sorted, 0/1 cannot</div>
+        <div class="quiz-option" data-correct="true" data-explanation="In fractional knapsack, taking part of an item to fill remaining capacity never wastes it. In 0/1, you must take all or nothing — leaving gaps that the highest-ratio item cannot fill exactly, making greedy suboptimal."><span class="opt-letter">B</span>Fractional allows taking partial items to fill capacity exactly; 0/1 forces all-or-nothing decisions that can leave capacity gaps</div>
+        <div class="quiz-option" data-correct="false" data-explanation="DP also applies to fractional knapsack, just unnecessarily."><span class="opt-letter">C</span>Fractional knapsack cannot be solved with DP</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Item count is not the determining factor."><span class="opt-letter">D</span>0/1 knapsack has more items</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">How do you prove a greedy algorithm is correct?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Two main proof techniques: (1) <strong>Exchange argument</strong> — take any optimal solution. Show you can swap its first choice with the greedy choice without making things worse. Repeat until the optimal solution matches the greedy solution. (2) <strong>Greedy stays ahead</strong> — inductively prove that after each greedy step, the greedy solution is at least as good as any other solution at the same step. Without a proof, a greedy algorithm is just a heuristic.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is the jump game problem and why is greedy optimal?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Given an array where nums[i] = max jump from index i, can you reach the last index? Greedy: track the furthest index reachable. For each index i: if i &gt; reach, you cannot get here — return false. Otherwise: reach = max(reach, i + nums[i]). Return true. Greedy is optimal because the maximum reachable index is a monotonic property — extending reach never hurts you. O(n) time, O(1) space.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="10-dynamic-programming.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Dynamic Programming</div></div></a>
+    <a href="12-interview-guide.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Big-O &amp; Interview Guide</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

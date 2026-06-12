@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Binary Search — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#84CC16}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Binary Search</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 09</div>
+    <h1>Binary <span class="accent">Search</span></h1>
+    <p class="subtitle">Binary search turns O(n) linear scan into O(log n) by exploiting sorted order. More importantly, the binary search pattern applies to any problem where the search space can be halved each iteration.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Precondition: sorted array</strong> — binary search requires a monotonic search space. Without sorted order, you cannot safely eliminate half the elements.</li>
+      <li><strong>O(log n) comparisons</strong> — each step halves the search space. Searching 1 billion elements takes at most 30 comparisons.</li>
+      <li><strong>Off-by-one errors</strong> — the most common bug. Know two templates: [lo, hi] closed interval (L&lt;=R) vs [lo, hi) half-open (L&lt;R). Pick one and use it consistently.</li>
+      <li><strong>Binary search on answer</strong> — "find minimum x such that f(x) is true" — apply binary search on the value range, not the array index. Powerful generalization.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Standard Binary Search</h4><p>L=0, R=n-1. While L&lt;=R: mid=(L+R)/2. If arr[mid]==target: found. If arr[mid]&lt;target: L=mid+1. Else: R=mid-1. Terminates in O(log n). Use (L+R)//2, not (L+R)/2 in languages without integer division.</p></div>
+    <div class="mini-card"><h4>Lower Bound</h4><p>Find leftmost index where arr[i] &gt;= target. When arr[mid] &gt;= target: R=mid-1 (do not stop, search left). When arr[mid] &lt; target: L=mid+1. Return L. Used for insertion position.</p></div>
+    <div class="mini-card"><h4>Binary Search on Answer</h4><p>Is it possible to ship all packages in D days? Binary search D between [max_weight, total_weight]. Check feasibility in O(n). Total: O(n log n). Pattern: minimize/maximize a value subject to a constraint.</p></div>
+    <div class="mini-card"><h4>Rotated Sorted Array</h4><p>Array [4,5,6,7,0,1,2] — sorted, then rotated. Binary search still works: determine which half is sorted (compare with lo/hi), then check if target is in the sorted half. O(log n).</p></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># Standard binary search — O(log n)</span>
+<span class="kw">def</span> <span class="fn">binary_search</span>(nums, target):
+    L, R = <span class="num">0</span>, len(nums) - <span class="num">1</span>
+    <span class="kw">while</span> L <= R:
+        mid = (L + R) // <span class="num">2</span>
+        <span class="kw">if</span> nums[mid] == target: <span class="kw">return</span> mid
+        <span class="kw">elif</span> nums[mid] < target: L = mid + <span class="num">1</span>
+        <span class="kw">else</span>: R = mid - <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>
+
+<span class="cmt"># Binary search on answer: capacity to ship in D days</span>
+<span class="kw">def</span> <span class="fn">ship_in_days</span>(weights, days):
+    <span class="kw">def</span> <span class="fn">feasible</span>(cap):
+        ships, cur = <span class="num">1</span>, <span class="num">0</span>
+        <span class="kw">for</span> w <span class="kw">in</span> weights:
+            <span class="kw">if</span> cur + w > cap: ships += <span class="num">1</span>; cur = <span class="num">0</span>
+            cur += w
+        <span class="kw">return</span> ships <= days
+    L, R = <span class="fn">max</span>(weights), <span class="fn">sum</span>(weights)
+    <span class="kw">while</span> L < R:
+        mid = (L + R) // <span class="num">2</span>
+        <span class="kw">if</span> <span class="fn">feasible</span>(mid): R = mid
+        <span class="kw">else</span>: L = mid + <span class="num">1</span>
+    <span class="kw">return</span> L</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Binary Search Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Sorted array of 24 elements</h3></div>
+    <div id="demo-search"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Enter a target value. Select Binary or Linear search. Press Search. L (green), R (red), and M (amber) markers show the current bounds. Comparison count updates each step.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Algorithm</th><th>Best</th><th>Worst</th><th>Space</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>Linear Search</td><td>O(1)</td><td>O(n)</td><td>O(1)</td><td>None</td></tr>
+        <tr><td>Binary Search</td><td>O(1)</td><td>O(log n)</td><td>O(1)</td><td>Sorted array</td></tr>
+        <tr><td>Jump Search</td><td>O(1)</td><td>O(sqrt n)</td><td>O(1)</td><td>Sorted array</td></tr>
+        <tr><td>Interpolation</td><td>O(1)</td><td>O(n)</td><td>O(1)</td><td>Uniform distribution</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">Binary search on 1,000,000 elements requires at most how many comparisons?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="1000 would be close to sqrt(10^6), not log2(10^6)."><span class="opt-letter">A</span>1000</div>
+        <div class="quiz-option" data-correct="false" data-explanation="100 is too many — log2(10^6) is approximately 20."><span class="opt-letter">B</span>100</div>
+        <div class="quiz-option" data-correct="true" data-explanation="log2(10^6) ≈ 20. Binary search on 1 million elements needs at most 20 comparisons."><span class="opt-letter">C</span>20</div>
+        <div class="quiz-option" data-correct="false" data-explanation="10 comparisons would handle 2^10 = 1024 elements, not 1 million."><span class="opt-letter">D</span>10</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Why is mid = (L + R) // 2 potentially dangerous in languages with fixed-size integers?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Floor division is the right approach — the bug is in the sum, not the division."><span class="opt-letter">A</span>Floor division loses precision</div>
+        <div class="quiz-option" data-correct="true" data-explanation="If L and R are both close to INT_MAX, L + R overflows. Safe alternative: mid = L + (R - L) // 2."><span class="opt-letter">B</span>L + R can overflow integer bounds when both are large</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Division by 2 cannot cause division by zero."><span class="opt-letter">C</span>Division by 2 is undefined when L == R</div>
+        <div class="quiz-option" data-correct="false" data-explanation="All integers are divisible by 2 (with floor division)."><span class="opt-letter">D</span>It does not work when L + R is odd</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">"Binary search on the answer" applies when:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="This describes a standard binary search on an array, not binary search on the answer."><span class="opt-letter">A</span>The input array is sorted</div>
+        <div class="quiz-option" data-correct="true" data-explanation="If there is a monotonic feasibility function (possible/impossible changes exactly once as you vary a parameter), you can binary search on the parameter value — not the array index."><span class="opt-letter">B</span>The answer space is monotonic — a feasibility function changes from false to true at exactly one threshold</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A hashmap is not needed for binary search on the answer."><span class="opt-letter">C</span>You need O(1) lookups</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Integer answers are common but not required."><span class="opt-letter">D</span>The answer is always an integer</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">How do you search in a rotated sorted array?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">After rotation, one half of the array is always sorted. At each step: compare arr[mid] with arr[lo]. If arr[lo] &lt;= arr[mid], the left half is sorted — check if target is in [arr[lo], arr[mid]]; if yes, search left; else search right. Otherwise, the right half is sorted — similar logic. O(log n). Key insight: always determine which half is sorted first.</div></div></div>
+    <div class="qa-item"><button class="qa-q">Give an example of "binary search on the answer".<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Problem: find the minimum capacity C to ship all packages within D days. As C increases, it becomes easier to ship in D days — monotonic. Binary search C between [max_weight, sum_of_weights]. For each candidate C, simulate the shipping in O(n). Total: O(n log(sum)). Other examples: "minimum days to complete tasks", "koko eating bananas", "split array largest sum" — all monotonic feasibility problems.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="08-sorting.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Sorting</div></div></a>
+    <a href="10-dynamic-programming.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Dynamic Programming</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

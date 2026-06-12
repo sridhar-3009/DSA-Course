@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Big-O &amp; Interview Guide — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#E879F9}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Interview Guide</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 12</div>
+    <h1>Big-O &amp; <span class="accent">Interview Guide</span></h1>
+    <p class="subtitle">Complexity analysis is the language of algorithm interviews. Understanding what Big-O means, how to derive it, and how to reason about space/time trade-offs is the final skill that ties everything together.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span><span class="badge">Apple</span><span class="badge">Stripe</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Big-O = upper bound</strong> — f(n) = O(g(n)) means f grows no faster than c*g(n) for large n. Drop constants and lower-order terms.</li>
+      <li><strong>Big-Omega = lower bound</strong> — f(n) = Omega(g(n)). Big-Theta = tight bound (both O and Omega).</li>
+      <li><strong>Amortized analysis</strong> — average cost per operation over a sequence. Dynamic array append is O(1) amortized despite occasional O(n) copies.</li>
+      <li><strong>Space-time trade-off</strong> — using more memory often reduces time. Memoization: O(n) space, O(n) time vs O(1) space, O(2^n) time. Know when the trade-off is worth it.</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Drop Constants</h4><p>O(2n) = O(n). O(n/2) = O(n). Big-O describes growth rate, not absolute speed. A O(n) algorithm with a high constant factor can be slower than O(n^2) for small n — but Big-O describes asymptotic behavior.</p></div>
+    <div class="mini-card"><h4>Add vs Multiply</h4><p>Sequential loops: O(n) + O(m) = O(n+m). Nested loops over the same input: O(n) * O(n) = O(n^2). Nested over different inputs: O(n*m). This distinction catches many interview mistakes.</p></div>
+    <div class="mini-card"><h4>Recursion Complexity</h4><p>Use the Master Theorem: T(n) = aT(n/b) + O(n^d). If d &gt; log_b(a): O(n^d). If d = log_b(a): O(n^d log n). If d &lt; log_b(a): O(n^log_b(a)). Merge sort: T(n)=2T(n/2)+O(n) → O(n log n).</p></div>
+    <div class="mini-card"><h4>Space Complexity</h4><p>Count the extra memory used by the algorithm, not the input. Recursive DFS: O(h) stack space where h = tree height. In-place sort: O(1). Merge sort: O(n) auxiliary. Hash tables: O(n).</p></div>
+  </div>
+  <div class="section-label">Complexity Classes — Visual Chart</div>
+  <h2 class="section-title">Big-O Interactive Chart</h2>
+  <p class="section-desc">Hover over the chart to see exact operation counts for each complexity class at a given n. Adjust max n and max ops to zoom in or out.</p>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Big-O Complexity Chart</h3></div>
+    <div id="demo-dsa-interview"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Hover to inspect all complexity classes at a given n. Green = O(1), Cyan = O(log n), Violet = O(n), Amber = O(n log n), Red = O(n^2), Crimson = O(2^n).</div>
+  </div>
+
+  <div class="section-label">Data Structure Cheat Sheet</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Best Use Case</th></tr></thead>
+      <tbody>
+        <tr><td>Array</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td><td>Random access, cache-friendly iteration</td></tr>
+        <tr><td>Dynamic Array</td><td>O(1)</td><td>O(n)</td><td>O(1)*</td><td>O(n)</td><td>Append-heavy, general purpose</td></tr>
+        <tr><td>Linked List</td><td>O(n)</td><td>O(n)</td><td>O(1)</td><td>O(1)*</td><td>Frequent front inserts, unknown size</td></tr>
+        <tr><td>Stack / Queue</td><td>O(n)</td><td>O(n)</td><td>O(1)</td><td>O(1)</td><td>LIFO (undo, DFS), FIFO (BFS, scheduling)</td></tr>
+        <tr><td>Hash Table</td><td>O(1)*</td><td>O(1)*</td><td>O(1)*</td><td>O(1)*</td><td>Frequency count, lookup by key</td></tr>
+        <tr><td>BST (balanced)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>Sorted data, range queries</td></tr>
+        <tr><td>Heap</td><td>O(1) top</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td><td>Priority queue, k-th largest</td></tr>
+        <tr><td>Trie</td><td>O(L)</td><td>O(L)</td><td>O(L)</td><td>O(L)</td><td>Prefix search, autocomplete</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.5rem">* amortized or average case</p>
+
+  <div class="section-label">Algorithm Selection Guide</div>
+  <div class="comparison-grid">
+    <div class="comparison-card">
+      <h4>Use Two Pointers when</h4>
+      <ul>
+        <li>Array is sorted (or can be sorted)</li>
+        <li>Looking for a pair with a property</li>
+        <li>Removing duplicates in-place</li>
+        <li>Container with most water</li>
+      </ul>
+    </div>
+    <div class="comparison-card">
+      <h4>Use Sliding Window when</h4>
+      <ul>
+        <li>Subarray / substring problem</li>
+        <li>Fixed or variable window size</li>
+        <li>Contiguous elements constraint</li>
+        <li>Max/min sum, longest substring</li>
+      </ul>
+    </div>
+    <div class="comparison-card">
+      <h4>Use DP when</h4>
+      <ul>
+        <li>Overlapping subproblems</li>
+        <li>Optimal substructure</li>
+        <li>"Number of ways", min/max cost</li>
+        <li>Greedy fails or is unproven</li>
+      </ul>
+    </div>
+    <div class="comparison-card">
+      <h4>Use BFS when</h4>
+      <ul>
+        <li>Shortest path (unweighted)</li>
+        <li>Level-order processing</li>
+        <li>All paths of same length</li>
+        <li>Minimum steps / hops</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Interview Strategy</div>
+  <div class="steps">
+    <div class="step-item"><div class="step-num">1</div><div><h4>Clarify Constraints</h4><p>Ask: What are n's bounds? Sorted? Distinct? Can I use O(n) space? These constraints often determine the algorithm. n=10^9 means O(n) is borderline; n=10^6 means O(n log n) is fine; n=100 means O(n^2) is acceptable.</p></div></div>
+    <div class="step-item"><div class="step-num">2</div><div><h4>Brute Force First</h4><p>Always state the brute force O(n^2) or O(n^3) solution. This shows you understand the problem. Then optimize from there — interviewers want to see your thought process.</p></div></div>
+    <div class="step-item"><div class="step-num">3</div><div><h4>Identify the Pattern</h4><p>Sorted array + pair sum = two pointers. Subarray max/sum = sliding window. Optimal substructure = DP. Shortest path = BFS/Dijkstra. Dependency ordering = topological sort. Matching brackets/parentheses = stack.</p></div></div>
+    <div class="step-item"><div class="step-num">4</div><div><h4>Code, then Walk Through</h4><p>Write clean code with meaningful variable names. Then trace through a small example to verify. Check edge cases: empty input, single element, all duplicates, all same value.</p></div></div>
+    <div class="step-item"><div class="step-num">5</div><div><h4>State Complexity</h4><p>Always state both time and space complexity with justification. "O(n log n) for the sort, O(n) for the hashmap, so O(n log n) total time and O(n) space." Interviewers expect this without being asked.</p></div></div>
+  </div>
+
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 4</div>
+      <div class="quiz-q-text">What is the time complexity of the following code?<br><code>for i in range(n): for j in range(i, n): pass</code></div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n) would be a single loop."><span class="opt-letter">A</span>O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n log n) requires a halving pattern in one of the loops."><span class="opt-letter">B</span>O(n log n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="The inner loop runs n-i times. Total iterations = n + (n-1) + ... + 1 = n(n+1)/2 = O(n^2)."><span class="opt-letter">C</span>O(n^2)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^3) would require three nested loops."><span class="opt-letter">D</span>O(n^3)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 4</div>
+      <div class="quiz-q-text">A recursive function calls itself twice per call with input size n/2. Its recurrence is T(n) = 2T(n/2) + O(1). What is T(n)?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n log n) would require O(n) work per level, not O(1)."><span class="opt-letter">A</span>O(n log n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Master theorem: a=2, b=2, d=0. log_b(a) = log2(2) = 1. d=0 &lt; 1, so T(n) = O(n^log_b(a)) = O(n). This is the recurrence for binary tree traversal."><span class="opt-letter">B</span>O(n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(log n) would require one recursive call, not two."><span class="opt-letter">C</span>O(log n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) would require O(n) work per call."><span class="opt-letter">D</span>O(n^2)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 4</div>
+      <div class="quiz-q-text">You need to find if two strings are anagrams. The optimal solution uses:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Sorting both strings is O(n log n) — not optimal."><span class="opt-letter">A</span>Sort both strings and compare — O(n log n)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Count character frequencies in a hashmap (or 26-element array). Compare frequency maps. O(n) time, O(1) space (26 letter alphabet is constant)."><span class="opt-letter">B</span>Frequency map comparison — O(n) time, O(1) space</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) character comparison is too slow."><span class="opt-letter">C</span>Nested character comparison — O(n^2)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Trie is for prefix queries — not anagram detection."><span class="opt-letter">D</span>Trie insertion and lookup</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Which complexity grows faster for large n: O(n^2) or O(2^n)?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) is polynomial — it grows much slower than exponential."><span class="opt-letter">A</span>O(n^2)</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Exponential O(2^n) dwarfs polynomial O(n^2) for large n. At n=100: n^2 = 10,000. 2^100 ≈ 10^30. This is why exponential algorithms are impractical."><span class="opt-letter">B</span>O(2^n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="They are not equivalent — exponential grows far faster."><span class="opt-letter">C</span>They are equivalent for large n</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Growth rate depends on input — but for large n, O(2^n) is always larger."><span class="opt-letter">D</span>It depends on the specific input</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="section-label">Interview Q&amp;A</div>
+  <h2 class="section-title">Common Interview Questions</h2>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">What is the difference between O, Omega, and Theta notation?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner"><strong>O(g)</strong>: upper bound. f(n) grows no faster than g(n). Most commonly used. <strong>Omega(g)</strong>: lower bound. f(n) grows at least as fast as g(n). <strong>Theta(g)</strong>: tight bound. f(n) grows exactly at the rate of g(n) — both O and Omega. In interviews, "O(n log n)" usually means Theta(n log n) informally. The information-theoretic lower bound for comparison sorting is Omega(n log n).</div></div></div>
+    <div class="qa-item"><button class="qa-q">Explain the Master Theorem.<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">For divide-and-conquer T(n) = aT(n/b) + O(n^d): <strong>Case 1:</strong> d &gt; log_b(a) → O(n^d). Work at top level dominates. <strong>Case 2:</strong> d = log_b(a) → O(n^d log n). Work balanced across levels. <strong>Case 3:</strong> d &lt; log_b(a) → O(n^log_b(a)). Work at leaf level dominates. Examples: merge sort a=2, b=2, d=1 → log_b(a)=1=d → O(n log n). Binary search a=1, b=2, d=0 → log_2(1)=0=d → O(log n).</div></div></div>
+    <div class="qa-item"><button class="qa-q">When is O(n^2) acceptable?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">With n &lt;= 10^4, O(n^2) is around 10^8 operations — borderline. With n &lt;= 10^3, O(n^2) is easily acceptable. With n &lt;= 100, even O(n^3) works. Rules of thumb: 10^8 operations per second on modern hardware. n=10^5: need O(n log n) or better. n=10^6: need O(n). n=10^9: need O(log n) or O(1). Always check constraints before coding.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you analyze space complexity of recursive algorithms?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Space = maximum stack depth * space per call. Binary search (recursive): O(log n) call stack depth * O(1) per frame = O(log n). Merge sort: O(log n) depth * O(n) auxiliary merge space = O(n). DFS on balanced tree: O(h) where h=log n. DFS on skewed tree: O(n). Fibonacci without memoization: O(n) stack depth despite O(2^n) total calls — only one path is on the stack at a time.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is the difference between best/worst/average case?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner"><strong>Best case:</strong> minimum over all inputs of size n. Quicksort on already-sorted input (with median pivot): O(n log n). <strong>Worst case:</strong> maximum over all inputs. Quicksort with always-last-element pivot on sorted input: O(n^2). <strong>Average case:</strong> expected over random inputs. Quicksort average: O(n log n). In interviews, state worst case unless told otherwise. Amortized is different — it is average cost per operation over a sequence, not over inputs.</div></div></div>
+  </div>
+
+  <div class="topic-nav">
+    <a href="11-greedy.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Greedy Algorithms</div></div></a>
+    <a href="../index.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">All Topics</div><div class="topic-nav-title">Back to Course</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>

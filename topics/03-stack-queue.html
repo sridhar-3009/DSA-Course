@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+  <title>Stacks &amp; Queues — DSA Illustrated</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>:root{--topic-color:#10B981}</style>
+</head>
+<body>
+<div class="reading-progress" id="reading-progress"></div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon" style="color:var(--primary-soft)">&#9670;</span>DSA Illustrated</a>
+    <div class="navbar-links"><a href="../index.html#topics">All Topics</a></div>
+    <div class="navbar-actions"><button class="btn-icon" id="theme-toggle">&#9788;</button></div>
+  </div>
+</nav>
+<div class="container">
+  <div class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="../index.html#topics">Course</a><span class="breadcrumb-sep">›</span><span>Stacks &amp; Queues</span></div>
+  <div class="topic-header">
+    <div class="topic-badge">Topic 03</div>
+    <h1>Stacks &amp; <span class="accent">Queues</span></h1>
+    <p class="subtitle">Two restricted data structures that turn up everywhere — from browser history to BFS traversal. Their constraints (LIFO vs FIFO) are features, not limitations.</p>
+    <div class="company-badges"><span class="badge">Google</span><span class="badge">Meta</span><span class="badge">Amazon</span><span class="badge">Microsoft</span><span class="badge">Apple</span></div>
+  </div>
+  <div class="at-a-glance reveal">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Stack (LIFO)</strong> — last in, first out. Push to top, pop from top. Used for DFS, undo, call stack, expression evaluation.</li>
+      <li><strong>Queue (FIFO)</strong> — first in, first out. Enqueue at rear, dequeue from front. Used for BFS, task scheduling, message queues.</li>
+      <li><strong>Monotonic stack</strong> — maintain elements in increasing/decreasing order. Solves "next greater element" problems in O(n).</li>
+      <li><strong>Deque</strong> — double-ended queue. O(1) push/pop at both ends. Implements sliding window maximum in O(n).</li>
+    </ul>
+  </div>
+  <div class="section-label">Core Concepts</div>
+  <div class="mini-cards">
+    <div class="mini-card"><h4>Stack</h4><p>Push: add to top. Pop: remove from top. Peek: read top without removing. All O(1). Implemented with an array or linked list. The call stack in your CPU is a hardware stack.</p></div>
+    <div class="mini-card"><h4>Queue</h4><p>Enqueue: add to rear. Dequeue: remove from front. Both O(1) with a doubly linked list or circular array. Circular array avoids the O(n) shift after each dequeue.</p></div>
+    <div class="mini-card"><h4>Monotonic Stack</h4><p>Keep popping while the top violates a monotonic property. Example: "next greater element" — for each element, pop everything smaller and they all found their answer. O(n) total.</p></div>
+    <div class="mini-card"><h4>Balanced Brackets</h4><p>Push opening brackets. On closing bracket: if top matches, pop; else invalid. If stack is empty at end: valid. Classic interview problem demonstrating stack's LIFO property.</p></div>
+  </div>
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Stack and Queue Operations</h2>
+  <div class="steps">
+    <div class="step-item"><div class="step-num">1</div><div><h4>Stack Push — O(1)</h4><p>Increment top pointer. Write value at arr[top]. If using a linked list: create node, set node.next = head, set head = node. Both are constant time.</p></div></div>
+    <div class="step-item"><div class="step-num">2</div><div><h4>Stack Pop — O(1)</h4><p>Read arr[top]. Decrement top pointer. The memory is not erased — just logically excluded. Stack underflow (popping empty stack) must be guarded against explicitly.</p></div></div>
+    <div class="step-item"><div class="step-num">3</div><div><h4>Queue Enqueue — O(1)</h4><p>Add to rear. With a circular array: rear = (rear + 1) % capacity. With a linked list: update tail.next and tail pointer. Never O(n).</p></div></div>
+    <div class="step-item"><div class="step-num">4</div><div><h4>Queue Dequeue — O(1)</h4><p>Read from front. Advance front = (front + 1) % capacity. Circular array reuses slots. Without circular indexing, naive arrays dequeue in O(n) due to shifting.</p></div></div>
+    <div class="step-item"><div class="step-num">5</div><div><h4>Balanced Brackets Algorithm</h4><p>For each character: if opening bracket (([{), push it. If closing bracket: check if stack top is the matching opener. If yes, pop; if no or stack empty, return false. After all characters, return stack.isEmpty().</p></div></div>
+  </div>
+  <div class="code-block">
+    <div class="cb-header"><div class="cb-dots"><div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div></div><span class="cb-lang">Python</span></div>
+    <pre><span class="cmt"># Balanced brackets — O(n) time, O(n) space</span>
+<span class="kw">def</span> <span class="fn">is_valid</span>(s):
+    stack = []
+    pairs = {<span class="str">')'</span>: <span class="str">'('</span>, <span class="str">']'</span>: <span class="str">'['</span>, <span class="str">'}'</span>: <span class="str">'{'</span>}
+    <span class="kw">for</span> c <span class="kw">in</span> s:
+        <span class="kw">if</span> c <span class="kw">in</span> <span class="str">'([{'</span>:
+            stack.append(c)
+        <span class="kw">elif</span> <span class="kw">not</span> stack <span class="kw">or</span> stack[-<span class="num">1</span>] != pairs[c]:
+            <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">else</span>:
+            stack.pop()
+    <span class="kw">return</span> <span class="kw">not</span> stack
+
+<span class="cmt"># Monotonic stack: next greater element — O(n)</span>
+<span class="kw">def</span> <span class="fn">next_greater</span>(nums):
+    result = [-<span class="num">1</span>] * len(nums)
+    stack = []
+    <span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(nums):
+        <span class="kw">while</span> stack <span class="kw">and</span> nums[stack[-<span class="num">1</span>]] < v:
+            result[stack.pop()] = v
+        stack.append(i)
+    <span class="kw">return</span> result</pre>
+  </div>
+  <div class="section-label">Interactive Demo</div>
+  <h2 class="section-title">Stack and Queue Visualizer</h2>
+  <div class="demo-section">
+    <div class="demo-header"><h3>Stack (LIFO) left | Queue (FIFO) right</h3></div>
+    <div id="demo-stackqueue"><div class="demo-canvas-wrap"></div></div>
+    <div class="demo-hint">Push/Pop the stack. Enqueue/Dequeue the queue. Run Brackets Demo to see balanced bracket detection step by step.</div>
+  </div>
+  <div class="section-label">Complexity</div>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Operation</th><th>Stack</th><th>Queue</th><th>Deque</th></tr></thead>
+      <tbody>
+        <tr><td>Push / Enqueue</td><td>O(1)</td><td>O(1)</td><td>O(1)</td></tr>
+        <tr><td>Pop / Dequeue</td><td>O(1)</td><td>O(1)</td><td>O(1)</td></tr>
+        <tr><td>Peek / Front</td><td>O(1)</td><td>O(1)</td><td>O(1)</td></tr>
+        <tr><td>Search</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+        <tr><td>Space</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section-label">Quiz</div>
+  <h2 class="section-title">Check Your Understanding</h2>
+  <div class="quiz-section">
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 1 of 3</div>
+      <div class="quiz-q-text">Which data structure is used internally by DFS (depth-first search) when implemented iteratively?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="BFS uses a queue, not DFS."><span class="opt-letter">A</span>Queue</div>
+        <div class="quiz-option" data-correct="true" data-explanation="DFS explores as deep as possible before backtracking — LIFO behavior. A stack mirrors the call stack of recursive DFS."><span class="opt-letter">B</span>Stack</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A heap is a priority structure used in Dijkstra and heap sort."><span class="opt-letter">C</span>Heap</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A linked list alone does not define traversal order."><span class="opt-letter">D</span>Linked List</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 2 of 3</div>
+      <div class="quiz-q-text">Why does a naive array-backed queue have O(n) dequeue?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Searching is not part of dequeue."><span class="opt-letter">A</span>It must search for the front element</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Removing from the front of a non-circular array requires shifting all remaining elements one position left — O(n)."><span class="opt-letter">B</span>Removing from the front requires shifting all remaining elements left</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Memory allocation is O(1) amortized."><span class="opt-letter">C</span>It must allocate new memory on each dequeue</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Sorting is irrelevant to queue dequeue."><span class="opt-letter">D</span>It sorts elements before dequeuing</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 3 of 3</div>
+      <div class="quiz-q-text">The "next greater element" problem is solved in O(n) using a:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="A two-pointer approach requires a sorted array and does not apply here."><span class="opt-letter">A</span>Two-pointer technique</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Binary search cannot find the next greater element in unsorted input."><span class="opt-letter">B</span>Binary search</div>
+        <div class="quiz-option" data-correct="true" data-explanation="A monotonic stack processes each element once and resolves answers when a larger element is found. O(n) total push+pop operations."><span class="opt-letter">C</span>Monotonic stack</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A hashmap stores key-value pairs but does not inherently solve ordering problems."><span class="opt-letter">D</span>Hashmap</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+  <div class="section-label">Interview Q&amp;A</div>
+  <div class="qa-section">
+    <div class="qa-item"><button class="qa-q">How do you implement a queue using two stacks?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Maintain two stacks: inbox and outbox. Enqueue: push to inbox. Dequeue: if outbox is empty, pop everything from inbox onto outbox (reversing the order), then pop from outbox. Amortized O(1) per operation — each element is moved at most once from inbox to outbox.</div></div></div>
+    <div class="qa-item"><button class="qa-q">What is a monotonic stack and when do you use it?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">A monotonic stack maintains elements in strictly increasing or decreasing order. When a new element violates the order, pop elements until the order is restored. Each element is pushed and popped at most once — O(n) total. Use cases: next greater element, largest rectangle in histogram, trapping rainwater, daily temperatures.</div></div></div>
+    <div class="qa-item"><button class="qa-q">Design a stack that supports getMin() in O(1).<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Maintain a second "min stack" in parallel. On push(v): also push min(v, min_stack.top()) onto the min stack. On pop: pop from both stacks simultaneously. getMin() peeks the min stack — O(1). Space: O(n). Alternative: store (value, current_min) as pairs in a single stack.</div></div></div>
+  </div>
+  <div class="topic-nav">
+    <a href="02-linked-list.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Linked Lists</div></div></a>
+    <a href="04-trees.html" class="topic-nav-link next"><div class="topic-nav-arrow">&#8594;</div><div><div class="topic-nav-label">Next Topic</div><div class="topic-nav-title">Trees &amp; BST</div></div></a>
+  </div>
+</div>
+<footer class="site-footer" style="margin-top:0"><p class="footer-sub"><a href="../index.html" style="color:var(--primary-soft)">Back to Course</a> &mdash; DSA Illustrated</p></footer>
+<script src="../js/main.js"></script><script src="../js/demos.js"></script>
+</body></html>
