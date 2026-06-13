@@ -176,7 +176,7 @@ function makeProbUI(container,cfg){
   var stepB=el('button','prob-btn','Step →');
   var resetB=el('button','prob-btn','↺ Reset');
   var spdW=el('label','prob-spd');
-  spdW.innerHTML='Speed <input type="range" min="0.5" max="4" step="0.5" value="1" style="width:58px"> <span>1×</span>';
+  spdW.innerHTML='Speed <input type="range" min="0.25" max="3" step="0.25" value="1" style="width:62px"> <span>1×</span>';
   var sSldr=spdW.querySelector('input'),sSpan=spdW.querySelector('span');
   sSldr.addEventListener('input',function(){sSpan.textContent=this.value+'×';speed=parseFloat(this.value);});
   var ctr=el('span','prob-ctr','Step 0 / 0');
@@ -225,7 +225,7 @@ function makeProbUI(container,cfg){
         return;
       }
       var now=performance.now();
-      if(now-lastT>700/speed){doStep();lastT=now;}
+      if(now-lastT>1200/speed){doStep();lastT=now;}
       rafId=raf(loop);
     })();
   });
@@ -861,6 +861,451 @@ function initNumIslands(id){
   draw(null);
 }
 
+/* ════════════════════════════════════════════════════════════
+   Recursion Tree Renderer (shared by P9, P11, P12)
+════════════════════════════════════════════════════════════ */
+
+function layoutTree(root){
+  var xCtr={v:0},maxD={v:0};
+  function assign(n){
+    maxD.v=Math.max(maxD.v,n.depth);
+    if(!n.children.length){n.x=xCtr.v++;}
+    else{n.children.forEach(assign);n.x=(n.children[0].x+n.children[n.children.length-1].x)/2;}
+  }
+  assign(root);
+  root.maxDepth=maxD.v;
+  return {W:xCtr.v,maxD:maxD.v};
+}
+
+function collectNodes(root){
+  var all=[],byId={};
+  function walk(n){all.push(n);byId[n.id]=n;n.children.forEach(walk);}
+  walk(root);return{all:all,byId:byId};
+}
+
+function drawRecTree(ctx,cW,cH,root,layout,step){
+  bg(ctx,cW,cH);
+  if(!root)return;
+
+  var STACK_W=112, TW=cW-STACK_W-8, PAD=18;
+  var nodeR=Math.min(22,Math.max(10,(TW-PAD*2)/(layout.W*2.6)));
+  var colW=(TW-PAD*2)/layout.W;
+  var rowH=Math.min(72,(cH-PAD*2)/(layout.maxD+1));
+
+  function pos(n){return{x:PAD+n.x*colW+colW/2,y:PAD+n.depth*rowH+rowH/2};}
+
+  var nodes=collectNodes(root),all=nodes.all;
+  var activeSet=step&&step.active?step.active:{};
+  var doneSet=step&&step.done?step.done:{};
+  var retVals=step&&step.ret?step.ret:{};
+  var cacheSet=step&&step.cache?step.cache:{};
+  var leafSet=step&&step.leaf?step.leaf:{};
+
+  // Edges
+  all.forEach(function(n){
+    n.children.forEach(function(c){
+      var p1=pos(n),p2=pos(c);
+      var isA=activeSet[c.id]||activeSet[n.id];
+      ctx.save();
+      ctx.strokeStyle=isA?'rgba(251,146,60,.55)':'rgba(139,92,246,.13)';
+      ctx.lineWidth=isA?2.5:1;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y+nodeR);ctx.lineTo(p2.x,p2.y-nodeR);ctx.stroke();
+      ctx.restore();
+    });
+  });
+
+  // Nodes
+  all.forEach(function(n){
+    var p=pos(n);
+    var isA=activeSet[n.id],isDone=doneSet[n.id],isCache=cacheSet[n.id],isLeaf=leafSet[n.id];
+    var rv=retVals[n.id];
+    ctx.save();
+    if(isA){ctx.shadowColor='rgba(251,146,60,.9)';ctx.shadowBlur=20;}
+    else if(isLeaf){ctx.shadowColor='rgba(52,211,153,.65)';ctx.shadowBlur=16;}
+    else if(isDone){ctx.shadowColor='rgba(52,211,153,.3)';ctx.shadowBlur=6;}
+    else if(isCache){ctx.shadowColor='rgba(129,140,248,.65)';ctx.shadowBlur=14;}
+    ctx.beginPath();ctx.arc(p.x,p.y,nodeR,0,Math.PI*2);
+    var g=ctx.createRadialGradient(p.x,p.y-nodeR*.3,0,p.x,p.y,nodeR);
+    if(isA){g.addColorStop(0,'#C2410C');g.addColorStop(1,'#7C2D12');}
+    else if(isLeaf){g.addColorStop(0,'#047857');g.addColorStop(1,'#064E3B');}
+    else if(isCache){g.addColorStop(0,'#3730A3');g.addColorStop(1,'#1e1b4b');}
+    else if(isDone){g.addColorStop(0,'#065F46');g.addColorStop(1,'#052E16');}
+    else{g.addColorStop(0,'#2E1B6B');g.addColorStop(1,'#0a051e');}
+    ctx.fillStyle=g;ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle=isA?'#FB923C':isLeaf?'#34D399':isCache?'#818CF8':isDone?'rgba(52,211,153,.45)':'rgba(139,92,246,.3)';
+    ctx.lineWidth=1.8;ctx.stroke();
+    var fs=Math.max(7,Math.min(13,nodeR*.72));
+    ctx.fillStyle='#EDE9FE';ctx.font='bold '+fs+'px "JetBrains Mono",monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(n.label,p.x,p.y);
+    ctx.shadowBlur=0;
+    if(rv!=null){
+      ctx.fillStyle=isLeaf||isDone?'#34D399':'#A78BFA';
+      ctx.font=Math.max(6,fs-2)+'px "JetBrains Mono",monospace';
+      ctx.fillText('='+rv,p.x,p.y+nodeR+9);
+    }
+    ctx.restore();
+  });
+
+  // Stack panel divider
+  var SX=TW+12;
+  ctx.save();
+  ctx.strokeStyle='rgba(139,92,246,.1)';ctx.setLineDash([3,4]);ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(TW+4,12);ctx.lineTo(TW+4,cH-12);ctx.stroke();
+  ctx.setLineDash([]);ctx.restore();
+  lbl(ctx,'Call Stack',SX+(STACK_W-16)/2,13,'rgba(167,139,250,.4)',8);
+
+  var stack=step&&step.stack?step.stack:[];
+  var FH=Math.min(22,Math.floor((cH-36)/Math.max(stack.length,1)));
+  var maxV=Math.floor((cH-36)/FH);
+  var vis=stack.slice(-maxV);
+  if(stack.length>maxV)lbl(ctx,'+'+(stack.length-maxV)+' more',SX+(STACK_W-16)/2,26,'rgba(167,139,250,.3)',7);
+
+  vis.forEach(function(fr,i){
+    var fy=cH-16-(i+1)*(FH+2);
+    var isTop=i===vis.length-1;
+    ctx.save();
+    rr(ctx,SX,fy,STACK_W-18,FH,3);
+    var fg=ctx.createLinearGradient(SX,fy,SX,fy+FH);
+    if(isTop){fg.addColorStop(0,'#C2410C');fg.addColorStop(1,'#7C2D12');ctx.shadowColor='rgba(251,146,60,.5)';ctx.shadowBlur=8;}
+    else{fg.addColorStop(0,'#1e1b4b');fg.addColorStop(1,'#0a051e');}
+    ctx.fillStyle=fg;ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle=isTop?'rgba(251,146,60,.7)':'rgba(139,92,246,.22)';
+    ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=isTop?'#FDBA74':'rgba(196,181,253,.65)';
+    var fs2=Math.min(10,FH*.55);
+    ctx.font='bold '+fs2+'px "JetBrains Mono",monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    var fw=STACK_W-18, maxChars=Math.floor(fw/(fs2*.62));
+    var frLabel=fr.length>maxChars?fr.slice(0,maxChars-1)+'…':fr;
+    ctx.fillText(frLabel,SX+fw/2,fy+FH/2);
+    ctx.restore();
+  });
+
+  lbl(ctx,'depth: '+stack.length,SX+(STACK_W-16)/2,cH-5,'rgba(167,139,250,.3)',7);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P9 — Fibonacci (Recursion Tree)
+════════════════════════════════════════════════════════════ */
+function initFibonacci(id){
+  var container=document.getElementById(id);if(!container)return;
+  var N=5;
+  var root,layout;
+
+  function buildFibTree(n){
+    var idC={v:0};
+    function make(k,depth){
+      var node={id:idC.v++,label:'f('+k+')',k:k,children:[],depth:depth};
+      if(k>1)node.children=[make(k-1,depth+1),make(k-2,depth+1)];
+      return node;
+    }
+    return make(n,0);
+  }
+
+  function mkSnap(callStack,returned,byId,extra){
+    var active={},done={},ret={},stack=[],leaf=extra&&extra.leaf||{},cache=extra&&extra.cache||{};
+    callStack.forEach(function(id){active[id]=true;stack.push(byId[id].label);});
+    Object.keys(returned).forEach(function(k){done[k]=true;ret[k]=returned[k];});
+    return{active:active,done:done,ret:ret,leaf:leaf,cache:cache,stack:stack,
+           msg:extra&&extra.msg?extra.msg:''};
+  }
+
+  function buildBrute(root){
+    var c=collectNodes(root),byId=c.byId;
+    var steps=[],returned={},callStack=[];
+    function sim(node){
+      callStack.push(node.id);
+      steps.push(mkSnap(callStack,returned,byId,{msg:'Call '+node.label+' — stack depth '+callStack.length}));
+      if(node.k<=1){
+        returned[node.id]=node.k;callStack.pop();
+        var lf={};lf[node.id]=true;
+        steps.push(mkSnap(callStack,returned,byId,{leaf:lf,msg:node.label+' = '+node.k+' (base case)'}));
+        return node.k;
+      }
+      var l=sim(node.children[0]),r=sim(node.children[1]);
+      var res=l+r;returned[node.id]=res;callStack.pop();
+      steps.push(mkSnap(callStack,returned,byId,{msg:node.label+' = '+l+' + '+r+' = '+res+' → return'}));
+      return res;
+    }
+    sim(root);
+    steps.push(mkSnap([],returned,byId,{msg:'✓ f('+N+') = '+returned[root.id]+'. Total calls: '+steps.length+' (O(2ⁿ) — redundant!).'}));
+    return steps;
+  }
+
+  function buildMemo(root){
+    var c=collectNodes(root),byId=c.byId;
+    var steps=[],returned={},memo={},callStack=[];
+    function sim(node){
+      if(memo[node.k]!==undefined){
+        returned[node.id]=memo[node.k];
+        var ch={};ch[node.id]=true;
+        steps.push(mkSnap(callStack,returned,byId,{cache:ch,msg:'f('+node.k+') = '+memo[node.k]+' ✦ cache hit — skip entire subtree!'}));
+        return memo[node.k];
+      }
+      callStack.push(node.id);
+      steps.push(mkSnap(callStack,returned,byId,{msg:'Call '+node.label+' — not in cache yet'}));
+      if(node.k<=1){
+        returned[node.id]=node.k;memo[node.k]=node.k;callStack.pop();
+        var lf={};lf[node.id]=true;
+        steps.push(mkSnap(callStack,returned,byId,{leaf:lf,msg:node.label+' = '+node.k+' (base case, store in cache)'}));
+        return node.k;
+      }
+      var l=sim(node.children[0]),r=sim(node.children[1]);
+      var res=l+r;returned[node.id]=res;memo[node.k]=res;callStack.pop();
+      steps.push(mkSnap(callStack,returned,byId,{msg:node.label+' = '+l+'+'+r+' = '+res+' → cached!'}));
+      return res;
+    }
+    sim(root);
+    steps.push(mkSnap([],returned,byId,{msg:'✓ f('+N+') = '+returned[root.id]+'. Only '+steps.length+' calls! O(n) with memo.'}));
+    return steps;
+  }
+
+  function rebuild(a){
+    root=buildFibTree(N);layout=layoutTree(root);
+    return a==='memo'?buildMemo(root):buildBrute(root);
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:740,canvasH:330,
+    approaches:[{key:'brute',label:'🌳 Recursion O(2ⁿ)'},{key:'memo',label:'⚡ Memoization O(n)'}],
+    inputs:[{id:'n',lbl:'n (1–7):',elem:inp('5','',46)}],
+    onInputs:function(v){var n=parseInt(v.n);if(!isNaN(n)&&n>=1&&n<=7)N=n;},
+    buildSteps:function(a){return rebuild(a);},
+    onStep:function(s){drawRecTree(ui.ctx,ui.W,ui.H,root,layout,s);},
+    onReset:function(){rebuild('brute');drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);}
+  });
+  rebuild('brute');drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P10 — House Robber
+════════════════════════════════════════════════════════════ */
+function initHouseRobber(id){
+  var container=document.getElementById(id);if(!container)return;
+  var nums=[2,7,3,1,5];
+  var curA='dp';
+
+  function buildDP(a){
+    var out=[],n=a.length;if(!n)return out;
+    var dp=new Array(n).fill(0);dp[0]=a[0];
+    out.push({dp:dp.slice(),idx:0,msg:'dp[0] = '+a[0]+' (only house 0 reachable)'});
+    if(n>1){dp[1]=Math.max(a[0],a[1]);out.push({dp:dp.slice(),idx:1,msg:'dp[1] = max('+a[0]+','+a[1]+') = '+dp[1]});}
+    for(var i=2;i<n;i++){
+      dp[i]=Math.max(dp[i-1],dp[i-2]+a[i]);
+      out.push({dp:dp.slice(),idx:i,msg:'dp['+i+'] = max(dp['+(i-1)+']='+dp[i-1]+', dp['+(i-2)+']+'+a[i]+'='+(dp[i-2]+a[i])+') = '+dp[i]});
+    }
+    out.push({dp:dp.slice(),idx:n-1,ans:dp[n-1],msg:'Max loot = $'+dp[n-1]+'. O(n) DP.'});
+    return out;
+  }
+
+  function buildOpt(a){
+    var out=[],n=a.length;if(!n)return out;
+    var p2=0,p1=0;
+    for(var i=0;i<n;i++){
+      var cur=Math.max(p1,p2+a[i]);
+      out.push({p2:p2,p1:p1,cur:cur,idx:i,msg:'House '+i+'($'+a[i]+'): max(skip='+p1+', rob='+p2+'+'+a[i]+'='+(p2+a[i])+') = '+cur});
+      p2=p1;p1=cur;
+    }
+    out.push({p2:p2,p1:p1,ans:p1,idx:a.length-1,msg:'Max loot = $'+p1+'. O(n) time, O(1) space!'});
+    return out;
+  }
+
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var n=nums.length,CW=Math.min(68,(ui.W-60)/n-6),CH=50;
+    var sx=(ui.W-n*(CW+6)+6)/2,sy=22;
+    // Houses row
+    nums.forEach(function(v,i){
+      var st='default';
+      if(s){if(i===s.idx)st='active';else if(curA==='dp'&&s.dp&&i<s.idx&&s.dp[i]>0)st='sorted';}
+      cell(ui.ctx,sx+i*(CW+6),sy,CW,CH,'$'+v,st);
+      lbl(ui.ctx,'H'+i,sx+i*(CW+6)+CW/2,sy+CH+13,'rgba(167,139,250,.4)',8);
+    });
+    if(curA==='dp'&&s&&s.dp){
+      lbl(ui.ctx,'dp[ ] — max loot up to each house:',ui.W/2,sy+CH+30,'rgba(167,139,250,.5)',10);
+      s.dp.forEach(function(v,i){
+        var isSet=v>0||(s.idx>=i);
+        cell(ui.ctx,sx+i*(CW+6),sy+CH+40,CW,34,isSet?'$'+v:'?',isSet?'selected':'default');
+      });
+      // Arrow from prev cells
+      if(s.idx>=2){
+        ui.ctx.save();ui.ctx.strokeStyle='rgba(52,211,153,.4)';ui.ctx.lineWidth=1.5;ui.ctx.setLineDash([4,3]);
+        ui.ctx.beginPath();
+        ui.ctx.moveTo(sx+(s.idx-2)*(CW+6)+CW/2,sy+CH+57);
+        ui.ctx.lineTo(sx+s.idx*(CW+6)+CW/2,sy+CH+57);
+        ui.ctx.stroke();ui.ctx.setLineDash([]);ui.ctx.restore();
+      }
+    }
+    if(curA==='opt'&&s){
+      lbl(ui.ctx,'Rolling variables (O(1) space):',ui.W/2,sy+CH+38,'rgba(167,139,250,.5)',10);
+      cell(ui.ctx,ui.W/2-110,sy+CH+52,96,34,'prev: $'+s.p2,'default');
+      cell(ui.ctx,ui.W/2+14,sy+CH+52,96,34,'curr: $'+s.p1,'active');
+    }
+    if(s&&s.ans!=null)lbl(ui.ctx,'Max Loot: $'+s.ans,ui.W/2,ui.H-12,'#34D399',17);
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:700,canvasH:238,
+    approaches:[{key:'dp',label:'📊 DP Table O(n)'},{key:'opt',label:'🚀 O(1) Space'}],
+    inputs:[{id:'h',lbl:'Houses ($):',elem:inp('2,7,3,1,5','',180)}],
+    onApproach:function(a){curA=a;},
+    onInputs:function(v){
+      var p=v.h.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x);});
+      if(p.length>=2)nums=p;
+    },
+    buildSteps:function(a){curA=a;return a==='opt'?buildOpt(nums):buildDP(nums);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P11 — Subsets (Backtracking Tree)
+════════════════════════════════════════════════════════════ */
+function initSubsets(id){
+  var container=document.getElementById(id);if(!container)return;
+  var nums=[1,2,3];
+  var root,layout;
+
+  function buildSubsetsTree(a){
+    var idC={v:0};
+    function make(idx,cur,depth){
+      var label=cur.length?'['+cur.join(',')+']':'∅';
+      var node={id:idC.v++,label:label,cur:cur.slice(),idx:idx,children:[],depth:depth,isLeaf:idx>=a.length};
+      if(!node.isLeaf){
+        node.children=[make(idx+1,cur.concat([a[idx]]),depth+1),make(idx+1,cur,depth+1)];
+      }
+      return node;
+    }
+    return make(0,[],0);
+  }
+
+  function buildSubsetsSteps(root,a){
+    var c=collectNodes(root),byId=c.byId;
+    var steps=[],callStack=[],done={},leaf={};
+    function mkS(msg){
+      var active={},dk={},stack=[];
+      callStack.forEach(function(id){active[id]=true;stack.push(byId[id].label);});
+      Object.keys(done).forEach(function(k){dk[k]=true;});
+      return{active:active,done:dk,leaf:Object.assign({},leaf),ret:{},cache:{},stack:stack,msg:msg};
+    }
+    function sim(node){
+      callStack.push(node.id);
+      steps.push(mkS(node.isLeaf?'Leaf reached: subset = '+node.label:'At '+node.label+' — try including/excluding element '+(a[node.idx]||'?')));
+      if(node.isLeaf){
+        done[node.id]=true;leaf[node.id]=true;callStack.pop();
+        steps.push(mkS('✓ Add subset '+node.label+' to result'));
+        return;
+      }
+      steps.push(mkS('Include '+a[node.idx]+' → recurse to '+node.children[0].label));
+      sim(node.children[0]);
+      steps.push(mkS('Backtrack. Exclude '+a[node.idx]+' → recurse to '+node.children[1].label));
+      sim(node.children[1]);
+      done[node.id]=true;callStack.pop();
+    }
+    sim(root);
+    var dk={};Object.keys(done).forEach(function(k){dk[k]=true;});
+    steps.push({active:{},done:dk,leaf:Object.assign({},leaf),ret:{},cache:{},stack:[],
+      msg:'All '+Math.pow(2,a.length)+' subsets found!'});
+    return steps;
+  }
+
+  function rebuild(){
+    root=buildSubsetsTree(nums);layout=layoutTree(root);
+    return buildSubsetsSteps(root,nums);
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:740,canvasH:330,
+    inputs:[{id:'a',lbl:'Array (max 4):',elem:inp('1,2,3','',120)}],
+    onInputs:function(v){
+      var p=v.a.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x);});
+      if(p.length>=1&&p.length<=4)nums=p;
+    },
+    buildSteps:function(){return rebuild();},
+    onStep:function(s){drawRecTree(ui.ctx,ui.W,ui.H,root,layout,s);},
+    onReset:function(){rebuild();drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);}
+  });
+  rebuild();drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P12 — Permutations (Backtracking Tree)
+════════════════════════════════════════════════════════════ */
+function initPermutations(id){
+  var container=document.getElementById(id);if(!container)return;
+  var nums=[1,2,3];
+  var root,layout;
+
+  function buildPermTree(a){
+    var idC={v:0};
+    function make(cur,rem,depth){
+      var label=cur.length?'['+cur.join(',')+']':'start';
+      var node={id:idC.v++,label:label,cur:cur.slice(),rem:rem.slice(),children:[],depth:depth,isLeaf:rem.length===0};
+      if(!node.isLeaf){
+        rem.forEach(function(v,i){
+          var newRem=rem.slice(0,i).concat(rem.slice(i+1));
+          node.children.push(make(cur.concat([v]),newRem,depth+1));
+        });
+      }
+      return node;
+    }
+    return make([],a,0);
+  }
+
+  function buildPermSteps(root,a){
+    var c=collectNodes(root),byId=c.byId;
+    var steps=[],callStack=[],done={},leaf={};
+    function mkS(msg){
+      var active={},dk={},stack=[];
+      callStack.forEach(function(id){active[id]=true;stack.push(byId[id].label);});
+      Object.keys(done).forEach(function(k){dk[k]=true;});
+      return{active:active,done:dk,leaf:Object.assign({},leaf),ret:{},cache:{},stack:stack,msg:msg};
+    }
+    function sim(node){
+      callStack.push(node.id);
+      steps.push(mkS(node.isLeaf?'Permutation complete: '+node.label:'Built '+node.label+' — remaining: ['+node.rem.join(',')+']'));
+      if(node.isLeaf){
+        done[node.id]=true;leaf[node.id]=true;callStack.pop();
+        steps.push(mkS('✓ Emit permutation '+node.label));
+        return;
+      }
+      node.children.forEach(function(child,i){
+        var chosen=child.cur[child.cur.length-1];
+        steps.push(mkS('Choose '+chosen+' next (option '+(i+1)+'/'+node.rem.length+') → '+child.label));
+        sim(child);
+        if(i<node.rem.length-1)steps.push(mkS('Backtrack to '+node.label+' — try next option'));
+      });
+      done[node.id]=true;callStack.pop();
+    }
+    sim(root);
+    var dk={};Object.keys(done).forEach(function(k){dk[k]=true;});
+    var total=1;for(var i=2;i<=a.length;i++)total*=i;
+    steps.push({active:{},done:dk,leaf:Object.assign({},leaf),ret:{},cache:{},stack:[],
+      msg:'All '+total+' permutations found!'});
+    return steps;
+  }
+
+  function rebuild(){
+    root=buildPermTree(nums);layout=layoutTree(root);
+    return buildPermSteps(root,nums);
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:740,canvasH:330,
+    inputs:[{id:'a',lbl:'Array (max 4):',elem:inp('1,2,3','',120)}],
+    onInputs:function(v){
+      var p=v.a.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x);});
+      if(p.length>=1&&p.length<=4)nums=p;
+    },
+    buildSteps:function(){return rebuild();},
+    onStep:function(s){drawRecTree(ui.ctx,ui.W,ui.H,root,layout,s);},
+    onReset:function(){rebuild();drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);}
+  });
+  rebuild();drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -871,6 +1316,10 @@ window.DSAProbs={
   coinChange:initCoinChange,
   mergeIntervals:initMergeIntervals,
   numIslands:initNumIslands,
+  fibonacci:initFibonacci,
+  houseRobber:initHouseRobber,
+  subsets:initSubsets,
+  permutations:initPermutations,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -884,6 +1333,10 @@ window.DSAProbs={
     if(document.getElementById('prob-coin-change'))initCoinChange('prob-coin-change');
     if(document.getElementById('prob-merge-intervals'))initMergeIntervals('prob-merge-intervals');
     if(document.getElementById('prob-num-islands'))initNumIslands('prob-num-islands');
+    if(document.getElementById('prob-fibonacci'))initFibonacci('prob-fibonacci');
+    if(document.getElementById('prob-house-robber'))initHouseRobber('prob-house-robber');
+    if(document.getElementById('prob-subsets'))initSubsets('prob-subsets');
+    if(document.getElementById('prob-permutations'))initPermutations('prob-permutations');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();

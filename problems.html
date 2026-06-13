@@ -114,6 +114,22 @@
     <div class="tc-num">P8</div><div class="tc-title">Number of Islands</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
+  <a href="#p-fibonacci" class="prob-toc-card">
+    <div class="tc-num">P9</div><div class="tc-title">Fibonacci — Recursion Tree</div>
+    <div class="tc-diff diff-easy">Easy / Recursion</div>
+  </a>
+  <a href="#p-house-robber" class="prob-toc-card">
+    <div class="tc-num">P10</div><div class="tc-title">House Robber</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-subsets" class="prob-toc-card">
+    <div class="tc-num">P11</div><div class="tc-title">Subsets (Backtracking)</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-permutations" class="prob-toc-card">
+    <div class="tc-num">P12</div><div class="tc-title">Permutations (Backtracking)</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -258,6 +274,80 @@
       <span class="prob-compl-chip">O(m × n) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-num-islands"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P9 Fibonacci -->
+  <div class="prob-section" id="p-fibonacci">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P9 — Easy / Recursion</span>
+      <span class="prob-section-title">Fibonacci — Recursion Tree</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Recursion</span><span class="prob-tag">Memoization</span><span class="prob-tag">Dynamic Programming</span>
+    </div>
+    <p class="prob-section-desc">See the full <strong>recursion call tree</strong> and call stack. Switch to Memoization to watch cache hits collapse entire subtrees — turning O(2ⁿ) to O(n).</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(2ⁿ) time · O(n) stack</span>
+      <span class="prob-compl-chip">Memo: O(n) time · O(n) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-fibonacci"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P10 House Robber -->
+  <div class="prob-section" id="p-house-robber">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P10 — Medium</span>
+      <span class="prob-section-title">House Robber</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Arrays</span>
+    </div>
+    <p class="prob-section-desc">Rob houses without hitting adjacent ones. DP table fills left-to-right, taking the max of robbing now vs skipping. O(1) space uses just two variables.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">DP Table: O(n) · O(n) space</span>
+      <span class="prob-compl-chip">Optimized: O(n) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-house-robber"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P11 Subsets -->
+  <div class="prob-section" id="p-subsets">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P11 — Medium</span>
+      <span class="prob-section-title">Subsets — Backtracking Tree</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span>
+    </div>
+    <p class="prob-section-desc">At each element, the algorithm <em>includes</em> or <em>excludes</em> it — forming a binary decision tree. The call stack and backtracking are shown live.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(2ⁿ) time · O(n) stack depth</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-subsets"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P12 Permutations -->
+  <div class="prob-section" id="p-permutations">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P12 — Medium</span>
+      <span class="prob-section-title">Permutations — Backtracking Tree</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span>
+    </div>
+    <p class="prob-section-desc">Generate all permutations via backtracking. Each level of the tree chooses one of the remaining elements — the full n! decision tree is shown with the live call stack.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(n! × n) time · O(n) stack depth</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-permutations"></div></div>
   </div>
 
 </div>
