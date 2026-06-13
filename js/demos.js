@@ -119,7 +119,7 @@ function makeControls(container,opts){
   var resetBtn=document.createElement('button');resetBtn.className='algo-btn';resetBtn.textContent='Reset';
   var counter=document.createElement('span');counter.className='step-counter';counter.textContent='Step 0 / 0';
   var speedWrap=document.createElement('label');speedWrap.className='speed-wrap';
-  speedWrap.innerHTML='Speed <input type="range" min="0.5" max="4" step="0.5" value="1"> <span>1x</span>';
+  speedWrap.innerHTML='Speed <input type="range" min="0.25" max="3" step="0.25" value="1"> <span>1x</span>';
   var speedSlider=speedWrap.querySelector('input');
   var speedLabel=speedWrap.querySelector('span');
   speedSlider.addEventListener('input',function(){speedLabel.textContent=speedSlider.value+'x';if(opts.onSpeed)opts.onSpeed(parseFloat(speedSlider.value));});
@@ -261,7 +261,7 @@ function initArrayDemo(){
       return;
     }
     var now=performance.now();
-    var delay=600/speed;
+    var delay=1300/speed;
     if(now-lastTime>delay){
       applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;
     }
@@ -417,7 +417,7 @@ function initLinkedListDemo(){
       if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);ctrl.setStatus('Done!');}
       return;
     }
-    var now=performance.now(),delay=700/speed;
+    var now=performance.now(),delay=1300/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -535,7 +535,7 @@ function initStackQueueDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);}return;}
-    var now=performance.now(),delay=700/speed;
+    var now=performance.now(),delay=1300/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -661,7 +661,7 @@ function initTreeDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);ctrl.setStatus('Done!');}return;}
-    var now=performance.now(),delay=500/speed;
+    var now=performance.now(),delay=1200/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -793,7 +793,7 @@ function initHeapDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);ctrl.setStatus('Done!');}return;}
-    var now=performance.now(),delay=600/speed;
+    var now=performance.now(),delay=1300/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -924,7 +924,7 @@ function initHashDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);activeHash=-1;ctrl.setStatus('Done!');draw();}return;}
-    var now=performance.now(),delay=600/speed;
+    var now=performance.now(),delay=1300/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -1073,7 +1073,7 @@ function initGraphDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);ctrl.setStatus('Done!');}return;}
-    var now=performance.now(),delay=700/speed;
+    var now=performance.now(),delay=1300/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -1346,7 +1346,7 @@ function initSearchDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);}return;}
-    var now=performance.now(),delay=500/speed;
+    var now=performance.now(),delay=1200/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -1468,7 +1468,7 @@ function initDPDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);ctrl.setStatus('Done!');}return;}
-    var now=performance.now(),delay=(tab==='fib'?500:80)/speed;
+    var now=performance.now(),delay=(tab==='fib'?1200:80)/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
@@ -1591,7 +1591,7 @@ function initGreedyDemo(){
   var lastTime=0;
   function runAnim(){
     if(!playing||stepIdx>=steps.length){if(stepIdx>=steps.length){playing=false;ctrl.setPlaying(false);ctrl.setStatus('Done!');}return;}
-    var now=performance.now(),delay=600/speed;
+    var now=performance.now(),delay=1300/speed;
     if(now-lastTime>delay){applyStep(steps[stepIdx]);stepIdx++;ctrl.setStep(stepIdx,steps.length);lastTime=now;}
     rafId=raf(runAnim);
   }
