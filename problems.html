@@ -130,6 +130,22 @@
     <div class="tc-num">P12</div><div class="tc-title">Permutations (Backtracking)</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
+  <a href="#p-binary-search" class="prob-toc-card">
+    <div class="tc-num">P13</div><div class="tc-title">Binary Search</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-max-subarray" class="prob-toc-card">
+    <div class="tc-num">P14</div><div class="tc-title">Maximum Subarray</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-three-sum" class="prob-toc-card">
+    <div class="tc-num">P15</div><div class="tc-title">3Sum</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-lcs" class="prob-toc-card">
+    <div class="tc-num">P16</div><div class="tc-title">Longest Common Subsequence</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -348,6 +364,82 @@
       <span class="prob-compl-chip">O(n! × n) time · O(n) stack depth</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-permutations"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P13 Binary Search -->
+  <div class="prob-section" id="p-binary-search">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P13 — Easy</span>
+      <span class="prob-section-title">Binary Search</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span>
+    </div>
+    <p class="prob-section-desc">Watch L, M, R pointers narrow the search window. Linear search checks every element; binary search halves the range each step — O(n) vs O(log n) on a sorted array.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Linear: O(n)</span>
+      <span class="prob-compl-chip">Binary: O(log n)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-binary-search"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P14 Maximum Subarray -->
+  <div class="prob-section" id="p-max-subarray">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P14 — Medium</span>
+      <span class="prob-section-title">Maximum Subarray (Kadane's)</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Dynamic Programming</span>
+    </div>
+    <p class="prob-section-desc">Find the contiguous subarray with largest sum. Brute O(n²) tries every pair; Kadane's O(n) decides at each step: extend the window or restart from here.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n²)</span>
+      <span class="prob-compl-chip">Kadane: O(n) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-subarray"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P15 3Sum -->
+  <div class="prob-section" id="p-three-sum">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P15 — Medium</span>
+      <span class="prob-section-title">3Sum</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Sorting</span>
+    </div>
+    <p class="prob-section-desc">Find all unique triplets summing to zero. Brute: O(n³) triple loop. Two-pointer: sort, fix one element, shrink L/R window — O(n²) with duplicate skipping.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n³)</span>
+      <span class="prob-compl-chip">Two Pointers: O(n²)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-three-sum"></div></div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P16 LCS -->
+  <div class="prob-section" id="p-lcs">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P16 — Medium</span>
+      <span class="prob-section-title">Longest Common Subsequence</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">2D Grid</span><span class="prob-tag">Strings</span>
+    </div>
+    <p class="prob-section-desc">Watch the 2D DP table fill cell by cell. Character matches glow green; mismatches take the max of left/above. The bottom-right cell holds the final LCS length.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(m × n) time</span>
+      <span class="prob-compl-chip">O(m × n) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lcs"></div></div>
   </div>
 
 </div>
