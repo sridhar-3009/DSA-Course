@@ -83,6 +83,11 @@
       </tbody>
     </table>
   </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Defining the DP state incorrectly</h4><p>The hardest part of DP is defining what dp[i] represents. A wrong state definition leads to a correct-looking recurrence that produces wrong answers. Write the definition in English first: "dp[i] = the minimum coins needed to make amount i." Then derive the recurrence from that definition — not the other way around.</p></div>
+    <div class="antipattern"><h4>Applying DP when greedy suffices (or vice versa)</h4><p>Activity selection and fractional knapsack are solvable with greedy — DP is overkill. Coin change with arbitrary denominations cannot use greedy — DP is required. The test: does a locally optimal choice always lead to a globally optimal solution? If yes, greedy. If the optimal subproblems overlap and order matters, DP.</p></div>
+  </div>
   <div class="section-label">Quiz</div>
   <h2 class="section-title">Check Your Understanding</h2>
   <div class="quiz-section">
@@ -116,6 +121,18 @@
         <div class="quiz-option" data-correct="false" data-explanation="It is the other way around."><span class="opt-letter">B</span>Tabulation uses recursion; memoization fills a table iteratively</div>
         <div class="quiz-option" data-correct="false" data-explanation="Both do not use recursion — memoization does."><span class="opt-letter">C</span>Both use recursion</div>
         <div class="quiz-option" data-correct="false" data-explanation="Neither can use recursion is incorrect."><span class="opt-letter">D</span>Neither uses recursion</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Which of the following does NOT have optimal substructure suitable for DP?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Shortest path does have optimal substructure — a shortest path through v contains a shortest path from source to v."><span class="opt-letter">A</span>Shortest path (non-negative weights)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="0/1 Knapsack has optimal substructure — DP fills a table of item×capacity states."><span class="opt-letter">B</span>0/1 Knapsack</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Longest simple path (no repeated vertices) does NOT have optimal substructure. Subpaths of the longest path are not necessarily longest paths themselves — you cannot reuse overlapping subpaths without revisiting nodes. This makes it NP-hard."><span class="opt-letter">C</span>Longest simple path (no repeated nodes)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Edit distance has optimal substructure — dp[i][j] depends on dp[i-1][j-1], dp[i-1][j], dp[i][j-1]."><span class="opt-letter">D</span>Edit distance</div>
       </div>
       <div class="quiz-feedback"></div>
     </div>

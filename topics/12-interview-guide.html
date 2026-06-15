@@ -116,6 +116,11 @@
     <div class="step-item"><div class="step-num">5</div><div><h4>State Complexity</h4><p>Always state both time and space complexity with justification. "O(n log n) for the sort, O(n) for the hashmap, so O(n log n) total time and O(n) space." Interviewers expect this without being asked.</p></div></div>
   </div>
 
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Confusing O with runtime</h4><p>O(n log n) does not mean "fast" — a very large constant makes it slower than O(n^2) for small n. And O(1) does not mean instant — a hash table lookup is O(1) but involves hashing, memory access, and possible cache miss. Big-O describes growth rate, not absolute speed.</p></div>
+    <div class="antipattern"><h4>Stating only time complexity, forgetting space</h4><p>Every algorithm has both. Interviewers always want both. A O(n) time solution that uses O(n) space is often acceptable but sometimes not (embedded systems, large datasets). Memoized solutions trade O(1)→O(n) space for exponential→polynomial time — always name that trade-off explicitly.</p></div>
+  </div>
   <div class="section-label">Quiz</div>
   <h2 class="section-title">Check Your Understanding</h2>
   <div class="quiz-section">

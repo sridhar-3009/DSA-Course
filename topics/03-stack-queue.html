@@ -94,6 +94,11 @@
       </tbody>
     </table>
   </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Using a list as a queue (O(n) dequeue)</h4><p>In Python, <code>list.pop(0)</code> is O(n) — all elements shift left. Use <code>collections.deque</code> which is O(1) at both ends. In interviews, always clarify whether the queue is array-backed (naive) or linked/circular before discussing complexity.</p></div>
+    <div class="antipattern"><h4>Forgetting to handle empty stack on pop</h4><p>Popping an empty stack is undefined behavior in C++ and throws in Python/Java. Every production pop should check <code>if not stack</code> or catch the exception. In bracket validation, an empty stack on a closing bracket means invalid — don't pop blindly.</p></div>
+  </div>
   <div class="section-label">Quiz</div>
   <h2 class="section-title">Check Your Understanding</h2>
   <div class="quiz-section">
@@ -127,6 +132,18 @@
         <div class="quiz-option" data-correct="false" data-explanation="Binary search cannot find the next greater element in unsorted input."><span class="opt-letter">B</span>Binary search</div>
         <div class="quiz-option" data-correct="true" data-explanation="A monotonic stack processes each element once and resolves answers when a larger element is found. O(n) total push+pop operations."><span class="opt-letter">C</span>Monotonic stack</div>
         <div class="quiz-option" data-correct="false" data-explanation="A hashmap stores key-value pairs but does not inherently solve ordering problems."><span class="opt-letter">D</span>Hashmap</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">A deque (double-ended queue) supports which operations in O(1)?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Search is O(n) for a deque."><span class="opt-letter">A</span>Push, pop, and search</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Random access (by index) is not O(1) for a linked-list deque."><span class="opt-letter">B</span>Push, pop, and random access</div>
+        <div class="quiz-option" data-correct="true" data-explanation="A deque supports O(1) push/pop at both front and back. This is its defining feature over a regular stack or queue."><span class="opt-letter">C</span>Push and pop at both front and back</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Binary search requires a sorted, randomly accessible structure — not a deque."><span class="opt-letter">D</span>Push, pop, and binary search</div>
       </div>
       <div class="quiz-feedback"></div>
     </div>

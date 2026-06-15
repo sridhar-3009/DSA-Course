@@ -135,6 +135,18 @@
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Dijkstra's algorithm fails when graph edges have:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Large positive weights are handled correctly by Dijkstra."><span class="opt-letter">A</span>Large positive weights</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Dijkstra assumes once a node is visited with shortest distance, it cannot be improved. Negative edges break this invariant — a later path through a negative edge may be shorter. Use Bellman-Ford for negative weights."><span class="opt-letter">B</span>Negative weights</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Dijkstra handles weight 0 correctly."><span class="opt-letter">C</span>Zero-weight edges</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Float weights are supported — Dijkstra only needs non-negative weights."><span class="opt-letter">D</span>Floating-point weights</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">How do you detect a cycle in a directed graph?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">DFS with three states per node: unvisited (white), in-current-path (gray), fully-done (black). If you reach a gray node during DFS, you found a back edge — a cycle exists. Alternatively, topological sort (Kahn's algorithm): if not all nodes are in the topological order, there is a cycle.</div></div></div>

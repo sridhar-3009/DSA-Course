@@ -134,10 +134,23 @@
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">The activity selection problem (pick max non-overlapping intervals) is solved greedily by:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Sorting by start time does not lead to the optimal selection — an early-starting long activity blocks many short ones."><span class="opt-letter">A</span>Sorting by start time and always picking the first available</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Sorting by end time and greedily picking each non-overlapping activity maximizes the number of activities. The exchange argument proves that the earliest-finishing activity never prevents a better choice."><span class="opt-letter">B</span>Sorting by end time and picking each activity that starts after the last selected</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Shortest duration does not guarantee maximum count of non-overlapping activities."><span class="opt-letter">C</span>Sorting by duration (shortest first)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="DP solves this in O(n^2) — greedy gives O(n log n) and is provably optimal."><span class="opt-letter">D</span>Dynamic programming on interval overlaps</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">How do you prove a greedy algorithm is correct?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Two main proof techniques: (1) <strong>Exchange argument</strong> — take any optimal solution. Show you can swap its first choice with the greedy choice without making things worse. Repeat until the optimal solution matches the greedy solution. (2) <strong>Greedy stays ahead</strong> — inductively prove that after each greedy step, the greedy solution is at least as good as any other solution at the same step. Without a proof, a greedy algorithm is just a heuristic.</div></div></div>
     <div class="qa-item"><button class="qa-q">What is the jump game problem and why is greedy optimal?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Given an array where nums[i] = max jump from index i, can you reach the last index? Greedy: track the furthest index reachable. For each index i: if i &gt; reach, you cannot get here — return false. Otherwise: reach = max(reach, i + nums[i]). Return true. Greedy is optimal because the maximum reachable index is a monotonic property — extending reach never hurts you. O(n) time, O(1) space.</div></div></div>
+    <div class="qa-item"><button class="qa-q">When does Huffman coding (greedy) produce optimal prefix codes?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Huffman coding builds an optimal prefix-free code by greedily merging the two lowest-frequency symbols at each step. It is provably optimal for any set of symbol frequencies. Key insight: the two least-frequent symbols should have the longest codes (deepest in the tree) — greedy always places them at the bottom. Proof by exchange argument: any swap of a symbol with higher frequency to a lower position only increases the total encoding length. Used in gzip, JPEG, MP3.</div></div></div>
   </div>
   <div class="topic-nav">
     <a href="10-dynamic-programming.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Dynamic Programming</div></div></a>

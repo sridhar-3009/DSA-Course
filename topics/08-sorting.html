@@ -89,6 +89,11 @@
       </tbody>
     </table>
   </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Quicksort with a bad pivot on sorted input</h4><p>Always picking the last (or first) element as pivot on an already-sorted array gives O(n²) — every partition puts 0 elements on one side. Randomize the pivot or use median-of-three. In interviews, always mention this degradation when discussing quicksort.</p></div>
+    <div class="antipattern"><h4>Using a non-stable sort when order of equal elements matters</h4><p>Sorting people by age when they also have a secondary sort by name: a non-stable sort (quicksort, heap sort) may scramble same-age names. Merge sort and Python's Timsort are stable. Always ask: do equal elements need to preserve relative order?</p></div>
+  </div>
   <div class="section-label">Quiz</div>
   <h2 class="section-title">Check Your Understanding</h2>
   <div class="quiz-section">
@@ -126,10 +131,23 @@
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Counting sort achieves O(n+k) time. What restriction does this impose?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Counting sort requires integers, but they don't need to be positive — they can be negative with an offset."><span class="opt-letter">A</span>Elements must be positive</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Counting sort creates a count array of size k (the range of values). If k is huge (e.g., sorting 64-bit integers), the O(k) space and time become impractical. Best when k is small relative to n."><span class="opt-letter">B</span>The value range k must be small — O(k) space is needed for the count array</div>
+        <div class="quiz-option" data-correct="false" data-explanation="The array can have duplicates — counting sort handles them naturally."><span class="opt-letter">C</span>Elements must be unique</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Counting sort requires integer keys — floats are not directly supported."><span class="opt-letter">D</span>The array must already be partially sorted</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">When is insertion sort a good choice?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Insertion sort excels on small arrays (n &lt; 20) and nearly-sorted arrays. O(n) on sorted input (best case). Low overhead — no recursion, no extra space. Java's Arrays.sort and Python's Timsort use insertion sort for small subarrays within their merge sort implementations. Also useful in online settings where elements arrive one at a time.</div></div></div>
     <div class="qa-item"><button class="qa-q">What is Timsort and why does Python use it?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Timsort (Tim Peters, 2002) is a hybrid of merge sort and insertion sort. It finds already-sorted "runs" in the input (exploiting natural ordering), sorts small runs with insertion sort, then merges runs. O(n) on nearly sorted data, O(n log n) worst case. Stable. This pattern is extremely common in real-world data — database results, log files, user input. Python's list.sort() and Java's Arrays.sort() for objects use Timsort.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you sort a list of objects by multiple criteria?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Use a stable sort with a comparison key that encodes all criteria. Python: <code>sorted(items, key=lambda x: (x.age, x.name))</code> — sort by age first, then by name for ties. Java: <code>Comparator.comparing(Person::getAge).thenComparing(Person::getName)</code>. A stable sort preserves the original order for equal elements, so you can also sort multiple times (sort by secondary key first, then primary). The stability ensures ties from the primary sort retain the secondary ordering.</div></div></div>
   </div>
   <div class="topic-nav">
     <a href="07-graphs.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Graphs</div></div></a>

@@ -127,10 +127,23 @@ freq = {}
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">What is the average-case time complexity of a hashmap get() operation?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="true" data-explanation="Hash the key to find the bucket, then do one (or a few, with collisions) comparisons. Under a good hash function and load factor, this is O(1) average."><span class="opt-letter">A</span>O(1) average</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(log n) would imply traversing a binary tree — that is the worst case for chaining in Java 8+, not average."><span class="opt-letter">B</span>O(log n)</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n) is the worst case (all keys collide to one bucket), not the average."><span class="opt-letter">C</span>O(n) worst case always</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n log n) applies to sorting — not hashmap lookup."><span class="opt-letter">D</span>O(n log n)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">Separate chaining vs open addressing — when to use each?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner"><strong>Separate chaining:</strong> handles high load factors gracefully, simpler deletion, no clustering. Downside: extra memory for pointers, poor cache locality. <strong>Open addressing:</strong> better cache performance (data stays in the array), lower memory overhead. Downside: performance degrades sharply at high load factors, deletion requires tombstones (or backshifting). Use chaining when load factor may be high or deletions are frequent. Use open addressing when cache performance is critical and load factor is controlled.</div></div></div>
     <div class="qa-item"><button class="qa-q">How do you design a hashmap from scratch?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Key decisions: (1) Hash function — key.hashCode() modulo array size. (2) Collision strategy — separate chaining (simpler) or linear probing (faster). (3) Load factor threshold — 0.75 is standard. (4) Resize factor — double on resize. (5) Handling deletions — tombstones for open addressing. Core operations: put(k,v): hash k, find bucket, update or append. get(k): hash k, find bucket, scan for k. remove(k): find and remove, mark tombstone if open addressing.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How do you count word frequencies efficiently?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Use a hashmap: key = word, value = count. One pass through the text: freq[word] = freq.get(word, 0) + 1. O(n) time and space. To find the top k most frequent: use a min-heap of size k — for each (word, count) pair, if count > heap.min, replace. O(n log k). Alternatively, sort by frequency in O(n log n). The hashmap is the bottleneck on memory — counts for a large vocabulary fit in memory, but for a stream, use Count-Min Sketch.</div></div></div>
   </div>
   <div class="topic-nav">
     <a href="05-heaps.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Heaps</div></div></a>

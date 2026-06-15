@@ -140,6 +140,18 @@
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Merging two sorted linked lists of length m and n takes:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="O(m+n) sorting would be required only if the lists were unsorted."><span class="opt-letter">A</span>O((m+n) log(m+n)) with a sort</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Compare the heads of both lists, pick the smaller, advance that pointer. One pass through all m+n nodes — O(m+n)."><span class="opt-letter">B</span>O(m+n) — one pass comparing heads</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(m*n) would result from a nested loop — not the merge approach."><span class="opt-letter">C</span>O(m * n) — nested comparison</div>
+        <div class="quiz-option" data-correct="false" data-explanation="O(n^2) is not achievable for merging two already-sorted lists."><span class="opt-letter">D</span>O(n^2)</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">When would you choose a linked list over an array?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Choose a linked list when: (1) you frequently insert/delete at the front or middle and have a pointer to the position; (2) you do not need random access by index; (3) the size is unknown and you want to avoid reallocation. Choose an array when you need O(1) index access, better cache performance (contiguous memory), or binary search.</div></div></div>

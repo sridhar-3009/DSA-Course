@@ -73,7 +73,7 @@
 <div class="prob-hero">
   <div class="prob-tag-row">
     <span class="prob-tag">NeetCode 150</span>
-    <span class="prob-tag">8 Problems</span>
+    <span class="prob-tag">20 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
   </div>
@@ -144,6 +144,22 @@
   </a>
   <a href="#p-lcs" class="prob-toc-card">
     <div class="tc-num">P16</div><div class="tc-title">Longest Common Subsequence</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-product-except-self" class="prob-toc-card">
+    <div class="tc-num">P17</div><div class="tc-title">Product of Array Except Self</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-container-water" class="prob-toc-card">
+    <div class="tc-num">P18</div><div class="tc-title">Container With Most Water</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-jump-game" class="prob-toc-card">
+    <div class="tc-num">P19</div><div class="tc-title">Jump Game</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-combination-sum" class="prob-toc-card">
+    <div class="tc-num">P20</div><div class="tc-title">Combination Sum</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
 </div>
@@ -442,11 +458,183 @@
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-lcs"></div></div>
   </div>
 
+
+  <div class="prob-divider"></div>
+
+  <!-- P17 Product of Array Except Self -->
+  <div class="prob-section" id="p-product-except-self">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P17 — Medium</span>
+      <span class="prob-section-title">Product of Array Except Self</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Prefix Products</span>
+    </div>
+    <p class="prob-section-desc">Return an array where <code>output[i]</code> is the product of all elements except <code>nums[i]</code>. No division allowed. Brute: O(n²). Optimal: prefix × suffix pass in O(n).</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n²) · O(1)</span>
+      <span class="prob-compl-chip">Prefix×Suffix: O(n) · O(1) output</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-product-except-self"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">Why does the problem say "without using division"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Division is not unusually slow — the restriction is about correctness."><span class="opt-letter">A</span>Division is too slow for large arrays</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If any element is 0, dividing the total product by 0 is undefined. The prefix×suffix approach handles zeros correctly without any division."><span class="opt-letter">B</span>nums[i] could be 0, making total_product / nums[i] undefined</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Integer overflow is a concern but it is not the reason division is banned."><span class="opt-letter">C</span>The product would overflow before division</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The output does not need to be sorted."><span class="opt-letter">D</span>Division would change the order of elements</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">In the optimal prefix×suffix approach, what does prefix[i] contain?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="prefix[i] = nums[0] × nums[1] × … × nums[i-1]. Then a reverse suffix pass multiplies suffix[i] = nums[i+1] × … × nums[n-1]. output[i] = prefix[i] × suffix[i]."><span class="opt-letter">A</span>The product of all elements strictly to the left of index i</div>
+          <div class="quiz-option" data-correct="false" data-explanation="That would be suffix[i], computed in the second pass."><span class="opt-letter">B</span>The product of all elements strictly to the right of index i</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Prefix stores a running product, not a running sum."><span class="opt-letter">C</span>The sum of all elements up to index i</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Prefix stores the product of left elements, not the maximum."><span class="opt-letter">D</span>The maximum element in nums[0..i]</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P18 Container With Most Water -->
+  <div class="prob-section" id="p-container-water">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P18 — Medium</span>
+      <span class="prob-section-title">Container With Most Water</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span>
+    </div>
+    <p class="prob-section-desc">Find two bars that form a container holding the most water. Brute: O(n²) try every pair. Two-pointer: always move the shorter bar inward — area = min(h[L], h[R]) × (R − L).</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n²)</span>
+      <span class="prob-compl-chip">Two Pointers: O(n) · O(1)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-container-water"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">In the two-pointer approach, why do we always move the shorter bar's pointer inward?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Area = min(h[L], h[R]) × width. Moving the taller bar inward can only decrease or keep the same min height while also decreasing width — area can only go down. Moving the shorter bar is the only choice that could yield a larger area."><span class="opt-letter">A</span>Moving the taller bar can only reduce area; moving the shorter bar is the only way to possibly find a larger container</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Width always decreases as pointers move inward. The benefit comes from a possible height increase."><span class="opt-letter">B</span>Moving the shorter bar always increases the width</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The shorter bar contributes to the area as the bottleneck height — the water rises to the shorter bar's height."><span class="opt-letter">C</span>The shorter bar does not contribute to the water volume</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Only one pointer moves at a time — the one pointing to the shorter bar."><span class="opt-letter">D</span>Both pointers always move simultaneously</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">How is area calculated for bars at positions L and R with heights h[L] and h[R]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Using the max height would overflow the shorter bar — water is limited by the shorter side."><span class="opt-letter">A</span>max(h[L], h[R]) × (R − L)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Water is bounded by the shorter bar, so height = min(h[L], h[R]). Width is the distance between the bars: (R − L). Area = min(h[L], h[R]) × (R − L)."><span class="opt-letter">B</span>min(h[L], h[R]) × (R − L)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The sum of heights is not the correct formula for water area."><span class="opt-letter">C</span>(h[L] + h[R]) × (R − L)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Multiplying the heights gives the wrong unit — it is not the water volume formula."><span class="opt-letter">D</span>h[L] × h[R]</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P19 Jump Game -->
+  <div class="prob-section" id="p-jump-game">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P19 — Medium</span>
+      <span class="prob-section-title">Jump Game</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Greedy</span>
+    </div>
+    <p class="prob-section-desc">Each element is your max jump length from that position. Can you reach the last index? Brute: O(2ⁿ) DFS. Greedy: O(n) — track the farthest index reachable so far.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(2ⁿ)</span>
+      <span class="prob-compl-chip">Greedy: O(n) · O(1)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-jump-game"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">What is the greedy invariant the O(n) Jump Game solution maintains?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="maxReach = the farthest index reachable from any position visited so far. At each index i, if i > maxReach you cannot reach it — return false. Otherwise update maxReach = max(maxReach, i + nums[i])."><span class="opt-letter">A</span>maxReach: the farthest index reachable from any position visited so far</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Always jumping exactly nums[i] steps may miss reachable paths and is not the greedy strategy used."><span class="opt-letter">B</span>Always jump exactly nums[i] steps at each position</div>
+          <div class="quiz-option" data-correct="false" data-explanation="BFS from 0 is a valid but O(n²) approach — the greedy just tracks maxReach in a single pass."><span class="opt-letter">C</span>BFS from index 0 — explore all reachable cells layer by layer</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Sorting would destroy the positional information the problem depends on."><span class="opt-letter">D</span>Sort the array first, then scan from right to left</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">For nums = [3,2,1,0,4], can you reach the last index?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="From index 0 you can reach [1,2,3]. From 1 you can reach [2,3]. From 2 you can reach [3]. From 3 you reach [3] — position 3 is always 0. maxReach can never exceed 3, so index 4 is unreachable."><span class="opt-letter">A</span>Yes — you can jump from index 0 directly to index 3, then to index 4</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Every path from 0 eventually reaches index 3 which has value 0 — you are stuck. maxReach never exceeds 3, so index 4 is unreachable."><span class="opt-letter">B</span>No — index 3 has value 0, so you can never jump past it</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The greedy correctly identifies this as unreachable in O(n)."><span class="opt-letter">C</span>Greedy gives the wrong answer here — you need DFS</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The answer depends only on positions and jump values, not array length."><span class="opt-letter">D</span>Depends on whether n > 5</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P20 Combination Sum -->
+  <div class="prob-section" id="p-combination-sum">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P20 — Medium</span>
+      <span class="prob-section-title">Combination Sum — Backtracking</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span>
+    </div>
+    <p class="prob-section-desc">Find all unique combinations of candidates that sum to target (candidates can be reused). The decision tree at each step: include the current candidate (and stay) or skip to the next. Full backtracking tree shown.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(2^(t/m)) time · O(t/m) depth</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-combination-sum"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">How does the backtracking avoid duplicate combinations like [2,3] and [3,2]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Each recursive call is passed a startIdx. A child can only pick candidates at index >= startIdx. So once you pass a candidate, you never go back — this enforces lexicographic order and prevents duplicates."><span class="opt-letter">A</span>Only consider candidates at index ≥ current startIdx in each recursive call</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Sorting the output after the fact does not prevent generating duplicate paths — it just reorders them."><span class="opt-letter">B</span>Sort the output combinations before returning</div>
+          <div class="quiz-option" data-correct="false" data-explanation="A visited set is used for problems with distinct indices, not for candidate reuse problems like this one."><span class="opt-letter">C</span>Use a visited set to track which candidates have been used</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Removing duplicates from candidates handles duplicate values in the input, but does not prevent ordering duplicates like [2,3] vs [3,2]."><span class="opt-letter">D</span>Remove duplicate values from the candidates array first</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">Candidates can be reused. How does the recursion allow the same candidate to be chosen multiple times?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="When you include a candidate at index i, the recursive call passes startIdx = i (not i+1). This lets the same index be chosen again next round, enabling reuse like [2,2,3]."><span class="opt-letter">A</span>The "include" branch recurses with the same startIdx, not startIdx+1</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Candidates are not duplicated in the input — the algorithm handles reuse through the startIdx logic."><span class="opt-letter">B</span>Each candidate is duplicated in the array before recursion starts</div>
+          <div class="quiz-option" data-correct="false" data-explanation="De-duplication at the end does not allow reuse — it removes results."><span class="opt-letter">C</span>The result list is de-duped to merge reused entries</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The target decreases by nums[i] each time that candidate is chosen, not by 2×."><span class="opt-letter">D</span>The target is decremented by 2 when the same candidate is chosen again</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">8 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">20 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -458,5 +646,18 @@
 
 <script src="js/main.js"></script>
 <script src="js/problems.js"></script>
+<script>
+(function(){
+  function tryInit(){
+    if(window.DSAProbs){
+      if(window.DSAProbs.productExceptSelf&&document.getElementById('prob-product-except-self'))window.DSAProbs.productExceptSelf('prob-product-except-self');
+      if(window.DSAProbs.containerWater&&document.getElementById('prob-container-water'))window.DSAProbs.containerWater('prob-container-water');
+      if(window.DSAProbs.jumpGame&&document.getElementById('prob-jump-game'))window.DSAProbs.jumpGame('prob-jump-game');
+      if(window.DSAProbs.combinationSum&&document.getElementById('prob-combination-sum'))window.DSAProbs.combinationSum('prob-combination-sum');
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
+})();
+</script>
 </body>
 </html>

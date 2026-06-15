@@ -1603,6 +1603,374 @@ function initLCS(id){
   draw(null);
 }
 
+/* ════════════════════════════════════════════════════════════
+   P17 — Product of Array Except Self
+════════════════════════════════════════════════════════════ */
+function initProductExceptSelf(id){
+  var container=document.getElementById(id);if(!container)return;
+  var arr=[1,2,3,4];
+
+  function buildBrute(a){
+    var steps=[],res=new Array(a.length).fill(0);
+    for(var i=0;i<a.length;i++){
+      var prod=1;
+      var st=a.map(function(){return'default';});
+      for(var j=0;j<a.length;j++){
+        if(j!==i){prod*=a[j];st[j]='comparing';}
+      }
+      res[i]=prod;
+      var rs=st.slice();rs[i]='found';
+      steps.push({arr:a,res:res.slice(),cur:i,st:rs,msg:'output['+i+']=product of all except a['+i+']='+a[i]+' → '+prod});
+    }
+    steps.push({arr:a,res:res.slice(),cur:-1,st:a.map(function(){return'sorted';}),msg:'Output: ['+res.join(',')+'] — O(n²) brute force.'});
+    return steps;
+  }
+
+  function buildOptimal(a){
+    var n=a.length,steps=[];
+    var pre=new Array(n).fill(1),suf=new Array(n).fill(1),res=new Array(n).fill(0);
+    // Prefix pass
+    for(var i=1;i<n;i++){pre[i]=pre[i-1]*a[i-1];}
+    steps.push({arr:a,pre:pre.slice(),suf:suf.slice(),res:res.slice(),phase:'prefix',cur:n-1,
+      msg:'Prefix pass done: pre[i]=product of everything to the LEFT of i. pre=['+pre.join(',')+']'});
+    // Show prefix fill step by step
+    var p2=new Array(n).fill(1);
+    for(var i=1;i<n;i++){
+      p2[i]=p2[i-1]*a[i-1];
+      steps.splice(steps.length-1,0,{arr:a,pre:p2.slice(),suf:suf.slice(),res:res.slice(),phase:'prefix',cur:i,
+        msg:'pre['+i+']=pre['+(i-1)+']('+p2[i-1]+') × a['+(i-1)+']('+a[i-1]+') = '+p2[i]});
+    }
+    // Suffix pass
+    for(var i=n-2;i>=0;i--){suf[i]=suf[i+1]*a[i+1];}
+    steps.push({arr:a,pre:pre.slice(),suf:suf.slice(),res:res.slice(),phase:'suffix',cur:0,
+      msg:'Suffix pass done: suf[i]=product of everything to the RIGHT of i. suf=['+suf.join(',')+']'});
+    var s2=new Array(n).fill(1);
+    for(var i=n-2;i>=0;i--){
+      s2[i]=s2[i+1]*a[i+1];
+      steps.splice(steps.length-1,0,{arr:a,pre:pre.slice(),suf:s2.slice(),res:res.slice(),phase:'suffix',cur:i,
+        msg:'suf['+i+']=suf['+(i+1)+']('+s2[i+1]+') × a['+(i+1)+']('+a[i+1]+') = '+s2[i]});
+    }
+    // Result
+    for(var i=0;i<n;i++){
+      res[i]=pre[i]*suf[i];
+      steps.push({arr:a,pre:pre.slice(),suf:suf.slice(),res:res.slice(),phase:'result',cur:i,
+        msg:'output['+i+']=pre['+i+']('+pre[i]+') × suf['+i+']('+suf[i]+') = '+res[i]});
+    }
+    steps.push({arr:a,pre:pre.slice(),suf:suf.slice(),res:res.slice(),phase:'done',cur:-1,
+      msg:'Output: ['+res.join(',')+'] — O(n) two-pass prefix×suffix!'});
+    return steps;
+  }
+
+  var curA='brute';
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var n=arr.length,CW=Math.min(62,(ui.W-40)/n-8),CH=42,GAP=8;
+    var sx=(ui.W-n*(CW+GAP)+GAP)/2;
+    // Input row
+    lbl(ui.ctx,'Input:',30,32,'rgba(167,139,250,.5)',10,'left');
+    arr.forEach(function(v,i){
+      var st=(s&&s.st)?s.st[i]:(s&&s.cur===i)?'active':'default';
+      cell(ui.ctx,sx+i*(CW+GAP),14,CW,CH,v,st);
+      lbl(ui.ctx,i,sx+i*(CW+GAP)+CW/2,14+CH+12,'rgba(167,139,250,.35)',8);
+    });
+    // Prefix row (optimal)
+    if(s&&s.pre&&(s.phase==='prefix'||s.phase==='suffix'||s.phase==='result'||s.phase==='done')){
+      lbl(ui.ctx,'prefix:',30,74,'rgba(167,139,250,.5)',10,'left');
+      s.pre.forEach(function(v,i){cell(ui.ctx,sx+i*(CW+GAP),80,CW,34,v,(s.phase==='prefix'&&i===s.cur)?'active':'default');});
+    }
+    // Suffix row (optimal)
+    if(s&&s.suf&&(s.phase==='suffix'||s.phase==='result'||s.phase==='done')){
+      lbl(ui.ctx,'suffix:',30,130,'rgba(167,139,250,.5)',10,'left');
+      s.suf.forEach(function(v,i){cell(ui.ctx,sx+i*(CW+GAP),136,CW,34,v,(s.phase==='suffix'&&i===s.cur)?'active':'default');});
+    }
+    // Output row
+    if(s&&s.res){
+      lbl(ui.ctx,'output:',30,ui.H-56,'rgba(167,139,250,.5)',10,'left');
+      s.res.forEach(function(v,i){
+        var st=(s.cur===i&&s.phase==='result')?'found':v>0?'sorted':'default';
+        cell(ui.ctx,sx+i*(CW+GAP),ui.H-50,CW,34,v||'?',st);
+      });
+    }
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:700,canvasH:230,
+    approaches:[{key:'brute',label:'⚡ Brute O(n²)'},{key:'opt',label:'🚀 Prefix×Suffix O(n)'}],
+    inputs:[{id:'a',lbl:'Array:',elem:inp('1,2,3,4','',160)}],
+    onApproach:function(a){curA=a;},
+    onInputs:function(v){
+      var p=v.a.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x);});
+      if(p.length>=2&&p.length<=8)arr=p;
+    },
+    buildSteps:function(a){curA=a;return a==='opt'?buildOptimal(arr):buildBrute(arr);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P18 — Container With Most Water
+════════════════════════════════════════════════════════════ */
+function initContainerWater(id){
+  var container=document.getElementById(id);if(!container)return;
+  var heights=[1,8,6,2,5,4,8,3,7];
+
+  function buildBrute(h){
+    var steps=[],maxW=0,bestL=0,bestR=h.length-1;
+    for(var i=0;i<h.length-1;i++){
+      for(var j=i+1;j<h.length;j++){
+        var w=Math.min(h[i],h[j])*(j-i);
+        if(w>maxW){maxW=w;bestL=i;bestR=j;}
+        var st=h.map(function(_,k){return k===i?'comparing':k===j?'active':'default';});
+        steps.push({h:h,st:st,L:i,R:j,water:w,maxW:maxW,bestL:bestL,bestR:bestR,
+          msg:'['+i+','+j+']: min('+h[i]+','+h[j]+')×'+(j-i)+'='+w+(w>maxW-1?' ← new max!':'')});
+      }
+    }
+    steps.push({h:h,st:h.map(function(_,k){return k===bestL||k===bestR?'found':'default';}),
+      L:bestL,R:bestR,maxW:maxW,done:true,msg:'Max water = '+maxW+' between bars '+bestL+' and '+bestR+'. O(n²).'});
+    return steps;
+  }
+
+  function buildTwoPtr(h){
+    var steps=[],L=0,R=h.length-1,maxW=0,bestL=0,bestR=h.length-1;
+    steps.push({h:h,L:L,R:R,maxW:0,msg:'Start: L=0, R='+(h.length-1)});
+    while(L<R){
+      var w=Math.min(h[L],h[R])*(R-L);
+      if(w>maxW){maxW=w;bestL=L;bestR=R;}
+      var st=h.map(function(_,k){return k===L?'comparing':k===R?'active':'default';});
+      steps.push({h:h,st:st,L:L,R:R,water:w,maxW:maxW,bestL:bestL,bestR:bestR,
+        msg:'L='+L+'(h='+h[L]+') R='+R+'(h='+h[R]+') water='+w+' maxW='+maxW});
+      if(h[L]<=h[R])L++;else R--;
+      steps.push({h:h,st:h.map(function(_,k){return k===L||k===R?'active':'default';}),
+        L:L,R:R,maxW:maxW,msg:(h[L-1]<=h[R+1]?'h[L]≤h[R] → advance L to '+L:'h[L]>h[R] → retreat R to '+R)});
+    }
+    steps.push({h:h,st:h.map(function(_,k){return k===bestL||k===bestR?'found':'default';}),
+      L:bestL,R:bestR,maxW:maxW,done:true,msg:'Max water = '+maxW+'. O(n) two-pointer!'});
+    return steps;
+  }
+
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var h=heights,n=h.length;
+    var maxH2=Math.max.apply(null,h)||1;
+    var bw=Math.max(28,Math.floor((ui.W-60)/n)-4),maxBH=ui.H-60,baseY=ui.H-30,sx=30+(ui.W-60-n*(bw+4))/2;
+    // water fill
+    if(s&&s.L>=0&&s.R>=0&&s.water>0){
+      var wh=Math.round(Math.min(h[s.L],h[s.R])/maxH2*maxBH);
+      var wx=sx+s.L*(bw+4),ww=(s.R-s.L)*(bw+4)+bw;
+      ui.ctx.save();ui.ctx.globalAlpha=0.18;ui.ctx.fillStyle='#3B82F6';
+      ui.ctx.fillRect(wx,baseY-wh,ww,wh);ui.ctx.globalAlpha=1;ui.ctx.restore();
+    }
+    h.forEach(function(v,i){
+      var bh=Math.max(4,Math.round((v/maxH2)*maxBH));
+      var x=sx+i*(bw+4),y=baseY-bh;
+      var st=(s&&s.st)?s.st[i]:'default';
+      ui.ctx.save();
+      var bg2=ui.ctx.createLinearGradient(x,y,x,baseY);
+      if(st==='comparing'){bg2.addColorStop(0,'#FB923C');bg2.addColorStop(1,'#7C2D12');ui.ctx.shadowColor='rgba(251,146,60,.7)';ui.ctx.shadowBlur=12;}
+      else if(st==='active'){bg2.addColorStop(0,'#C4B5FD');bg2.addColorStop(1,'#2E1B6B');ui.ctx.shadowColor='rgba(196,181,253,.6)';ui.ctx.shadowBlur=12;}
+      else if(st==='found'){bg2.addColorStop(0,'#34D399');bg2.addColorStop(1,'#064E3B');ui.ctx.shadowColor='rgba(52,211,153,.7)';ui.ctx.shadowBlur=14;}
+      else{bg2.addColorStop(0,'#4C1D95');bg2.addColorStop(1,'#1E1B4B');}
+      rr(ui.ctx,x,y,bw,bh,3);ui.ctx.fillStyle=bg2;ui.ctx.fill();ui.ctx.shadowBlur=0;
+      ui.ctx.strokeStyle=st==='comparing'?'#FB923C':st==='active'?'#A78BFA':st==='found'?'#34D399':'rgba(139,92,246,.3)';
+      ui.ctx.lineWidth=1.5;ui.ctx.stroke();ui.ctx.restore();
+      lbl(ui.ctx,v,x+bw/2,y-10,'#EDE9FE',10);
+      lbl(ui.ctx,i,x+bw/2,baseY+12,'rgba(167,139,250,.35)',8);
+    });
+    if(s&&s.maxW!=null){
+      ui.ctx.save();rr(ui.ctx,ui.W-148,10,138,26,5);
+      var tg=ui.ctx.createLinearGradient(ui.W-148,10,ui.W-10,36);tg.addColorStop(0,'#064E3B');tg.addColorStop(1,'#052E16');
+      ui.ctx.fillStyle=tg;ui.ctx.fill();ui.ctx.strokeStyle='rgba(52,211,153,.5)';ui.ctx.lineWidth=1.5;ui.ctx.stroke();
+      ui.ctx.fillStyle='#34D399';ui.ctx.font='bold 12px "JetBrains Mono",monospace';ui.ctx.textAlign='center';ui.ctx.textBaseline='middle';
+      ui.ctx.fillText('Max Water: '+s.maxW,ui.W-79,23);ui.ctx.restore();
+    }
+    if(s&&s.L>=0&&s.L!=null){arrow(ui.ctx,sx+s.L*(bw+4)+bw/2,baseY-6-4,'L','#34D399');}
+    if(s&&s.R>=0&&s.R<n&&s.R!=null){arrow(ui.ctx,sx+s.R*(bw+4)+bw/2,baseY-6-4,'R','#F472B6');}
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:700,canvasH:260,
+    approaches:[{key:'brute',label:'⚡ Brute O(n²)'},{key:'twoptr',label:'👆 Two Pointers O(n)'}],
+    inputs:[{id:'h',lbl:'Heights:',elem:inp('1,8,6,2,5,4,8,3,7','',260)}],
+    onInputs:function(v){
+      var p=v.h.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x)&&x>=0;});
+      if(p.length>=2&&p.length<=12)heights=p;
+    },
+    buildSteps:function(a){return a==='twoptr'?buildTwoPtr(heights):buildBrute(heights);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P19 — Jump Game
+════════════════════════════════════════════════════════════ */
+function initJumpGame(id){
+  var container=document.getElementById(id);if(!container)return;
+  var arr=[2,3,1,1,4];
+
+  function buildBrute(a){
+    var steps=[],reached=false;
+    var vis={};
+    function dfs(i){
+      if(i>=a.length-1){reached=true;return true;}
+      if(vis[i])return false;vis[i]=true;
+      for(var j=1;j<=a[i]&&!reached;j++){
+        steps.push({arr:a,cur:i,jump:j,target:i+j,msg:'From idx '+i+' (jump='+a[i]+'): try jumping '+j+' → idx '+(i+j)});
+        if(dfs(i+j))return true;
+      }
+      return false;
+    }
+    dfs(0);
+    steps.push({arr:a,done:true,result:reached,msg:(reached?'✓ Can reach end!':'✗ Cannot reach end.')+'  O(2ⁿ) brute DFS.'});
+    return steps;
+  }
+
+  function buildGreedy(a){
+    var steps=[],maxReach=0,n=a.length;
+    steps.push({arr:a,cur:0,maxReach:0,msg:'Start: maxReach=0'});
+    for(var i=0;i<n&&i<=maxReach;i++){
+      var newMax=Math.max(maxReach,i+a[i]);
+      var improved=newMax>maxReach;
+      maxReach=newMax;
+      steps.push({arr:a,cur:i,maxReach:maxReach,msg:'idx '+i+' (jump='+a[i]+'): maxReach=max('+maxReach+','+(i+a[i])+')='+(i+a[i])+(i+a[i]>maxReach-a[i]?' → extended!':'')});
+      if(maxReach>=n-1){
+        steps.push({arr:a,cur:i,maxReach:maxReach,done:true,result:true,msg:'maxReach('+maxReach+') ≥ last idx('+(n-1)+') → ✓ Can reach end! O(n) greedy.'});
+        return steps;
+      }
+    }
+    steps.push({arr:a,cur:maxReach,maxReach:maxReach,done:true,result:false,msg:'Stuck at maxReach='+maxReach+' < '+(n-1)+' → ✗ Cannot reach end. O(n).'});
+    return steps;
+  }
+
+  var curA='brute';
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var n=arr.length,CW=Math.min(62,Math.floor((ui.W-40)/n)-6),CH=50;
+    var GAP=6,sx=(ui.W-n*(CW+GAP)+GAP)/2,cy=ui.H/2-CH/2-16;
+    arr.forEach(function(v,i){
+      var st='default';
+      if(s){
+        if(s.done&&s.result&&i===n-1)st='found';
+        else if(s.cur===i)st='comparing';
+        else if(s.maxReach!=null&&i<=s.maxReach)st='active';
+        else if(s.target===i)st='pivot';
+      }
+      cell(ui.ctx,sx+i*(CW+GAP),cy,CW,CH,v,st);
+      lbl(ui.ctx,i,sx+i*(CW+GAP)+CW/2,cy+CH+13,'rgba(167,139,250,.35)',8);
+    });
+    if(s&&s.maxReach!=null&&curA==='greedy'){
+      lbl(ui.ctx,'maxReach: '+s.maxReach,ui.W/2,ui.H-14,'#34D399',14);
+    }
+    if(s&&s.done){
+      lbl(ui.ctx,s.result?'✓ REACHABLE':'✗ BLOCKED',ui.W/2,cy-24,s.result?'#34D399':'#EF4444',16);
+    }
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:700,canvasH:200,
+    approaches:[{key:'brute',label:'⚡ Brute O(2ⁿ)'},{key:'greedy',label:'🚀 Greedy O(n)'}],
+    inputs:[{id:'a',lbl:'Jumps:',elem:inp('2,3,1,1,4','',200)}],
+    onApproach:function(a){curA=a;},
+    onInputs:function(v){
+      var p=v.a.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x)&&x>=0;});
+      if(p.length>=2&&p.length<=10)arr=p;
+    },
+    buildSteps:function(a){curA=a;return a==='greedy'?buildGreedy(arr):buildBrute(arr);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P20 — Combination Sum (Backtracking)
+════════════════════════════════════════════════════════════ */
+function initCombinationSum(id){
+  var container=document.getElementById(id);if(!container)return;
+  var cands=[2,3,6,7],target=7;
+  var root,layout;
+
+  function buildTree(candidates,t){
+    var sorted=candidates.slice().sort(function(a,b){return a-b;});
+    var idC={v:0};
+    function make(startIdx,cur,rem,depth){
+      var label=cur.length?'['+cur.join(',')+']':'start';
+      var node={id:idC.v++,label:label,cur:cur.slice(),rem:rem,children:[],depth:depth,
+        isLeaf:rem===0,isFail:rem<0||(rem>0&&startIdx>=sorted.length)};
+      if(!node.isLeaf&&!node.isFail){
+        for(var i=startIdx;i<sorted.length;i++){
+          if(sorted[i]<=rem)node.children.push(make(i,cur.concat([sorted[i]]),rem-sorted[i],depth+1));
+        }
+        if(!node.children.length)node.isFail=true;
+      }
+      return node;
+    }
+    return make(0,[],t,0);
+  }
+
+  function buildSteps(root,candidates){
+    var c=collectNodes(root),byId=c.byId;
+    var steps=[],callStack=[],done={},leaf={};
+    function mkS(msg){
+      var active={},dk={},stack=[];
+      callStack.forEach(function(i){active[i]=true;stack.push(byId[i].label);});
+      Object.keys(done).forEach(function(k){dk[k]=true;});
+      return{active:active,done:dk,leaf:Object.assign({},leaf),ret:{},cache:{},stack:stack,msg:msg};
+    }
+    function sim(node){
+      callStack.push(node.id);
+      if(node.isLeaf){
+        done[node.id]=true;leaf[node.id]=true;
+        steps.push(mkS('✓ Found combination: '+node.label+' sums to target!'));
+        callStack.pop();return;
+      }
+      if(node.isFail&&!node.children.length){
+        steps.push(mkS('✗ '+node.label+' (rem='+node.rem+') — no valid candidates. Backtrack.'));
+        done[node.id]=true;callStack.pop();return;
+      }
+      steps.push(mkS('Exploring '+node.label+', remaining='+node.rem+' — try candidates starting from index '+candidates.indexOf(node.cur[node.cur.length-1]||candidates[0])));
+      node.children.forEach(function(child,i){
+        var c2=child.cur[child.cur.length-1];
+        steps.push(mkS('Add '+c2+' → '+child.label+' (rem='+child.rem+')'));
+        sim(child);
+        if(i<node.children.length-1)steps.push(mkS('Backtrack to '+node.label+' (rem='+node.rem+'), try next candidate'));
+      });
+      done[node.id]=true;callStack.pop();
+    }
+    sim(root);
+    var dk={};Object.keys(done).forEach(function(k){dk[k]=true;});
+    var found=c.all.filter(function(n){return n.isLeaf;}).length;
+    steps.push({active:{},done:dk,leaf:Object.assign({},leaf),ret:{},cache:{},stack:[],
+      msg:'Done! Found '+found+' combination(s) summing to '+target+'.'});
+    return steps;
+  }
+
+  function rebuild(){
+    root=buildTree(cands,target);layout=layoutTree(root);
+    return buildSteps(root,cands);
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:740,canvasH:330,
+    inputs:[
+      {id:'c',lbl:'Candidates:',elem:inp('2,3,6,7','',140)},
+      {id:'t',lbl:'Target:',elem:inp('7','',46)}
+    ],
+    onInputs:function(v){
+      var p=v.c.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x)&&x>0;});
+      var t=parseInt(v.t);
+      if(p.length>=1&&p.length<=5&&!isNaN(t)&&t>0&&t<=20){cands=p;target=t;}
+    },
+    buildSteps:function(){return rebuild();},
+    onStep:function(s){drawRecTree(ui.ctx,ui.W,ui.H,root,layout,s);},
+    onReset:function(){rebuild();drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);}
+  });
+  rebuild();drawRecTree(ui.ctx,ui.W,ui.H,root,layout,null);
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -1621,6 +1989,10 @@ window.DSAProbs={
   maxSubarray:initMaxSubarray,
   threeSum:initThreeSum,
   lcs:initLCS,
+  productExceptSelf:initProductExceptSelf,
+  containerWater:initContainerWater,
+  jumpGame:initJumpGame,
+  combinationSum:initCombinationSum,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -1642,6 +2014,10 @@ window.DSAProbs={
     if(document.getElementById('prob-max-subarray'))initMaxSubarray('prob-max-subarray');
     if(document.getElementById('prob-three-sum'))initThreeSum('prob-three-sum');
     if(document.getElementById('prob-lcs'))initLCS('prob-lcs');
+    if(document.getElementById('prob-product-except-self'))initProductExceptSelf('prob-product-except-self');
+    if(document.getElementById('prob-container-water'))initContainerWater('prob-container-water');
+    if(document.getElementById('prob-jump-game'))initJumpGame('prob-jump-game');
+    if(document.getElementById('prob-combination-sum'))initCombinationSum('prob-combination-sum');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();

@@ -92,6 +92,11 @@ heapq.heappush(h, <span class="num">3</span>)
       </tbody>
     </table>
   </div>
+  <div class="section-label">Anti-patterns</div>
+  <div class="antipatterns">
+    <div class="antipattern"><h4>Searching a heap for arbitrary elements</h4><p>A heap only guarantees the min/max at the root. Searching for an arbitrary value requires O(n) linear scan — there is no ordering between siblings. If you need to search and prioritize, use a sorted BST or combine a heap with a hashmap (used in Dijkstra's algorithm).</p></div>
+    <div class="antipattern"><h4>Building a heap with n individual inserts instead of heapify</h4><p>Inserting n elements one by one is O(n log n). Python's <code>heapq.heapify()</code> on an existing array is O(n). Always prefer heapify when you have all elements upfront. The difference matters for large n.</p></div>
+  </div>
   <div class="section-label">Quiz</div>
   <h2 class="section-title">Check Your Understanding</h2>
   <div class="quiz-section">
@@ -129,10 +134,23 @@ heapq.heappush(h, <span class="num">3</span>)
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Which operation does a binary heap NOT support in O(log n)?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="Insert (push) is O(log n) via bubble-up."><span class="opt-letter">A</span>Insert</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Extract-min (pop) is O(log n) via bubble-down."><span class="opt-letter">B</span>Extract-min</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Searching for an arbitrary value in a heap is O(n) — the heap property only tells you about parent-child order, not between siblings. There is no shortcut."><span class="opt-letter">C</span>Search for arbitrary value</div>
+        <div class="quiz-option" data-correct="false" data-explanation="Decrease-key (used in Dijkstra) is O(log n) with a pointer to the node."><span class="opt-letter">D</span>Decrease-key</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">What is the difference between a heap and a BST?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">A heap has the heap property (parent &lt;= children for min-heap) but siblings have no required order. A BST has the BST property (left &lt; node &lt; right) which gives total ordering along any path. Heap: O(1) min, O(log n) insert/extract. BST: O(log n) search/insert/delete, but supports in-order traversal and range queries. Use heap for priority queues; use BST for sorted data with arbitrary search.</div></div></div>
     <div class="qa-item"><button class="qa-q">How would you find the median of a data stream?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Maintain two heaps: a max-heap for the lower half of numbers, and a min-heap for the upper half. Keep them balanced (sizes differ by at most 1). For each new number: if &lt;= max-heap top, push to max-heap; otherwise push to min-heap. Rebalance if sizes differ by more than 1. Median is the top of the larger heap, or the average of both tops if equal size. O(log n) insert, O(1) median.</div></div></div>
+    <div class="qa-item"><button class="qa-q">How does Dijkstra's algorithm use a heap?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">Dijkstra maintains a min-heap of (distance, node) pairs. Start: push (0, source). Each step: pop the node with smallest tentative distance. For each neighbor: if dist[u] + edge_weight &lt; dist[v], update dist[v] and push (new_dist, v) to the heap. The heap ensures we always process the closest unvisited node. O((V+E) log V) with a binary heap. O(V+E + V log V) with a Fibonacci heap (but rarely practical).</div></div></div>
   </div>
   <div class="topic-nav">
     <a href="04-trees.html" class="topic-nav-link"><div class="topic-nav-arrow">&#8592;</div><div><div class="topic-nav-label">Previous</div><div class="topic-nav-title">Trees &amp; BST</div></div></a>

@@ -128,6 +128,18 @@
       <div class="quiz-feedback"></div>
     </div>
   </div>
+    <div class="quiz-question">
+      <div class="quiz-q-num">Question 4 of 4</div>
+      <div class="quiz-q-text">Level-order traversal of a binary tree is typically implemented with a:</div>
+      <div class="quiz-options">
+        <div class="quiz-option" data-correct="false" data-explanation="A stack would give DFS (depth-first), not BFS level-order."><span class="opt-letter">A</span>Stack</div>
+        <div class="quiz-option" data-correct="true" data-explanation="Level-order (BFS) processes nodes level by level. Enqueue root, then for each dequeued node, enqueue its children. FIFO ensures left-to-right, level-by-level order."><span class="opt-letter">B</span>Queue</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A heap sorts by priority — not by tree level."><span class="opt-letter">C</span>Min-heap</div>
+        <div class="quiz-option" data-correct="false" data-explanation="A hashmap stores key-value pairs — not traversal order."><span class="opt-letter">D</span>Hashmap</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
   <div class="section-label">Interview Q&amp;A</div>
   <div class="qa-section">
     <div class="qa-item"><button class="qa-q">What is the difference between a binary tree and a BST?<span class="qa-chevron">&#9662;</span></button><div class="qa-a"><div class="qa-a-inner">A binary tree is any tree where each node has at most two children — no ordering constraint. A BST adds the invariant: left subtree values &lt; node.val &lt; right subtree values. This ordering enables O(log n) search. Binary heaps are also binary trees but use the heap property (parent &lt;= children for min-heap), not BST ordering.</div></div></div>
