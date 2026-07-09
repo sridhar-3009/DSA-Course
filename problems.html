@@ -73,7 +73,7 @@
 <div class="prob-hero">
   <div class="prob-tag-row">
     <span class="prob-tag">NeetCode 150</span>
-    <span class="prob-tag">20 Problems</span>
+    <span class="prob-tag">24 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
   </div>
@@ -160,6 +160,22 @@
   </a>
   <a href="#p-combination-sum" class="prob-toc-card">
     <div class="tc-num">P20</div><div class="tc-title">Combination Sum</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-valid-palindrome" class="prob-toc-card">
+    <div class="tc-num">P21</div><div class="tc-title">Valid Palindrome</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-trapping-rain" class="prob-toc-card">
+    <div class="tc-num">P22</div><div class="tc-title">Trapping Rain Water</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-word-break" class="prob-toc-card">
+    <div class="tc-num">P23</div><div class="tc-title">Word Break</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-find-min-rotated" class="prob-toc-card">
+    <div class="tc-num">P24</div><div class="tc-title">Find Min in Rotated Array</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
 </div>
@@ -630,11 +646,183 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P21 Valid Palindrome -->
+  <div class="prob-section" id="p-valid-palindrome">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P21 — Easy</span>
+      <span class="prob-section-title">Valid Palindrome</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Strings</span><span class="prob-tag">Two Pointers</span>
+    </div>
+    <p class="prob-section-desc">A phrase is a palindrome if, after lowercasing and removing non-alphanumeric characters, it reads the same forwards and backwards. Brute: filter then compare with reverse. Optimal: two pointers shrink inward — O(1) extra space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n) · O(n) space</span>
+      <span class="prob-compl-chip">Two Pointers: O(n) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-palindrome"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">What does the two-pointer approach do when it encounters a non-alphanumeric character?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Non-alphanumeric characters are not replaced — they are skipped entirely."><span class="opt-letter">A</span>Replace it with a space and continue comparing</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The pointer keeps advancing past non-alphanumeric characters (spaces, commas, punctuation) until it lands on an alphanumeric one. No extra memory is needed — hence O(1) space."><span class="opt-letter">B</span>Skip it by advancing the pointer until it reaches an alphanumeric character</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The algorithm returns false only on a mismatch between two alphanumeric characters, not when it sees punctuation."><span class="opt-letter">C</span>Return false immediately — the string is not a palindrome</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The brute approach does filtering; the two-pointer approach skips in place."><span class="opt-letter">D</span>Filter the whole string first, then restart from the beginning</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">Is "race a car" a palindrome under the problem's definition?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="After filtering: 'raceacar'. Reversed: 'racaecr'. These are not equal — it is NOT a palindrome."><span class="opt-letter">A</span>Yes — removing the space makes it 'raceacar', which is symmetric</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Filter and lowercase: 'raceacar'. Reversed: 'racaecar'. Position 4 (index 3): 'e' vs 'a' — mismatch. NOT a palindrome."><span class="opt-letter">B</span>No — 'raceacar' reversed is 'racaecar', which has a mismatch</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Spaces are non-alphanumeric and are simply skipped, not counted as palindrome breakers on their own."><span class="opt-letter">C</span>The space in the middle makes it automatically invalid</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Single-character strings are always palindromes, but 'race a car' has 8 alphanumeric characters."><span class="opt-letter">D</span>Only single-character strings are palindromes</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P22 Trapping Rain Water -->
+  <div class="prob-section" id="p-trapping-rain">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P22 — Hard</span>
+      <span class="prob-section-title">Trapping Rain Water</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">DP</span>
+    </div>
+    <p class="prob-section-desc">Given a histogram of bar heights, compute how much rain water it can trap. Water at bar <code>i</code> = min(maxLeft, maxRight) − height[i]. Brute: scan left and right for each bar O(n²). Two-pointer: maintain running max from each side — O(n), O(1) space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n²) · O(1)</span>
+      <span class="prob-compl-chip">Two Pointers: O(n) · O(1)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-trapping-rain"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">How much water does bar <em>i</em> trap (at height h[i]) when maxLeft = 5 and maxRight = 3?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Using max(maxLeft, maxRight) would overflow the shorter wall — water spills over the shorter side."><span class="opt-letter">A</span>max(maxLeft, maxRight) − h[i] = 5 − h[i]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Water is bounded by the shorter wall: min(5, 3) = 3. Trapped water = 3 − h[i] (or 0 if h[i] ≥ 3). The shorter side is always the bottleneck."><span class="opt-letter">B</span>min(maxLeft, maxRight) − h[i] = 3 − h[i]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Multiplying the two maxes does not represent water capacity."><span class="opt-letter">C</span>maxLeft × maxRight − h[i]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The water depends on the surrounding wall heights, not just the bar itself."><span class="opt-letter">D</span>h[i] itself — taller bars hold more water</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">In the two-pointer approach, when do you advance the left pointer (L)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="You advance L when h[L] ≤ h[R], not when h[L] > h[R]."><span class="opt-letter">A</span>When h[L] > h[R]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When h[L] ≤ h[R], the left side is the bottleneck — maxLeft determines how much water L holds. You safely process L and advance it. The right side is guaranteed to be at least as tall."><span class="opt-letter">B</span>When h[L] ≤ h[R] — the right wall is tall enough to bound the water at L</div>
+          <div class="quiz-option" data-correct="false" data-explanation="L and R never advance simultaneously — only one pointer moves per step."><span class="opt-letter">C</span>Always advance both L and R simultaneously</div>
+          <div class="quiz-option" data-correct="false" data-explanation="L is advanced first regardless of height; R is advanced only when h[R] < h[L]."><span class="opt-letter">D</span>L is always advanced first, regardless of heights</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P23 Word Break -->
+  <div class="prob-section" id="p-word-break">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P23 — Medium</span>
+      <span class="prob-section-title">Word Break</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Strings</span>
+    </div>
+    <p class="prob-section-desc">Can string <code>s</code> be segmented into words from a dictionary? Brute: try every split recursively — O(2ⁿ). DP: <code>dp[i]</code> = true if <code>s[0..i-1]</code> is segmentable. Fill left to right: if <code>dp[j]</code> and <code>s[j..i-1]</code> is a word, set <code>dp[i] = true</code>.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(2ⁿ)</span>
+      <span class="prob-compl-chip">DP: O(n² × L) · O(n) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-break"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">Why is dp[0] = true in the Word Break DP solution?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="dp[0] represents the empty prefix — it is set to true as a base case, not because the first character is in the dict."><span class="opt-letter">A</span>The first character of s is always in the dictionary</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i] means 'the prefix s[0..i-1] can be segmented'. dp[0] = empty string = trivially segmentable. This base case seeds all future dp[i]: dp[i] = true if dp[j] = true and s[j..i-1] is a word, for some j."><span class="opt-letter">B</span>dp[0] is the base case: the empty prefix is trivially segmentable, seeding all future states</div>
+          <div class="quiz-option" data-correct="false" data-explanation="dp[0] = true is a base case choice, not related to initialization convention."><span class="opt-letter">C</span>Arrays are zero-indexed, so index 0 is always initialized to true</div>
+          <div class="quiz-option" data-correct="false" data-explanation="dp[n] (not dp[0]) tells you whether the full string is segmentable."><span class="opt-letter">D</span>dp[0] = true means the full string is already segmentable</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">For s = "catsandog", wordDict = ["cats","dog","sand","and","cat"], is it segmentable?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="'cats' + 'and' + 'og' — 'og' is not in the dictionary. 'cat' + 'sand' + 'og' also fails. No valid split reaches the end."><span class="opt-letter">A</span>Yes — "cat" + "sand" + "og"</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Every split path eventually fails: 'cats'+'and'+'og' (og not a word), 'cat'+'sand'+'og' (og not a word). dp[9] stays false — NOT segmentable."><span class="opt-letter">B</span>No — no combination of dictionary words covers the full string</div>
+          <div class="quiz-option" data-correct="false" data-explanation="'dog' appears in the dict but cannot be reached from a valid prefix split."><span class="opt-letter">C</span>Yes — "cats" + "and" + "og" uses "dog" backwards</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The DP can handle any combination of words from the dict, not just contiguous ones."><span class="opt-letter">D</span>Only works if words appear in the same order as the dict</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P24 Find Minimum in Rotated Sorted Array -->
+  <div class="prob-section" id="p-find-min-rotated">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P24 — Medium</span>
+      <span class="prob-section-title">Find Minimum in Rotated Sorted Array</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Binary Search</span><span class="prob-tag">Arrays</span>
+    </div>
+    <p class="prob-section-desc">A sorted array was rotated at an unknown pivot. Find the minimum element. Linear scan: O(n). Binary search: if <code>nums[mid] &gt; nums[R]</code>, the minimum is in the right half (pivot is between mid and R). Otherwise it's in the left half including mid — O(log n).</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Linear: O(n) · O(1)</span>
+      <span class="prob-compl-chip">Binary Search: O(log n) · O(1)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-min-rotated"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">In a rotated sorted array [3,4,5,1,2], how does binary search know the minimum is in the right half?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="The minimum is detected by the relative comparison of nums[mid] and nums[R], not by checking for value 1 explicitly."><span class="opt-letter">A</span>It checks if nums[mid] == 1</div>
+          <div class="quiz-option" data-correct="true" data-explanation="mid = 2, nums[mid] = 5, nums[R] = 2. Since nums[mid] > nums[R], the right portion [mid+1, R] is where the values 'wrap around' — the minimum lives there. Set L = mid + 1."><span class="opt-letter">B</span>nums[mid] = 5 > nums[R] = 2 → the pivot (minimum) is in [mid+1, R]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Comparing with nums[L] is a valid alternative formulation, but the standard approach compares mid with R."><span class="opt-letter">C</span>It compares nums[mid] with nums[L] and chooses the smaller half</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The array is not re-sorted — binary search works by comparing nums[mid] with nums[R] to deduce which half is unsorted."><span class="opt-letter">D</span>It sorts the right half first, then scans linearly</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">When the loop ends with L == R, what does that index represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="L == R converges to the minimum, not the pivot index (though the pivot is the element right before the minimum)."><span class="opt-letter">A</span>The rotation pivot — the original starting element</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The invariant: at every step, the minimum is always within [L, R]. When L == R, the search space is a single element — that element is the minimum. nums[L] is the answer."><span class="opt-letter">B</span>The minimum element — the search space has narrowed to one element, which must be the answer</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The maximum could be at any position depending on how the array was rotated."><span class="opt-letter">C</span>The maximum element</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The middle index during binary search changes each iteration — L == R at the end is the final answer index, not a midpoint."><span class="opt-letter">D</span>The middle index of the original sorted array</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">20 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">24 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -654,6 +842,10 @@
       if(window.DSAProbs.containerWater&&document.getElementById('prob-container-water'))window.DSAProbs.containerWater('prob-container-water');
       if(window.DSAProbs.jumpGame&&document.getElementById('prob-jump-game'))window.DSAProbs.jumpGame('prob-jump-game');
       if(window.DSAProbs.combinationSum&&document.getElementById('prob-combination-sum'))window.DSAProbs.combinationSum('prob-combination-sum');
+      if(window.DSAProbs.validPalindrome&&document.getElementById('prob-valid-palindrome'))window.DSAProbs.validPalindrome('prob-valid-palindrome');
+      if(window.DSAProbs.trappingRain&&document.getElementById('prob-trapping-rain'))window.DSAProbs.trappingRain('prob-trapping-rain');
+      if(window.DSAProbs.wordBreak&&document.getElementById('prob-word-break'))window.DSAProbs.wordBreak('prob-word-break');
+      if(window.DSAProbs.findMinRotated&&document.getElementById('prob-find-min-rotated'))window.DSAProbs.findMinRotated('prob-find-min-rotated');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
