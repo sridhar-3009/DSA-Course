@@ -327,6 +327,46 @@
     <div class="tc-num">P56</div><div class="tc-title">Merge K Sorted Lists</div>
     <div class="tc-diff diff-hard">Hard</div>
   </a>
+  <a href="#p-clone-graph" class="prob-toc-card">
+    <div class="tc-num">P57</div><div class="tc-title">Clone Graph</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-pacific-atlantic" class="prob-toc-card">
+    <div class="tc-num">P58</div><div class="tc-title">Pacific Atlantic Water Flow</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-rotting-oranges" class="prob-toc-card">
+    <div class="tc-num">P59</div><div class="tc-title">Rotting Oranges</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-connected-components" class="prob-toc-card">
+    <div class="tc-num">P60</div><div class="tc-title">Number of Connected Components</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-lis" class="prob-toc-card">
+    <div class="tc-num">P61</div><div class="tc-title">Longest Increasing Subsequence</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-unique-paths" class="prob-toc-card">
+    <div class="tc-num">P62</div><div class="tc-title">Unique Paths</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-edit-distance" class="prob-toc-card">
+    <div class="tc-num">P63</div><div class="tc-title">Edit Distance</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-coin-change-ii" class="prob-toc-card">
+    <div class="tc-num">P64</div><div class="tc-title">Coin Change II</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-partition-subset" class="prob-toc-card">
+    <div class="tc-num">P65</div><div class="tc-title">Partition Equal Subset Sum</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-house-robber-ii" class="prob-toc-card">
+    <div class="tc-num">P66</div><div class="tc-title">House Robber II</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -2019,11 +2059,281 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P57 Clone Graph -->
+  <div class="prob-section" id="p-clone-graph">
+    <div class="prob-section-header"><span class="prob-section-num">P57 — Medium</span><span class="prob-section-title">Clone Graph</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graphs</span><span class="prob-tag">BFS</span><span class="prob-tag">HashMap</span></div>
+    <p class="prob-section-desc">Deep copy a connected graph. BFS from the start node: maintain a hashmap <code>old→clone</code>. Each time a new neighbor is found, create its clone and enqueue it. When a neighbor is already cloned, just add the edge.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n + e) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-clone-graph"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we need a hashmap (visited/clone map) when cloning?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To sort the nodes by value before cloning</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Graphs can have cycles. Without a visited/clone map, we'd revisit nodes infinitely in a cycle. The map also serves as the storage for clones — when we encounter a neighbor already in the map, we just reuse its clone and add the edge."><span class="opt-letter">B</span>Graphs have cycles — without it we'd recurse/loop infinitely; it also stores references to already-created clones</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To count the number of edges before starting</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>So we can restore the original graph after cloning</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is stored in the hashmap during cloning?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Node values mapped to their BFS level</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The map stores originalNode → clonedNode. This lets us (1) detect already-visited nodes to prevent cycles, (2) retrieve the clone reference when adding edges between already-cloned nodes."><span class="opt-letter">B</span>originalNode → clonedNode — tracks which nodes are cloned and provides reference to the clone</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Node index → list of neighbor indices</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Edge weights for the cloned graph</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P58 Pacific Atlantic Water Flow -->
+  <div class="prob-section" id="p-pacific-atlantic">
+    <div class="prob-section-header"><span class="prob-section-num">P58 — Medium</span><span class="prob-section-title">Pacific Atlantic Water Flow</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graphs</span><span class="prob-tag">BFS</span><span class="prob-tag">Matrix</span></div>
+    <p class="prob-section-desc">Find cells from which water can flow to both the Pacific (top/left) and Atlantic (bottom/right) oceans. Key insight: reverse the flow — BFS <em>uphill</em> from each ocean's border. Cells reachable from both borders are the answer.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-pacific-atlantic"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we BFS from the ocean borders INWARD (uphill) rather than from each cell outward?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because water only flows toward ocean borders</div>
+          <div class="quiz-option" data-correct="true" data-explanation="BFS from each cell outward would be O(m²·n²) — one BFS per cell. BFS from borders inward is O(m·n) total — we process each cell at most once per ocean. The reversal: water flows downhill from cell to ocean, so ocean's BFS going uphill covers all cells that can reach that ocean."><span class="opt-letter">B</span>Outward BFS from every cell is O(m²·n²); border BFS covers all reachable cells in O(m·n) — one pass per ocean</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Water doesn't flow from inland cells to the border</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS only works when starting from the boundary</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When BFS-ing uphill from a border, what condition allows us to expand to a neighbor?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Neighbor height is strictly less than current cell</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We're tracing water flow in reverse: water flows from high to low, so the reverse path goes from low to high. We expand to a neighbor if neighbor.height >= current.height — meaning water at the neighbor CAN flow downhill to the current cell and eventually reach the ocean."><span class="opt-letter">B</span>neighbor.height ≥ current.height — reverse of downhill flow; water at neighbor can flow to current</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Neighbor height is strictly greater (must be uphill)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Neighbor is within grid bounds only</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P59 Rotting Oranges -->
+  <div class="prob-section" id="p-rotting-oranges">
+    <div class="prob-section-header"><span class="prob-section-num">P59 — Medium</span><span class="prob-section-title">Rotting Oranges</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graphs</span><span class="prob-tag">Multi-Source BFS</span></div>
+    <p class="prob-section-desc">Each minute, every rotten orange (2) rots adjacent fresh oranges (1). Return the minimum minutes to rot all oranges, or -1 if impossible. Multi-source BFS: initialize the queue with ALL initially rotten oranges, then expand by one level per minute.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotting-oranges"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must ALL initially rotten oranges be added to the BFS queue at the start?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>So we can count them before starting</div>
+          <div class="quiz-option" data-correct="true" data-explanation="All rotten oranges spread simultaneously each minute. If we only start BFS from one rotten orange, we'd compute the wrong time (as if only one source is spreading). Multi-source BFS correctly models all rotten oranges spreading at the same time — each BFS level = one minute elapsed."><span class="opt-letter">B</span>Rotting happens simultaneously from all sources — single-source BFS gives wrong time as if only one rots at a time</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To avoid visiting orange cells multiple times</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because BFS requires a non-empty initial queue to run</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [[2,1,1],[1,1,0],[0,1,1]], how many minutes does it take?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Minute 1: (0,0) rots (0,1),(1,0). Minute 2: (0,1) rots (0,2),(1,1). Minute 3: (1,1) rots (2,1). Minute 4: (2,1) rots (2,2). All 6 fresh oranges rotted in 4 minutes."><span class="opt-letter">A</span>4 minutes — rot spreads from (0,0) through the grid, reaching (2,2) last</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3 minutes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>6 minutes — one per fresh orange</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>-1 — some oranges are unreachable</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P60 Number of Connected Components -->
+  <div class="prob-section" id="p-connected-components">
+    <div class="prob-section-header"><span class="prob-section-num">P60 — Medium</span><span class="prob-section-title">Number of Connected Components</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graphs</span><span class="prob-tag">Union-Find</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Count connected components in an undirected graph. Union-Find: each edge merges two components. After processing all edges, count unique roots. Alternative: BFS/DFS from unvisited nodes, count how many DFS starts are needed.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Union-Find O((n+e)·α(n)) · DFS O(n+e)</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-connected-components"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For n=5 and edges [[0,1],[1,2],[3,4]], how many components are there?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Union(0,1): {0,1} merged. Union(1,2): {0,1,2} merged. Union(3,4): {3,4} merged. Final components: {0,1,2} and {3,4} → 2 components."><span class="opt-letter">A</span>2 — {0,1,2} and {3,4}</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3 — {0,1}, {2}, {3,4}</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5 — each node is its own component</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1 — all nodes are eventually connected</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What does the find(x) operation return in Union-Find?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The number of nodes in x's component</div>
+          <div class="quiz-option" data-correct="true" data-explanation="find(x) follows parent pointers up the tree until reaching a node that is its own parent (root). That root is the representative/ID of the component. Two nodes are in the same component if and only if find(a) === find(b)."><span class="opt-letter">B</span>The root (representative) of x's component — two nodes are connected iff their roots match</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The node with the maximum value in x's component</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The index of x in the adjacency list</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P61 Longest Increasing Subsequence -->
+  <div class="prob-section" id="p-lis">
+    <div class="prob-section-header"><span class="prob-section-num">P61 — Medium</span><span class="prob-section-title">Longest Increasing Subsequence</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Binary Search</span></div>
+    <p class="prob-section-desc">Find the length of the longest strictly increasing subsequence. DP O(n²): <code>dp[i]</code> = LIS length ending at index i. Optimal O(n log n): maintain a <code>tails</code> array — for each element, binary search where it fits; place it there. Length = tails.length.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">DP O(n²)</span><span class="prob-compl-chip">Patience Sort O(n log n)</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lis"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [10,9,2,5,3,7,101,18], what is the LIS length?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="One LIS of length 4: [2,5,7,101] or [2,3,7,101] or [2,5,7,18] etc. dp array: [1,1,1,2,2,3,4,4]. Max = 4."><span class="opt-letter">A</span>4 — e.g., [2, 5, 7, 101]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8 — the whole array</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the patience sort approach, what does tails[k] represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The kth element of the LIS</div>
+          <div class="quiz-option" data-correct="true" data-explanation="tails[k] = the smallest possible tail element of any increasing subsequence of length k+1 seen so far. Keeping tails small maximizes the chance of extending the subsequence with future elements."><span class="opt-letter">B</span>The smallest tail value among all increasing subsequences of length k+1 found so far</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The largest value in the current active subsequence</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The starting index of the kth valid subsequence</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P62 Unique Paths -->
+  <div class="prob-section" id="p-unique-paths">
+    <div class="prob-section-header"><span class="prob-section-num">P62 — Medium</span><span class="prob-section-title">Unique Paths</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Count paths from top-left to bottom-right in an m×n grid, moving only right or down. <code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code>. Base: entire top row and left column = 1 (only one way to reach each). Also solvable as a combinatorics problem: C(m+n-2, m-1).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">DP O(m·n)</span><span class="prob-compl-chip">Math O(min(m,n)) with combinatorics</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-unique-paths"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For a 3×3 grid (3 rows, 3 cols), how many unique paths are there?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp fills: row 0 = [1,1,1], row 1 = [1,2,3], row 2 = [1,3,6]. dp[2][2] = 6. Also: C(4,2) = 6 (choose 2 right moves from 4 total moves)."><span class="opt-letter">A</span>6</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>9</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why is dp[i][j] = dp[i-1][j] + dp[i][j-1]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because we add the paths of the two diagonal neighbors</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A robot at (i,j) could only have come from (i-1,j) moving down, or from (i,j-1) moving right. So the number of ways to reach (i,j) is the sum of ways to reach those two predecessors."><span class="opt-letter">B</span>Cell (i,j) can only be reached from above (i-1,j) or from the left (i,j-1) — total paths = sum of those two</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because the robot can move in all 4 directions</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The formula comes from Pascal's triangle by coincidence</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P63 Edit Distance -->
+  <div class="prob-section" id="p-edit-distance">
+    <div class="prob-section-header"><span class="prob-section-num">P63 — Hard</span><span class="prob-section-title">Edit Distance (Levenshtein)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Strings</span></div>
+    <p class="prob-section-desc">Minimum operations (insert, delete, replace) to convert word1 to word2. <code>dp[i][j]</code> = edit distance between word1[0..i-1] and word2[0..j-1]. Match: <code>dp[i-1][j-1]</code>. Mismatch: <code>1 + min(replace, delete, insert)</code>.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-edit-distance"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What do dp[i-1][j], dp[i][j-1], and dp[i-1][j-1] represent for a mismatch?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The three possible next characters to compare</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i-1][j] = cost if we DELETE word1[i-1] (move up one row). dp[i][j-1] = cost if we INSERT word2[j-1] (move left one col). dp[i-1][j-1] = cost if we REPLACE word1[i-1] with word2[j-1] (diagonal). For a mismatch, we take 1 + min of these three."><span class="opt-letter">B</span>dp[i-1][j]=delete, dp[i][j-1]=insert, dp[i-1][j-1]=replace — mismatch costs 1+min of these three</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The edit distances for three alternative target words</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The positions of the mismatched characters in both words</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What are the base cases in the edit distance DP table?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>dp[0][0]=0 and all other base cells = ∞</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[0][j]=j: converting empty string to word2[0..j-1] requires j insertions. dp[i][0]=i: converting word1[0..i-1] to empty string requires i deletions."><span class="opt-letter">B</span>dp[0][j]=j (j insertions from empty), dp[i][0]=i (i deletions to empty)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>dp[0][0]=0 and dp[m][n]=edit_distance (must be pre-computed)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>All dp[i][j]=0 initially; only fills in during comparison</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P64 Coin Change II -->
+  <div class="prob-section" id="p-coin-change-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P64 — Medium</span><span class="prob-section-title">Coin Change II (Count Ways)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Knapsack</span></div>
+    <p class="prob-section-desc">Count the number of distinct combinations of coins that sum to a target amount. Key: iterate COINS in the outer loop and AMOUNTS in the inner loop — this ensures each combination is counted once (not permutations). <code>dp[a] += dp[a - coin]</code>.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(amount · k) time · O(amount) space — k = number of coins</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-coin-change-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For coins=[1,2,5], amount=5, how many combinations exist?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Combinations: {5}, {2,2,1}, {2,1,1,1}, {1,1,1,1,1}. Total: 4."><span class="opt-letter">A</span>4 — {5}, {2,2,1}, {2,1,1,1}, {1,1,1,1,1}</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8 — counting permutations too</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we iterate coins in the outer loop (not amounts)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>So we can break early once the coin value exceeds the amount</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If amounts were in the outer loop, each coin could be placed at any position independently — counting PERMUTATIONS. With coins outer, we process each coin once: when computing dp[a] for coin c, only combinations using c and smaller coins are counted. This avoids {1,2} and {2,1} being counted separately."><span class="opt-letter">B</span>Coins outer → each coin added once → combinations only. Amounts outer → each coin can be at any position → counts permutations.</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because the coins array is typically sorted ascending</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To achieve the O(amount·k) time complexity</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P65 Partition Equal Subset Sum -->
+  <div class="prob-section" id="p-partition-subset">
+    <div class="prob-section-header"><span class="prob-section-num">P65 — Medium</span><span class="prob-section-title">Partition Equal Subset Sum</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">0/1 Knapsack</span></div>
+    <p class="prob-section-desc">Can the array be partitioned into two subsets with equal sum? Total sum must be even; target = sum/2. 0/1 knapsack: <code>dp[s]</code> = true if some subset sums to s. Update right-to-left (each number used at most once). Return <code>dp[target]</code>.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · sum) time · O(sum) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-partition-subset"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we iterate the DP array right-to-left when adding each number?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To avoid negative indices in the array</div>
+          <div class="quiz-option" data-correct="true" data-explanation="In 0/1 knapsack, each item can only be used once. If we iterated left-to-right, dp[s] = dp[s-num] might use the same num multiple times in the same pass (since dp[s-num] was already updated this round). Right-to-left: dp[s-num] hasn't been updated yet, so it reflects values WITHOUT the current num — ensuring each item is used at most once."><span class="opt-letter">B</span>Right-to-left ensures dp[s-num] wasn't updated yet this round — preventing the same number from being used multiple times</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because the target is at the right end of the array</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Left-to-right gives the same result but is slower</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [1,5,11,5], can we partition equally?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Sum=22, target=11. Subset {11} sums to 11, remaining {1,5,5} also sums to 11. dp[11] becomes true during the pass for num=11. Answer: Yes."><span class="opt-letter">A</span>Yes — {11} and {1,5,5} each sum to 11</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>No — sum is 22 which is even but 11 cannot be formed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>No — arrays with repeated elements cannot be partitioned</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Yes — but only because all elements are odd</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P66 House Robber II -->
+  <div class="prob-section" id="p-house-robber-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P66 — Medium</span><span class="prob-section-title">House Robber II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Houses arranged in a circle — can't rob first AND last (they're adjacent). Trick: run House Robber I twice: once on <code>nums[0..n-2]</code> (skip last), once on <code>nums[1..n-1]</code> (skip first). Take the maximum.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-house-robber-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't we simply run House Robber I on the full circular array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because circular arrays require a different data structure</div>
+          <div class="quiz-option" data-correct="true" data-explanation="House Robber I assumes a linear array where only adjacent pairs conflict. In the circular version, the first and last houses are also adjacent — meaning if we rob both, we alert the system. The linear DP doesn't model this circular constraint."><span class="opt-letter">B</span>In a circle, first and last houses are adjacent — the linear DP doesn't model this constraint and may select both</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Circular arrays always have odd length which breaks the DP</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>House Robber I only works for arrays of length ≤ 100</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [2,3,2], what is the maximum amount that can be robbed?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Pass 1 (skip last, rob [2,3]): max(2,3)=3. Pass 2 (skip first, rob [3,2]): max(3,2)=3. Answer = max(3,3) = 3. Can't rob houses 0 and 2 (adjacent in circle), so best is house 1 alone = 3."><span class="opt-letter">A</span>3 — rob only house 1 (value 3); robbing 0+2=4 is invalid (adjacent)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>4 — rob houses 0 and 2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5 — rob all three</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>2 — only the first house can be robbed</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">56 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">66 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -2079,6 +2389,16 @@
       if(window.DSAProbs.wordSearch&&document.getElementById('prob-word-search'))window.DSAProbs.wordSearch('prob-word-search');
       if(window.DSAProbs.reorderList&&document.getElementById('prob-reorder-list'))window.DSAProbs.reorderList('prob-reorder-list');
       if(window.DSAProbs.mergeKLists&&document.getElementById('prob-merge-k-lists'))window.DSAProbs.mergeKLists('prob-merge-k-lists');
+      if(window.DSAProbs.cloneGraph&&document.getElementById('prob-clone-graph'))window.DSAProbs.cloneGraph('prob-clone-graph');
+      if(window.DSAProbs.pacificAtlantic&&document.getElementById('prob-pacific-atlantic'))window.DSAProbs.pacificAtlantic('prob-pacific-atlantic');
+      if(window.DSAProbs.rottingOranges&&document.getElementById('prob-rotting-oranges'))window.DSAProbs.rottingOranges('prob-rotting-oranges');
+      if(window.DSAProbs.connectedComponents&&document.getElementById('prob-connected-components'))window.DSAProbs.connectedComponents('prob-connected-components');
+      if(window.DSAProbs.lis&&document.getElementById('prob-lis'))window.DSAProbs.lis('prob-lis');
+      if(window.DSAProbs.uniquePaths&&document.getElementById('prob-unique-paths'))window.DSAProbs.uniquePaths('prob-unique-paths');
+      if(window.DSAProbs.editDistance&&document.getElementById('prob-edit-distance'))window.DSAProbs.editDistance('prob-edit-distance');
+      if(window.DSAProbs.coinChangeII&&document.getElementById('prob-coin-change-ii'))window.DSAProbs.coinChangeII('prob-coin-change-ii');
+      if(window.DSAProbs.partitionSubset&&document.getElementById('prob-partition-subset'))window.DSAProbs.partitionSubset('prob-partition-subset');
+      if(window.DSAProbs.houseRobberII&&document.getElementById('prob-house-robber-ii'))window.DSAProbs.houseRobberII('prob-house-robber-ii');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
