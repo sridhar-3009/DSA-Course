@@ -287,6 +287,46 @@
     <div class="tc-num">P46</div><div class="tc-title">Balanced Binary Tree</div>
     <div class="tc-diff diff-easy">Easy</div>
   </a>
+  <a href="#p-diameter-tree" class="prob-toc-card">
+    <div class="tc-num">P47</div><div class="tc-title">Diameter of Binary Tree</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-same-tree" class="prob-toc-card">
+    <div class="tc-num">P48</div><div class="tc-title">Same Tree</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-subtree" class="prob-toc-card">
+    <div class="tc-num">P49</div><div class="tc-title">Subtree of Another Tree</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-right-side-view" class="prob-toc-card">
+    <div class="tc-num">P50</div><div class="tc-title">Binary Tree Right Side View</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-count-good-nodes" class="prob-toc-card">
+    <div class="tc-num">P51</div><div class="tc-title">Count Good Nodes in Binary Tree</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-kth-smallest" class="prob-toc-card">
+    <div class="tc-num">P52</div><div class="tc-title">Kth Smallest Element in BST</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-lca-bst" class="prob-toc-card">
+    <div class="tc-num">P53</div><div class="tc-title">Lowest Common Ancestor of BST</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-word-search" class="prob-toc-card">
+    <div class="tc-num">P54</div><div class="tc-title">Word Search</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-reorder-list" class="prob-toc-card">
+    <div class="tc-num">P55</div><div class="tc-title">Reorder List</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-merge-k-lists" class="prob-toc-card">
+    <div class="tc-num">P56</div><div class="tc-title">Merge K Sorted Lists</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -1709,11 +1749,281 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P47 Diameter of Binary Tree -->
+  <div class="prob-section" id="p-diameter-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P47 — Easy</span><span class="prob-section-title">Diameter of Binary Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Find the longest path between any two nodes (number of edges). Brute: for every node compute <code>height(left) + height(right)</code> — O(n) per node = O(n²). Optimal: single DFS returns height bottom-up and updates diameter as a side effect — O(n).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n²)</span><span class="prob-compl-chip">Optimal O(n) · O(h) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-diameter-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the brute force approach run in O(n²)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>It sorts nodes before computing heights</div>
+          <div class="quiz-option" data-correct="true" data-explanation="For each of the n nodes the brute approach calls height(), which itself takes O(n) time by traversing the subtree. There is no memoization, so the same subtree heights are recomputed repeatedly. Total: O(n) nodes × O(n) height calls = O(n²)."><span class="opt-letter">B</span>For each of n nodes it calls height() which traverses the subtree — O(n) work per node with no memoization</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It visits every pair of nodes to compare their values</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It builds a copy of the tree for each node</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the optimal DFS, what value does each recursive call return?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The diameter of the subtree rooted at that node</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Each call returns 1 + max(leftHeight, rightHeight) — the HEIGHT of its subtree. The diameter update (leftHeight + rightHeight) happens as a side effect inside the call. This way a single DFS computes both heights and the global diameter simultaneously."><span class="opt-letter">B</span>The HEIGHT of its subtree — diameter is updated as a side effect</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The number of nodes in the subtree</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The depth of the deepest leaf</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P48 Same Tree -->
+  <div class="prob-section" id="p-same-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P48 — Easy</span><span class="prob-section-title">Same Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc">Check if two binary trees are structurally identical with the same node values. Recursive DFS: compare root values, then recursively check left subtrees and right subtrees. Base cases: both null → true; one null → false.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-same-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What base cases must the recursive function handle?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Only when both nodes are leaves</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Two base cases: (1) both null → return true (matching empty subtrees); (2) exactly one null → return false (structural mismatch). If both are non-null, compare values and recurse on children."><span class="opt-letter">B</span>Both null → true; exactly one null → false</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When node values are equal, stop and return true</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only when tree depth exceeds some threshold</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Are [1,2] and [1,null,2] the same tree?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Yes — they contain the same values 1 and 2</div>
+          <div class="quiz-option" data-correct="true" data-explanation="[1,2] has 2 as the LEFT child of 1. [1,null,2] has 2 as the RIGHT child. The structures differ. At the root (1): check left child — first tree has node(2), second has null → mismatch → false."><span class="opt-letter">B</span>No — 2 is the left child in [1,2] but the right child in [1,null,2]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Yes — same number of nodes and same depth</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Depends on whether comparison is case-sensitive</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P49 Subtree of Another Tree -->
+  <div class="prob-section" id="p-subtree">
+    <div class="prob-section-header"><span class="prob-section-num">P49 — Easy</span><span class="prob-section-title">Subtree of Another Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Check if <code>subRoot</code> is a subtree of <code>root</code>. At each node of root, run <code>sameTree(node, subRoot)</code>. If any matches, return true. Time: O(m·n) where m and n are sizes of both trees.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(max(h₁,h₂)) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-subtree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is it O(m·n) and not O(m+n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the trees must be sorted first</div>
+          <div class="quiz-option" data-correct="true" data-explanation="For each of the m nodes in root, we potentially run sameTree which takes O(n) time (comparing the n-node subRoot). In the worst case (e.g., all nodes match until the last), this is m × n comparisons."><span class="opt-letter">B</span>For each of the m root nodes we run sameTree in O(n) — total O(m·n) in the worst case</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because we visit each node twice</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because of the recursion overhead on the call stack</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For root=[3,4,5,1,2] and subRoot=[4,1,2] — is subRoot a subtree?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Node 4 in root has left child 1 and right child 2 — exactly matching subRoot=[4,1,2]. sameTree(root.left, subRoot) returns true."><span class="opt-letter">A</span>Yes — node 4 in root has the same structure and values as subRoot</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>No — 4 appears in root but its subtree has additional nodes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>No — only exact whole-tree matches count</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Yes — any node value appearing in both trees makes it a subtree</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P50 Binary Tree Right Side View -->
+  <div class="prob-section" id="p-right-side-view">
+    <div class="prob-section-header"><span class="prob-section-num">P50 — Medium</span><span class="prob-section-title">Binary Tree Right Side View</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">BFS</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Return the values visible when looking at the tree from the right side — one value per level. BFS: last node dequeued at each level. DFS right-first: first node visited at each depth is the rightmost.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space BFS · O(h) space DFS</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-right-side-view"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [1,2,3,null,5,null,4], what is the right side view?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Level 0: only node 1 → rightmost = 1. Level 1: nodes 2 and 3 → rightmost = 3. Level 2: nodes 5 and 4 → rightmost = 4. View: [1,3,4]."><span class="opt-letter">A</span>[1, 3, 4]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[1, 2, 5]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[1, 3, 5, 4]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[1, 2, 3, 4]</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the DFS approach, why must we visit the RIGHT child before the LEFT?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Right-first is required for all tree problems</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We track the maximum depth seen so far (maxD). The FIRST node reached at a new depth is added to the result. By visiting right before left, the first-reached node at each depth is always the rightmost — exactly what we want."><span class="opt-letter">B</span>The first node visited at each new depth is added to result — visiting right first ensures that node is the rightmost</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Left-first DFS gives the same result but is slower</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To avoid revisiting nodes that were already highlighted</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P51 Count Good Nodes -->
+  <div class="prob-section" id="p-count-good-nodes">
+    <div class="prob-section-header"><span class="prob-section-num">P51 — Medium</span><span class="prob-section-title">Count Good Nodes in Binary Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">A node is "good" if no value on the path from root to that node is greater than its own value. DFS: pass the maximum value seen so far down the path. Count each node where <code>val ≥ maxSoFar</code>.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-count-good-nodes"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">The root is always a good node. Why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Roots always have the largest value in the tree</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The root has no ancestors — the path from root to itself contains only itself. maxSoFar starts at −∞ (or the root's own value), so root.val ≥ maxSoFar is always true."><span class="opt-letter">B</span>The root has no ancestors, so maxSoFar = −∞ and root.val ≥ −∞ is always true</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Roots are always non-negative in value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Good node counting always starts from 1</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [3,1,4,3,null,1,5], how many good nodes are there?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>3</div>
+          <div class="quiz-option" data-correct="true" data-explanation="DFS: 3 (max=−∞ → good, max now 3); 1 (max=3, 1<3 → skip); 3 (max=3, 3≥3 → good); 4 (max=3, 4≥3 → good, max now 4); 1 (max=4, 1<4 → skip); 5 (max=4, 5≥4 → good). Total: 4."><span class="opt-letter">B</span>4 — nodes 3 (root), 3, 4, and 5 are good</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P52 Kth Smallest in BST -->
+  <div class="prob-section" id="p-kth-smallest">
+    <div class="prob-section-header"><span class="prob-section-num">P52 — Medium</span><span class="prob-section-title">Kth Smallest Element in a BST</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">BST</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Inorder traversal of a BST produces a sorted sequence. Brute: collect all inorder values, return index k−1. Optimal: count during traversal — stop at count = k without visiting remaining nodes.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n)</span><span class="prob-compl-chip">Optimal O(k) average · O(h) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-kth-smallest"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does inorder traversal of a BST give sorted order?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>BSTs store values sorted at insertion time</div>
+          <div class="quiz-option" data-correct="true" data-explanation="By the BST property: left subtree < node < right subtree. Inorder traversal visits left first, then the node, then right — so it visits values in strictly increasing order."><span class="opt-letter">B</span>BST property: left < node < right. Inorder visits left→node→right, naturally ascending.</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Inorder gives sorted output only for balanced BSTs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The traversal implicitly sorts values before visiting</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For BST [3,1,4,null,2] and k=1, what is the answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Inorder of [3,1,4,null,2]: visit 1 (leftmost), then 2 (right child of 1), then 3 (root), then 4. Sorted: [1,2,3,4]. k=1 → first = 1."><span class="opt-letter">A</span>1 — inorder sequence is [1,2,3,4]; k=1 gives the first element</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3 — the root is always the kth smallest</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>4</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P53 LCA of BST -->
+  <div class="prob-section" id="p-lca-bst">
+    <div class="prob-section-header"><span class="prob-section-num">P53 — Medium</span><span class="prob-section-title">Lowest Common Ancestor of a BST</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">BST</span></div>
+    <p class="prob-section-desc">Find the deepest node that is an ancestor of both p and q. For a BST: if both p,q &lt; node → go left; if both &gt; node → go right; else node is the LCA (the paths to p and q diverge here).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(h) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lca-bst"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the "split point" in the optimal BST approach the LCA?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because it is always the median value in the BST</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The split point is the first node where p and q are on DIFFERENT sides (or one equals the node). Before the split, both p and q are in the same subtree so the LCA must be deeper. At the split, one goes left and one goes right — this node is the deepest node that is an ancestor of both, i.e., the LCA."><span class="opt-letter">B</span>At the split point p and q diverge to different subtrees — this is the deepest node that ancestors both</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The split point is always the root for BST problems</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because both p and q are leaves in a balanced BST</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For BST [6,2,8,0,4,7,9] with p=2, q=4 — what is the LCA?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Start at root=6. Both 2 and 4 < 6 → go left to node 2. Now check: p=2 equals current node (2), and q=4 > 2 (right side). This is the split point → LCA = 2."><span class="opt-letter">A</span>2 — both 2 and 4 are in node 2's subtree; node 2 itself is the split point</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>6 — the root is always the LCA</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4 — the deeper node is the LCA</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8 — midpoint of 2 and 8</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P54 Word Search -->
+  <div class="prob-section" id="p-word-search">
+    <div class="prob-section-header"><span class="prob-section-num">P54 — Medium</span><span class="prob-section-title">Word Search</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Backtracking</span><span class="prob-tag">DFS</span><span class="prob-tag">Graphs</span></div>
+    <p class="prob-section-desc">Given a 2D grid of characters, find if a word exists as a path of horizontally/vertically adjacent cells. DFS backtracking: mark cell as visited (#), recurse in 4 directions, unmark on backtrack. Each cell can be used only once per path.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n·4^L) time · O(L) space — L = word length</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-search"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we "unmark" visited cells when backtracking?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To reset the grid for the next call to the function</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A cell is only unavailable within the CURRENT path — another path from a different starting cell is allowed to use it. Unmarking on backtrack ensures cells are only blocked for the duration of the current path being explored, not globally."><span class="opt-letter">B</span>A cell is only blocked within the current path — other paths from different starting points need to reuse it</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To save memory — keeping visited markers would exceed the space limit</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>So the grid remains sorted after the search</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the worst-case time complexity of word search and when does it occur?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>O(n²) — two nested loops over the grid</div>
+          <div class="quiz-option" data-correct="true" data-explanation="O(m·n·4^L): for each of the m×n cells as a potential start, we explore up to 4^L paths of length L. Worst case: all grid cells are the same character and the word is almost that character (every path explored fully before failing on the last character)."><span class="opt-letter">B</span>O(m·n·4^L) — each cell is a potential start and each step explores 4 directions, up to L levels deep</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>O(m·n·L) — DFS is linear in the word length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>O(L²) — only depends on the word length</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P55 Reorder List -->
+  <div class="prob-section" id="p-reorder-list">
+    <div class="prob-section-header"><span class="prob-section-num">P55 — Medium</span><span class="prob-section-title">Reorder List</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Linked List</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Reorder L0→L1→…→Ln to L0→Ln→L1→Ln-1→… in-place. Brute: collect to array, rebuild. Optimal three steps: find middle (slow/fast), reverse second half, merge alternating. All O(n) time, O(1) space.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n) · O(n) space</span><span class="prob-compl-chip">Optimal O(n) · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-reorder-list"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [1,2,3,4], what is the reordered list?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Pattern L0→Ln→L1→Ln-1: L0=1, Ln=4, L1=2, Ln-1=3 → [1,4,2,3]."><span class="opt-letter">A</span>[1, 4, 2, 3]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[1, 3, 2, 4]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[4, 3, 2, 1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[1, 2, 4, 3]</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we reverse the second half before merging?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To sort the second half before interleaving</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The pattern requires taking from the END of the list alternately. Reversing the second half lets us take from its FRONT instead — making it a simple linear merge of two lists rather than needing random access to the tail."><span class="opt-letter">B</span>Reversing the 2nd half means we can take from its front instead of its tail — turning tail-access into a simple linear merge</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>So the merged result is automatically sorted</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Reversing disconnects the second half from the first</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P56 Merge K Sorted Lists -->
+  <div class="prob-section" id="p-merge-k-lists">
+    <div class="prob-section-header"><span class="prob-section-num">P56 — Hard</span><span class="prob-section-title">Merge K Sorted Lists</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Linked List</span><span class="prob-tag">Heap</span><span class="prob-tag">Divide &amp; Conquer</span></div>
+    <p class="prob-section-desc">Merge k sorted linked lists into one sorted list. Brute: collect all values, sort, rebuild — O(n log n). Optimal: min-heap — always extract the smallest head across all k lists in O(log k), total O(n log k).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n log n)</span><span class="prob-compl-chip">Optimal O(n log k) — k = number of lists, n = total nodes</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-merge-k-lists"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the heap approach O(n log k) instead of O(n log n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the heap sorts values faster than comparison sort</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The heap holds at most k elements (one head per list). Each heap push/pop is O(log k). We do this n times (once per total node). Total: O(n log k). This is better than O(n log n) when k << n."><span class="opt-letter">B</span>The heap holds only k elements; each push/pop is O(log k). Over n total nodes: O(n log k) — and k << n typically.</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because merge sort is used internally on k sub-problems</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The heap skips duplicate values, reducing comparisons</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [[1,4,5],[1,3,4],[2,6]], what is the merged result?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Min-heap picks in order: 1(L0),1(L1),2(L2),3(L1),4(L0),4(L1),5(L0),6(L2) → [1,1,2,3,4,4,5,6]."><span class="opt-letter">A</span>[1,1,2,3,4,4,5,6]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[1,2,3,4,5,6]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[1,1,2,3,4,5,6]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[1,3,4,1,4,5,2,6]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">46 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">56 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -1759,6 +2069,16 @@
       if(window.DSAProbs.longestConsecutive&&document.getElementById('prob-longest-consecutive'))window.DSAProbs.longestConsecutive('prob-longest-consecutive');
       if(window.DSAProbs.maxProductSubarray&&document.getElementById('prob-max-product'))window.DSAProbs.maxProductSubarray('prob-max-product');
       if(window.DSAProbs.balancedBinaryTree&&document.getElementById('prob-balanced-tree'))window.DSAProbs.balancedBinaryTree('prob-balanced-tree');
+      if(window.DSAProbs.diameterBinaryTree&&document.getElementById('prob-diameter-tree'))window.DSAProbs.diameterBinaryTree('prob-diameter-tree');
+      if(window.DSAProbs.sameTree&&document.getElementById('prob-same-tree'))window.DSAProbs.sameTree('prob-same-tree');
+      if(window.DSAProbs.subtreeCheck&&document.getElementById('prob-subtree'))window.DSAProbs.subtreeCheck('prob-subtree');
+      if(window.DSAProbs.rightSideView&&document.getElementById('prob-right-side-view'))window.DSAProbs.rightSideView('prob-right-side-view');
+      if(window.DSAProbs.countGoodNodes&&document.getElementById('prob-count-good-nodes'))window.DSAProbs.countGoodNodes('prob-count-good-nodes');
+      if(window.DSAProbs.kthSmallestBST&&document.getElementById('prob-kth-smallest'))window.DSAProbs.kthSmallestBST('prob-kth-smallest');
+      if(window.DSAProbs.lcaOfBST&&document.getElementById('prob-lca-bst'))window.DSAProbs.lcaOfBST('prob-lca-bst');
+      if(window.DSAProbs.wordSearch&&document.getElementById('prob-word-search'))window.DSAProbs.wordSearch('prob-word-search');
+      if(window.DSAProbs.reorderList&&document.getElementById('prob-reorder-list'))window.DSAProbs.reorderList('prob-reorder-list');
+      if(window.DSAProbs.mergeKLists&&document.getElementById('prob-merge-k-lists'))window.DSAProbs.mergeKLists('prob-merge-k-lists');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
