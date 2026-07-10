@@ -2910,6 +2910,424 @@ function initLongestPalindrome(id){
   draw(null);
 }
 
+/* ════════════════════════════════════════════════════════════
+   P29 — Maximum Depth of Binary Tree
+════════════════════════════════════════════════════════════ */
+function initMaxDepthTree(id){
+  var container=document.getElementById(id);if(!container)return;
+  var treeArr=[3,9,20,null,null,15,7];
+
+  function mkTree(arr){
+    if(!arr||!arr.length||arr[0]==null)return null;
+    var nodes=arr.map(function(v){return v!=null?{val:v,left:null,right:null,depth:0,xPos:0}:null;});
+    for(var i=0;i<nodes.length;i++){
+      if(!nodes[i])continue;
+      var l=2*i+1,r2=2*i+2;
+      if(l<nodes.length)nodes[i].left=nodes[l]||null;
+      if(r2<nodes.length)nodes[i].right=nodes[r2]||null;
+    }
+    function setD(n,d){if(!n)return;n.depth=d;setD(n.left,d+1);setD(n.right,d+1);}
+    setD(nodes[0],0);
+    var cnt=[0];
+    function ino(n){if(!n)return;ino(n.left);n.xPos=cnt[0]++;ino(n.right);}
+    ino(nodes[0]);
+    return nodes[0];
+  }
+
+  function collectAll(n,out){if(!n)return;out.push(n);collectAll(n.left,out);collectAll(n.right,out);}
+
+  function buildBFS(r){
+    var steps=[],visited={},queue=[{node:r,dep:1}];
+    steps.push({hl:{},dep:0,msg:'BFS: process level by level, count the levels.'});
+    while(queue.length){
+      var sz=queue.length,d=queue[0].dep,lvl=[];
+      for(var i=0;i<sz;i++){
+        var item=queue.shift();
+        lvl.push(item.node.val);
+        if(item.node.left)queue.push({node:item.node.left,dep:d+1});
+        if(item.node.right)queue.push({node:item.node.right,dep:d+1});
+      }
+      var hl=Object.assign({},visited);
+      lvl.forEach(function(v){hl[v]='comparing';});
+      steps.push({hl:hl,dep:d,msg:'Level '+d+': ['+lvl.join(', ')+']. '+(queue.length?'Next level…':'All levels done.')});
+      lvl.forEach(function(v){visited[v]='sorted';});
+    }
+    var doneHl={};var all=[];collectAll(r,all);all.forEach(function(n){doneHl[n.val]='found';});
+    var maxD=Math.max.apply(null,all.map(function(n){return n.depth;}))+1;
+    steps.push({hl:doneHl,dep:maxD,done:true,msg:'Max depth = '+maxD+'. O(n) BFS.'});
+    return steps;
+  }
+
+  function buildDFS(r){
+    var steps=[];
+    steps.push({hl:{},dep:0,msg:'DFS: depth(node) = 1 + max(depth(left), depth(right)). Base: null → 0.'});
+    function dfs(n,hl){
+      if(!n){steps.push({hl:Object.assign({},hl),dep:0,msg:'null → return 0'});return 0;}
+      var hl2=Object.assign({},hl);hl2[n.val]='comparing';
+      steps.push({hl:hl2,dep:0,msg:'Visit '+n.val+' (depth '+n.depth+'): recurse left…'});
+      var l=dfs(n.left,hl2);
+      hl2=Object.assign({},hl2);hl2[n.val]='active';
+      steps.push({hl:hl2,dep:0,msg:'Visit '+n.val+': left='+l+', recurse right…'});
+      var r2=dfs(n.right,hl2);
+      var d=1+Math.max(l,r2);
+      hl2=Object.assign({},hl2);hl2[n.val]='found';
+      steps.push({hl:hl2,dep:d,msg:'depth('+n.val+') = 1+max('+l+','+r2+') = '+d});
+      return d;
+    }
+    var maxD=dfs(r,{});
+    var doneHl={};var all=[];collectAll(r,all);all.forEach(function(n){doneHl[n.val]='found';});
+    steps.push({hl:doneHl,dep:maxD,done:true,msg:'Max depth = '+maxD+'. O(n) time, O(h) space.'});
+    return steps;
+  }
+
+  function drawTree(ctx,r,W,H,hl){
+    var all=[];collectAll(r,all);
+    if(!all.length)return;
+    var maxX=Math.max.apply(null,all.map(function(n){return n.xPos;}));
+    var maxD=Math.max.apply(null,all.map(function(n){return n.depth;}));
+    var xSp=Math.min(72,(W-50)/(maxX+1)),ySp=Math.min(60,(H-40)/(maxD+1));
+    var xOff=(W-maxX*xSp)/2,yOff=28,R=Math.min(18,xSp*0.38);
+    function nx(n){return xOff+n.xPos*xSp;}
+    function ny(n){return yOff+n.depth*ySp;}
+    all.forEach(function(n){
+      [n.left,n.right].forEach(function(c){
+        if(!c)return;
+        ctx.save();ctx.strokeStyle='rgba(139,92,246,.28)';ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.moveTo(nx(n),ny(n));ctx.lineTo(nx(c),ny(c));ctx.stroke();ctx.restore();
+      });
+    });
+    all.forEach(function(n){
+      var x=nx(n),y=ny(n);
+      var st=(hl&&hl[n.val])||'default';
+      var cs2=CS[st];
+      ctx.save();
+      ctx.beginPath();ctx.arc(x,y,R,0,Math.PI*2);
+      var g=ctx.createRadialGradient(x,y-R*0.3,1,x,y,R);
+      g.addColorStop(0,cs2.g0);g.addColorStop(1,cs2.g1);
+      ctx.fillStyle=g;ctx.fill();
+      if(cs2.gl){ctx.shadowColor=cs2.gl;ctx.shadowBlur=10;}
+      ctx.strokeStyle=cs2.sk;ctx.lineWidth=1.5;ctx.stroke();
+      ctx.restore();
+      ctx.save();ctx.fillStyle=cs2.tx;
+      ctx.font='bold '+(R<14?8:11)+'px "JetBrains Mono",monospace';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(n.val,x,y);ctx.restore();
+    });
+  }
+
+  var root=mkTree(treeArr);
+
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    drawTree(ui.ctx,root,ui.W,ui.H-52,s&&s.hl?s.hl:null);
+    if(s&&s.dep>0){
+      ui.ctx.save();rr(ui.ctx,ui.W/2-80,ui.H-46,160,26,5);
+      var tg=ui.ctx.createLinearGradient(ui.W/2-80,ui.H-46,ui.W/2+80,ui.H-20);
+      tg.addColorStop(0,s.done?'rgba(5,46,26,.8)':'rgba(46,27,107,.8)');
+      tg.addColorStop(1,s.done?'rgba(6,46,26,.4)':'rgba(30,27,75,.4)');
+      ui.ctx.fillStyle=tg;ui.ctx.fill();
+      ui.ctx.strokeStyle=s.done?'rgba(52,211,153,.6)':'rgba(139,92,246,.5)';ui.ctx.lineWidth=1.5;ui.ctx.stroke();
+      ui.ctx.fillStyle=s.done?'#34D399':'#C4B5FD';
+      ui.ctx.font='bold 11px "JetBrains Mono",monospace';
+      ui.ctx.textAlign='center';ui.ctx.textBaseline='middle';
+      ui.ctx.fillText('depth = '+s.dep,ui.W/2,ui.H-33);ui.ctx.restore();
+    }
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:660,canvasH:290,
+    approaches:[{key:'bfs',label:'📊 BFS Level-Order'},{key:'dfs',label:'🔄 DFS Recursive'}],
+    buildSteps:function(a){root=mkTree(treeArr);return a==='dfs'?buildDFS(root):buildBFS(root);},
+    onStep:function(s){draw(s);},
+    onReset:function(){root=mkTree(treeArr);draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P30 — Generate Parentheses
+════════════════════════════════════════════════════════════ */
+function initGenerateParentheses(id){
+  var container=document.getElementById(id);if(!container)return;
+  var n=3;
+
+  function buildSteps(n2){
+    var steps=[],results=[];
+    steps.push({cur:'',open:0,close:0,results:[],msg:'Build valid combinations. Add "(" if open<n, add ")" if close<open.'});
+    function rec(s,op,cl){
+      if(s.length===2*n2){
+        results.push(s);
+        steps.push({cur:s,open:op,close:cl,results:results.slice(),found:true,
+          msg:'✓ Valid: "'+s+'" ('+results.length+' found so far)'});
+        return;
+      }
+      if(op<n2){
+        steps.push({cur:s,open:op,close:cl,adding:'(',results:results.slice(),
+          msg:'"'+s+'": open('+op+')<n('+n2+') → add "(" → "'+s+'("'});
+        rec(s+'(',op+1,cl);
+      }
+      if(cl<op){
+        steps.push({cur:s,open:op,close:cl,adding:')',results:results.slice(),
+          msg:'"'+s+'": close('+cl+')<open('+op+') → add ")" → "'+s+')"'});
+        rec(s+')',op,cl+1);
+      }
+    }
+    rec('',0,0);
+    steps.push({cur:'',results:results,done:true,
+      msg:'Done! '+results.length+' valid combination'+(results.length===1?'':'s')+': '+results.map(function(r){return '"'+r+'"';}).join(', ')});
+    return steps;
+  }
+
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var maxLen=2*n,cur=(s&&s.cur)||'';
+    var CW=Math.min(38,Math.max(20,Math.floor((ui.W-80)/maxLen)));
+    var gap=3,tw=maxLen*(CW+gap)-gap,sx=(ui.W-tw)/2,row=52;
+
+    lbl(ui.ctx,'building:',sx-4,row-14,'rgba(167,139,250,.4)',9,'right');
+    for(var i=0;i<maxLen;i++){
+      var x=sx+i*(CW+gap);
+      var c=i<cur.length?cur[i]:'';
+      var isNew=i===cur.length-1&&s&&s.adding&&c;
+      var st=s&&s.found?'found':isNew?'comparing':c?'sorted':'default';
+      rr(ui.ctx,x,row,CW,30,4);
+      var g=ui.ctx.createLinearGradient(x,row,x,row+30);
+      g.addColorStop(0,CS[st].g0);g.addColorStop(1,CS[st].g1);
+      ui.ctx.fillStyle=g;ui.ctx.fill();
+      ui.ctx.strokeStyle=CS[st].sk;ui.ctx.lineWidth=c?1.5:0.7;ui.ctx.stroke();
+      if(c)lbl(ui.ctx,c,x+CW/2,row+15,CS[st].tx,14);
+    }
+
+    if(s&&s.open!=null)
+      lbl(ui.ctx,'open='+s.open+'  close='+s.close,ui.W/2,row+44,'rgba(196,181,253,.6)',10);
+
+    var results=(s&&s.results)||[];
+    if(results.length){
+      lbl(ui.ctx,'found:',ui.W/2,row+62,'rgba(167,139,250,.4)',9);
+      var ry=row+76,rsw=Math.min(80,Math.max(44,Math.floor((ui.W-40)/results.length)-6));
+      var rsx=(ui.W-(results.length*(rsw+4)-4))/2;
+      results.forEach(function(r,i){
+        var rx=rsx+i*(rsw+4);
+        rr(ui.ctx,rx,ry,rsw,24,4);
+        var g=ui.ctx.createLinearGradient(rx,ry,rx,ry+24);
+        g.addColorStop(0,CS.found.g0);g.addColorStop(1,CS.found.g1);
+        ui.ctx.fillStyle=g;ui.ctx.fill();
+        ui.ctx.strokeStyle=CS.found.sk;ui.ctx.lineWidth=1.2;ui.ctx.stroke();
+        lbl(ui.ctx,r,rx+rsw/2,ry+12,CS.found.tx,rsw<58?8:10);
+      });
+    }
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:680,canvasH:250,
+    inputs:[{id:'n',lbl:'n (pairs):',elem:inp('3','',42)}],
+    onInputs:function(v){var n2=parseInt(v.n);if(!isNaN(n2)&&n2>=1&&n2<=4)n=n2;},
+    buildSteps:function(){return buildSteps(n);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P31 — Meeting Rooms II
+════════════════════════════════════════════════════════════ */
+function initMeetingRooms(id){
+  var container=document.getElementById(id);if(!container)return;
+  var intervals=[[0,30],[5,10],[15,20]];
+
+  function buildBrute(iv){
+    var steps=[],sorted=iv.slice().sort(function(a,b){return a[0]-b[0];});
+    steps.push({iv:sorted,rooms:[],cur:null,msg:'Sort by start time. Try to fit each meeting into an existing room.'});
+    var rooms=[];
+    sorted.forEach(function(m){
+      var placed=false;
+      for(var r=0;r<rooms.length;r++){
+        if(rooms[r]<=m[0]){
+          var prev=rooms[r];rooms[r]=m[1];placed=true;
+          steps.push({iv:sorted,rooms:rooms.slice(),cur:m,
+            msg:'['+m+']: room '+(r+1)+' free (ends '+prev+'≤start '+m[0]+') — reuse. Rooms: '+rooms.length});
+          break;
+        }
+      }
+      if(!placed){
+        rooms.push(m[1]);
+        steps.push({iv:sorted,rooms:rooms.slice(),cur:m,
+          msg:'['+m+']: no free room — open room '+rooms.length+'. All ends: ['+rooms.join(',')+']'});
+      }
+    });
+    steps.push({iv:sorted,rooms:rooms.slice(),done:true,msg:'Min rooms needed: '+rooms.length+'. O(n²).'});
+    return steps;
+  }
+
+  function buildHeap(iv){
+    var steps=[],sorted=iv.slice().sort(function(a,b){return a[0]-b[0];});
+    steps.push({iv:sorted,heap:[],cur:null,msg:'Sort by start. Min-heap of room end-times — heap.min = earliest room to free up.'});
+    var heap=[];
+    function hpush(v){heap.push(v);heap.sort(function(a,b){return a-b;});}
+    sorted.forEach(function(m){
+      if(heap.length&&heap[0]<=m[0]){
+        var freed=heap.shift();
+        hpush(m[1]);
+        steps.push({iv:sorted,heap:heap.slice(),cur:m,freed:freed,
+          msg:'['+m+']: heap min='+freed+'≤start='+m[0]+' — reuse room. Heap: ['+heap.join(',')+']'});
+      } else {
+        hpush(m[1]);
+        steps.push({iv:sorted,heap:heap.slice(),cur:m,
+          msg:'['+m+']: heap min='+(heap[0]||'—')+'>start='+m[0]+' — new room. Heap: ['+heap.join(',')+']'});
+      }
+    });
+    steps.push({iv:sorted,heap:heap.slice(),done:true,msg:'Min rooms = '+heap.length+'. O(n log n). Heap size = answer.'});
+    return steps;
+  }
+
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var iv=s&&s.iv?s.iv:intervals.slice().sort(function(a,b){return a[0]-b[0];});
+    var maxT=Math.max.apply(null,iv.map(function(x){return x[1];}));
+    var tw=ui.W-100,tlx=50,sy=36,IH=22,gap=5;
+    var scale=tw/maxT;
+
+    lbl(ui.ctx,'0',tlx,sy-10,'rgba(167,139,250,.3)',8);
+    lbl(ui.ctx,maxT,tlx+tw,sy-10,'rgba(167,139,250,.3)',8);
+    ui.ctx.save();ui.ctx.strokeStyle='rgba(139,92,246,.2)';ui.ctx.lineWidth=1;
+    ui.ctx.beginPath();ui.ctx.moveTo(tlx,sy-2);ui.ctx.lineTo(tlx+tw,sy-2);ui.ctx.stroke();ui.ctx.restore();
+
+    iv.forEach(function(m,i){
+      var x=tlx+m[0]*scale,w=Math.max(4,(m[1]-m[0])*scale);
+      var isCur=s&&s.cur&&s.cur[0]===m[0]&&s.cur[1]===m[1];
+      var isDone=s&&s.done;
+      var st=isDone?'found':isCur?'comparing':'active';
+      var cs2=CS[st];
+      rr(ui.ctx,x,sy+i*(IH+gap),w,IH,4);
+      var g=ui.ctx.createLinearGradient(x,sy,x,sy+IH);
+      g.addColorStop(0,cs2.g0);g.addColorStop(1,cs2.g1);
+      ui.ctx.fillStyle=g;ui.ctx.fill();
+      if(isCur){ui.ctx.save();ui.ctx.shadowColor=cs2.sk;ui.ctx.shadowBlur=8;}
+      ui.ctx.strokeStyle=cs2.sk;ui.ctx.lineWidth=1.2;ui.ctx.stroke();
+      if(isCur)ui.ctx.restore();
+      lbl(ui.ctx,'['+m[0]+','+m[1]+']',x+w/2,sy+i*(IH+gap)+IH/2,cs2.tx,9);
+    });
+
+    var infoY=sy+iv.length*(IH+gap)+14;
+    if(s&&s.rooms){
+      lbl(ui.ctx,'room end-times: ['+s.rooms.join(', ')+']',ui.W/2,infoY,'rgba(167,139,250,.6)',9);
+    }
+    if(s&&s.heap){
+      lbl(ui.ctx,'min-heap: ['+s.heap.join(', ')+']',ui.W/2,infoY,'rgba(167,139,250,.6)',9);
+    }
+    if(s&&s.done){
+      var cnt=s.rooms?s.rooms.length:s.heap?s.heap.length:0;
+      lbl(ui.ctx,'Min rooms needed = '+cnt,ui.W/2,ui.H-28,'#34D399',12);
+    }
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:680,canvasH:240,
+    approaches:[{key:'brute',label:'⚡ Brute O(n²)'},{key:'heap',label:'🏔 Min-Heap O(n log n)'}],
+    inputs:[{id:'i',lbl:'Intervals (start,end; sep by ;):',elem:inp('0,30;5,10;15,20','',240)}],
+    onInputs:function(v){
+      try{
+        var iv2=v.i.split(';').map(function(p){return p.split(',').map(Number);});
+        if(iv2.length>=1&&iv2.length<=6&&iv2.every(function(p){return p.length===2&&!isNaN(p[0])&&!isNaN(p[1])&&p[0]<p[1];}))
+          intervals=iv2;
+      }catch(e){}
+    },
+    buildSteps:function(a){return a==='heap'?buildHeap(intervals):buildBrute(intervals);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P32 — Rotate Array
+════════════════════════════════════════════════════════════ */
+function initRotateArray(id){
+  var container=document.getElementById(id);if(!container)return;
+  var arr=[1,2,3,4,5,6,7],k=3;
+
+  function buildBrute(a,k2){
+    var steps=[],n=a.length,k3=k2%n,cur=a.slice();
+    steps.push({arr:cur.slice(),k:k3,msg:'Brute: rotate by 1, k times. O(n×k).'});
+    for(var i=0;i<k3;i++){
+      var last=cur[n-1];
+      for(var j=n-1;j>0;j--)cur[j]=cur[j-1];
+      cur[0]=last;
+      steps.push({arr:cur.slice(),k:k3,rotated:i+1,
+        msg:'Rotation '+(i+1)+'/'+k3+': moved '+last+' to front. Array: ['+cur.join(',')+']'});
+    }
+    steps.push({arr:cur.slice(),done:true,msg:'Done: ['+cur.join(',')+'] after '+k3+' rotations. O(n×k) time.'});
+    return steps;
+  }
+
+  function buildReversal(a,k2){
+    var steps=[],n=a.length,k3=k2%n,cur=a.slice();
+    steps.push({arr:cur.slice(),k:k3,msg:'Reversal trick: reverse all → reverse first k → reverse last n-k. O(n).'});
+    function rev(ar,l,r,label){
+      var before=ar.slice();
+      while(l<r){var t=ar[l];ar[l]=ar[r];ar[r]=t;l++;r--;}
+      steps.push({arr:ar.slice(),phase:label,msg:label+': ['+ar.join(',')+']'});
+    }
+    rev(cur,0,n-1,'Reverse all [0..'+( n-1)+']');
+    rev(cur,0,k3-1,'Reverse first k=[0..'+(k3-1)+']');
+    rev(cur,k3,n-1,'Reverse last n-k=['+(k3)+'..'+(n-1)+']');
+    steps.push({arr:cur.slice(),done:true,msg:'Rotated: ['+cur.join(',')+'] — O(n) time, O(1) space.'});
+    return steps;
+  }
+
+  function draw(s){
+    bg(ui.ctx,ui.W,ui.H);
+    var a=s&&s.arr?s.arr:arr,n=a.length;
+    var k3=(k%n)||k;
+    var CW=Math.min(60,Math.max(32,Math.floor((ui.W-60)/n)));
+    var gap=4,tw=n*(CW+gap)-gap,sx=(ui.W-tw)/2,row=70;
+
+    a.forEach(function(v,i){
+      var x=sx+i*(CW+gap);
+      var isDone=s&&s.done;
+      var isK=i<k3;
+      var st=isDone?'found':s&&s.phase&&isK?'comparing':s&&s.phase&&!isK?'active':'default';
+      var cs2=CS[st];
+      rr(ui.ctx,x,row,CW,36,5);
+      var g=ui.ctx.createLinearGradient(x,row,x,row+36);g.addColorStop(0,cs2.g0);g.addColorStop(1,cs2.g1);
+      ui.ctx.fillStyle=g;ui.ctx.fill();ui.ctx.strokeStyle=cs2.sk;ui.ctx.lineWidth=1.5;ui.ctx.stroke();
+      lbl(ui.ctx,v,x+CW/2,row+18,cs2.tx,13);
+      lbl(ui.ctx,i,x+CW/2,row+46,'rgba(167,139,250,.35)',8);
+    });
+
+    if(s&&s.phase){
+      var kx=sx+k3*(CW+gap)-gap/2;
+      ui.ctx.save();ui.ctx.strokeStyle='rgba(196,181,253,.35)';ui.ctx.lineWidth=1.5;
+      ui.ctx.setLineDash([4,3]);
+      ui.ctx.beginPath();ui.ctx.moveTo(kx,row-6);ui.ctx.lineTo(kx,row+42);ui.ctx.stroke();
+      ui.ctx.setLineDash([]);ui.ctx.restore();
+      lbl(ui.ctx,'k='+k3,kx,row-12,'rgba(196,181,253,.5)',9);
+    }
+
+    if(s&&s.done)
+      lbl(ui.ctx,'Rotated by k='+k3+': ['+a.join(', ')+']',ui.W/2,ui.H-28,'#34D399',11);
+  }
+
+  var ui=makeProbUI(container,{
+    canvasW:700,canvasH:220,
+    approaches:[{key:'brute',label:'⚡ Brute O(n×k)'},{key:'rev',label:'🔄 Reversal O(n) O(1)'}],
+    inputs:[
+      {id:'a',lbl:'Array:',elem:inp('1,2,3,4,5,6,7','',200)},
+      {id:'k',lbl:'k:',elem:inp('3','',36)}
+    ],
+    onInputs:function(v){
+      var p=v.a.split(',').map(function(s){return parseInt(s.trim());}).filter(function(x){return !isNaN(x);});
+      var k2=parseInt(v.k);
+      if(p.length>=2&&p.length<=10&&!isNaN(k2)&&k2>=1)arr=p,k=k2;
+    },
+    buildSteps:function(a){return a==='rev'?buildReversal(arr.slice(),k):buildBrute(arr.slice(),k);},
+    onStep:function(s){draw(s);},
+    onReset:function(){draw(null);}
+  });
+  draw(null);
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -2940,6 +3358,10 @@ window.DSAProbs={
   spiralMatrix:initSpiralMatrix,
   topKFrequent:initTopKFrequent,
   longestPalindrome:initLongestPalindrome,
+  maxDepthTree:initMaxDepthTree,
+  generateParentheses:initGenerateParentheses,
+  meetingRooms:initMeetingRooms,
+  rotateArray:initRotateArray,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -2973,6 +3395,10 @@ window.DSAProbs={
     if(document.getElementById('prob-spiral-matrix'))initSpiralMatrix('prob-spiral-matrix');
     if(document.getElementById('prob-top-k-frequent'))initTopKFrequent('prob-top-k-frequent');
     if(document.getElementById('prob-longest-palindrome'))initLongestPalindrome('prob-longest-palindrome');
+    if(document.getElementById('prob-max-depth-tree'))initMaxDepthTree('prob-max-depth-tree');
+    if(document.getElementById('prob-generate-parens'))initGenerateParentheses('prob-generate-parens');
+    if(document.getElementById('prob-meeting-rooms'))initMeetingRooms('prob-meeting-rooms');
+    if(document.getElementById('prob-rotate-array'))initRotateArray('prob-rotate-array');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();

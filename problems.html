@@ -73,7 +73,7 @@
 <div class="prob-hero">
   <div class="prob-tag-row">
     <span class="prob-tag">NeetCode 150</span>
-    <span class="prob-tag">28 Problems</span>
+    <span class="prob-tag">32 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
   </div>
@@ -192,6 +192,22 @@
   </a>
   <a href="#p-longest-palindrome" class="prob-toc-card">
     <div class="tc-num">P28</div><div class="tc-title">Longest Palindromic Substring</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-max-depth-tree" class="prob-toc-card">
+    <div class="tc-num">P29</div><div class="tc-title">Max Depth of Binary Tree</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-generate-parens" class="prob-toc-card">
+    <div class="tc-num">P30</div><div class="tc-title">Generate Parentheses</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-meeting-rooms" class="prob-toc-card">
+    <div class="tc-num">P31</div><div class="tc-title">Meeting Rooms II</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-rotate-array" class="prob-toc-card">
+    <div class="tc-num">P32</div><div class="tc-title">Rotate Array</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
 </div>
@@ -1005,11 +1021,181 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P29 Maximum Depth of Binary Tree -->
+  <div class="prob-section" id="p-max-depth-tree">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P29 — Easy</span>
+      <span class="prob-section-title">Maximum Depth of Binary Tree</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Trees</span><span class="prob-tag">DFS</span><span class="prob-tag">BFS</span>
+    </div>
+    <p class="prob-section-desc">Find the maximum depth (number of nodes along the longest root-to-leaf path). BFS: count levels one by one. DFS: <code>depth(node) = 1 + max(depth(left), depth(right))</code> — nodes glow as the recursion unwinds.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(n) time · O(h) space (h = height)</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-depth-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">For the DFS approach, what does the base case return?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Returning -1 would make a single-node tree have depth 0, which is incorrect by the standard definition."><span class="opt-letter">A</span>−1, so a leaf node returns depth 0</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When node is null (no child), return 0 — no nodes in this subtree. A leaf then gets depth = 1 + max(0, 0) = 1, which is correct."><span class="opt-letter">B</span>0 — a null node contributes no depth</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Returning 1 for null would overcount every path by 1."><span class="opt-letter">C</span>1 — every null sentinel counts as a level</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The base case is always for null nodes, not leaf nodes."><span class="opt-letter">D</span>The value of the leaf node itself</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">What is the space complexity of the DFS recursive approach on a balanced tree of n nodes?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="O(n) space is the worst case for a completely skewed (degenerate) tree, not a balanced one."><span class="opt-letter">A</span>O(n) — the call stack holds all n nodes</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The call stack depth equals the tree height h. For a balanced tree, h = O(log n). Each recursive call adds one frame; frames are popped as you backtrack."><span class="opt-letter">B</span>O(log n) — the call stack depth equals the tree height</div>
+          <div class="quiz-option" data-correct="false" data-explanation="O(1) would mean no recursion stack — DFS uses O(h) stack frames."><span class="opt-letter">C</span>O(1) — DFS uses no extra memory</div>
+          <div class="quiz-option" data-correct="false" data-explanation="O(n²) is not relevant here — DFS visits each node exactly once."><span class="opt-letter">D</span>O(n²) — each level makes n comparisons</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P30 Generate Parentheses -->
+  <div class="prob-section" id="p-generate-parens">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P30 — Medium</span>
+      <span class="prob-section-title">Generate Parentheses</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Backtracking</span><span class="prob-tag">Strings</span><span class="prob-tag">Recursion</span>
+    </div>
+    <p class="prob-section-desc">Generate all combinations of n pairs of valid parentheses. Backtracking: build the string character by character. Add <code>(</code> if <code>open &lt; n</code>. Add <code>)</code> if <code>close &lt; open</code>. When length = 2n, the string is complete.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(4ⁿ / √n) combinations · O(n) depth</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-generate-parens"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">Why is the constraint <code>close &lt; open</code> (not <code>close &lt; n</code>) for adding a closing bracket?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Using close < n would allow ')' before any '(' — producing invalid strings like '))(('. "><span class="opt-letter">A</span>close &lt; n would work equally well</div>
+          <div class="quiz-option" data-correct="true" data-explanation="You can only close a bracket that has been opened. close < open ensures every ')' has a matching '(' to its left. Using close < n would allow closing brackets before opening ones — producing invalid strings."><span class="opt-letter">B</span>You can only close a bracket that's already open — close &lt; open guarantees every ')' has a matching '('</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The constraint prevents invalid strings, not stack overflow."><span class="opt-letter">C</span>To prevent infinite recursion and stack overflow</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Performance is a side effect — correctness is the reason for the constraint."><span class="opt-letter">D</span>For performance — fewer branches to explore</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">How many valid combinations does n=3 produce?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="3 is not a Catalan number — for n=2 there are 2 combinations, for n=3 there are 5."><span class="opt-letter">A</span>3</div>
+          <div class="quiz-option" data-correct="false" data-explanation="6 would be 3! — the number of combinations follows the Catalan numbers (1,1,2,5,14,...), not factorials."><span class="opt-letter">B</span>6</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The nth Catalan number C(n) = C(2n,n)/(n+1). C(3) = 5. For n=3: ((())), (()()), (())(), ()(()), ()()()."><span class="opt-letter">C</span>5 — the 3rd Catalan number</div>
+          <div class="quiz-option" data-correct="false" data-explanation="8 = 2³ is the number of bit strings of length 3, not valid parenthesizations."><span class="opt-letter">D</span>8</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P31 Meeting Rooms II -->
+  <div class="prob-section" id="p-meeting-rooms">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P31 — Medium</span>
+      <span class="prob-section-title">Meeting Rooms II</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Intervals</span><span class="prob-tag">Heap</span><span class="prob-tag">Greedy</span>
+    </div>
+    <p class="prob-section-desc">Given meeting intervals, find the minimum number of conference rooms required. Brute: sort by start, scan all rooms for earliest free slot — O(n²). Min-heap: sort by start, heap tracks end-times. If <code>heap.min ≤ start</code>, reuse that room — O(n log n).</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n²)</span>
+      <span class="prob-compl-chip">Min-Heap: O(n log n) · O(n) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-meeting-rooms"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">After processing all meetings, what does the heap size represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="The heap shrinks when rooms are reused — it doesn't hold all meetings, only active ones."><span class="opt-letter">A</span>The total number of meetings processed</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Each entry in the heap is one active room's end time. When a room is reused, its end time is updated in-place (pop old, push new). The final heap size = peak simultaneous meetings = min rooms needed."><span class="opt-letter">B</span>The minimum number of rooms needed — each heap entry is one room still in use</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Meetings that share a room are merged into one entry, not counted separately."><span class="opt-letter">C</span>The number of meetings that overlapped with at least one other</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The heap stores end times, not start times."><span class="opt-letter">D</span>The number of unique start times seen</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">For intervals [[0,30],[5,10],[15,20]], what is the minimum number of rooms?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="One room cannot fit [0,30] and [5,10] simultaneously — they overlap."><span class="opt-letter">A</span>1 room</div>
+          <div class="quiz-option" data-correct="true" data-explanation="[0,30] starts first. [5,10] starts before [0,30] ends → room 2. [15,20] starts before [0,30] ends, but [5,10] has ended (10≤15) → reuse room 2. Peak overlap = 2 rooms."><span class="opt-letter">B</span>2 rooms</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Three rooms would be needed if all three overlapped simultaneously. But [5,10] ends before [15,20] starts."><span class="opt-letter">C</span>3 rooms</div>
+          <div class="quiz-option" data-correct="false" data-explanation="One room per interval is the naive upper bound, not the minimum."><span class="opt-letter">D</span>Depends on the order meetings are assigned</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P32 Rotate Array -->
+  <div class="prob-section" id="p-rotate-array">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P32 — Medium</span>
+      <span class="prob-section-title">Rotate Array</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Math</span>
+    </div>
+    <p class="prob-section-desc">Rotate an array right by k steps. Brute: rotate one position at a time, k times — O(n×k). Reversal trick: reverse the whole array, then reverse the first k elements, then reverse the remaining n−k — O(n) time, O(1) space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n × k)</span>
+      <span class="prob-compl-chip">Reversal: O(n) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotate-array"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">Why do we take k = k % n before rotating?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="k % n does not change the result type — it still produces an integer."><span class="opt-letter">A</span>To convert k to a floating-point index</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Rotating by n positions returns the array to its original state. Rotating by n+1 is the same as rotating by 1. So k % n gives the effective rotation, preventing redundant O(n×k) work when k ≥ n."><span class="opt-letter">B</span>Rotating by n brings the array back to start — k % n gives the effective rotation and avoids redundant work</div>
+          <div class="quiz-option" data-correct="false" data-explanation="k % n works correctly whether k is larger or smaller than n."><span class="opt-letter">C</span>To handle the case where k is smaller than n</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The modulo prevents redundant rotations, not index-out-of-bounds errors specifically."><span class="opt-letter">D</span>To avoid index out-of-bounds when accessing arr[k]</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">Rotating [1,2,3,4,5,6,7] right by k=3 using the reversal trick — what is the array after the first reversal (reverse all)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Reversing [1,2,3,4,5,6,7] gives [7,6,5,4,3,2,1]. Then reverse first k=3: [5,6,7,4,3,2,1]. Then reverse last n-k=4: [5,6,7,1,2,3,4] — the correct rotation."><span class="opt-letter">A</span>[7,6,5,4,3,2,1]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="[5,6,7,1,2,3,4] is the final answer after all three reversals, not just the first."><span class="opt-letter">B</span>[5,6,7,1,2,3,4]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="[4,5,6,7,1,2,3] is a left rotation by 3, not a right rotation."><span class="opt-letter">C</span>[4,5,6,7,1,2,3]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Reversing all elements swaps first with last, second with second-to-last, etc."><span class="opt-letter">D</span>[3,2,1,4,5,6,7]</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">28 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">32 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -1037,6 +1223,10 @@
       if(window.DSAProbs.spiralMatrix&&document.getElementById('prob-spiral-matrix'))window.DSAProbs.spiralMatrix('prob-spiral-matrix');
       if(window.DSAProbs.topKFrequent&&document.getElementById('prob-top-k-frequent'))window.DSAProbs.topKFrequent('prob-top-k-frequent');
       if(window.DSAProbs.longestPalindrome&&document.getElementById('prob-longest-palindrome'))window.DSAProbs.longestPalindrome('prob-longest-palindrome');
+      if(window.DSAProbs.maxDepthTree&&document.getElementById('prob-max-depth-tree'))window.DSAProbs.maxDepthTree('prob-max-depth-tree');
+      if(window.DSAProbs.generateParentheses&&document.getElementById('prob-generate-parens'))window.DSAProbs.generateParentheses('prob-generate-parens');
+      if(window.DSAProbs.meetingRooms&&document.getElementById('prob-meeting-rooms'))window.DSAProbs.meetingRooms('prob-meeting-rooms');
+      if(window.DSAProbs.rotateArray&&document.getElementById('prob-rotate-array'))window.DSAProbs.rotateArray('prob-rotate-array');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
