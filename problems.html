@@ -247,6 +247,46 @@
     <div class="tc-num">P36</div><div class="tc-title">Course Schedule</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
+  <a href="#p-invert-tree" class="prob-toc-card">
+    <div class="tc-num">P37</div><div class="tc-title">Invert Binary Tree</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-level-order" class="prob-toc-card">
+    <div class="tc-num">P38</div><div class="tc-title">Level Order Traversal</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-min-stack" class="prob-toc-card">
+    <div class="tc-num">P39</div><div class="tc-title">Min Stack</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-eval-rpn" class="prob-toc-card">
+    <div class="tc-num">P40</div><div class="tc-title">Evaluate Reverse Polish Notation</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-num-1-bits" class="prob-toc-card">
+    <div class="tc-num">P41</div><div class="tc-title">Number of 1 Bits</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-missing-number" class="prob-toc-card">
+    <div class="tc-num">P42</div><div class="tc-title">Missing Number</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-remove-nth" class="prob-toc-card">
+    <div class="tc-num">P43</div><div class="tc-title">Remove Nth Node From End</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-longest-consecutive" class="prob-toc-card">
+    <div class="tc-num">P44</div><div class="tc-title">Longest Consecutive Sequence</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-max-product" class="prob-toc-card">
+    <div class="tc-num">P45</div><div class="tc-title">Maximum Product Subarray</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-balanced-tree" class="prob-toc-card">
+    <div class="tc-num">P46</div><div class="tc-title">Balanced Binary Tree</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -1399,11 +1439,281 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P37 Invert Binary Tree -->
+  <div class="prob-section" id="p-invert-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P37 — Easy</span><span class="prob-section-title">Invert Binary Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Mirror a binary tree. DFS: swap left↔right children at each node, then recurse. BFS: use a queue and swap children level by level. Both are O(n) — every node visited once.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space DFS · O(n) space BFS</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-invert-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What happens if you don't swap the children before recursing in the DFS approach?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Recursing before swapping would invert the subtrees first, then swap pointers — but since you swapped after inversion, the children references are correct but their sub-trees are already inverted in the right order. Actually this still works for inversion — but the standard approach swaps first for clarity."><span class="opt-letter">A</span>Nothing — order of swap vs recurse doesn't matter</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If you recurse first (invert subtrees), then swap the (now-inverted) children pointers, the final result is still a correctly inverted tree. However, swapping FIRST then recursing is the canonical approach because it's clearer: swap children here, then let recursion handle the rest."><span class="opt-letter">B</span>Swapping first is the canonical approach — recurse-first also works but processes subtrees before the parent swap</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Both orderings produce a correctly inverted tree — the issue is clarity and convention, not correctness."><span class="opt-letter">C</span>The tree will not be inverted — you must always swap before recursing</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Swapping after recursion does not cause infinite recursion — the recursion terminates at null nodes."><span class="opt-letter">D</span>The recursion will run infinitely</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Inverting [4,2,7,1,3,6,9] — what is the root's children after inversion?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Original: root=4, left=2, right=7. After inversion, left↔right at every node: root=4 gets left=7, right=2. Their subtrees are also inverted: 7's children become [9,6] instead of [6,9], and 2's children become [3,1] instead of [1,3]."><span class="opt-letter">A</span>left=7, right=2 (original left and right are swapped)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The children are swapped — original left(2) goes to right and original right(7) goes to left."><span class="opt-letter">B</span>left=2, right=7 (unchanged)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The values themselves don't change — only the pointers/structure is mirrored."><span class="opt-letter">C</span>left=9, right=1 (deepest nodes swap first)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Inversion mirrors the tree — it doesn't reverse the level-order traversal."><span class="opt-letter">D</span>left=7, right=9</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P38 Binary Tree Level Order Traversal -->
+  <div class="prob-section" id="p-level-order">
+    <div class="prob-section-header"><span class="prob-section-num">P38 — Medium</span><span class="prob-section-title">Binary Tree Level Order Traversal</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">BFS</span><span class="prob-tag">Queue</span></div>
+    <p class="prob-section-desc">Return nodes grouped by level: <code>[[3],[9,20],[15,7]]</code>. BFS: at each step, snapshot the queue size — that's how many nodes are on the current level. Process exactly that many nodes, then enqueue their children.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-level-order"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How does BFS know where one level ends and the next begins?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Null sentinels work but are messier — snapshotting queue size is cleaner."><span class="opt-letter">A</span>By inserting null sentinels between levels in the queue</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Before processing a level, record queue.length — that's exactly how many nodes are on this level. Process that many, enqueue their children, then the queue now holds the next level only."><span class="opt-letter">B</span>Snapshot queue.length before processing — process exactly that many nodes for the current level</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Depth tracking requires storing depth alongside each node — valid but more complex than the size snapshot trick."><span class="opt-letter">C</span>Track the depth of each node explicitly as it's enqueued</div>
+          <div class="quiz-option" data-correct="false" data-explanation="There's no comparison with root value — levels are determined by BFS order alone."><span class="opt-letter">D</span>Compare each node's value with the root to determine depth</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For tree [3,9,20,null,null,15,7], what is the output?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Level 0: [3]. Level 1: [9, 20]. Level 2: [15, 7] (children of 20 only — 9 has no children). Output: [[3],[9,20],[15,7]]."><span class="opt-letter">A</span>[[3],[9,20],[15,7]]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="[3,9,20,15,7] is a flat BFS order, not the grouped level-order output."><span class="opt-letter">B</span>[3,9,20,15,7]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="[[3],[9],[20],[15,7]] would mean 9 and 20 are on different levels — they're both depth 1."><span class="opt-letter">C</span>[[3],[9],[20],[15,7]]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The levels go top-down, not bottom-up."><span class="opt-letter">D</span>[[15,7],[9,20],[3]]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P39 Min Stack -->
+  <div class="prob-section" id="p-min-stack">
+    <div class="prob-section-header"><span class="prob-section-num">P39 — Medium</span><span class="prob-section-title">Min Stack</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Stack</span><span class="prob-tag">Design</span></div>
+    <p class="prob-section-desc">Design a stack that supports push, pop, top, and <code>getMin</code> in O(1). Trick: each push also records the running minimum up to that point. When you pop, the minimum for the remaining stack is already stored.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">All operations O(1) · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-stack"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">After push(-2), push(0), push(-3) — what does getMin() return?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="-2 was the minimum after the first push, but -3 is smaller."><span class="opt-letter">A</span>−2</div>
+          <div class="quiz-option" data-correct="false" data-explanation="0 is not the minimum — both -2 and -3 are smaller."><span class="opt-letter">B</span>0</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Stack: [-2, 0, -3]. Minimums stored alongside: [-2, -2, -3]. getMin() reads the top of the min-stack → -3."><span class="opt-letter">C</span>−3</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The top() value is -3, but that's a coincidence here — getMin() returns the smallest, not the top."><span class="opt-letter">D</span>Top of the value stack, which is −3 (same by coincidence)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After pop() (removes -3), what does getMin() return now?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="After pop(), the min stack also pops its top (-3). The new top of the min stack is -2 — the minimum of the remaining stack [-2, 0]. This is why we store a min per push, not just one global min."><span class="opt-letter">A</span>−2 — the min-stack top after popping is −2</div>
+          <div class="quiz-option" data-correct="false" data-explanation="-3 was just popped — it's no longer in the stack."><span class="opt-letter">B</span>−3 — still the global minimum seen so far</div>
+          <div class="quiz-option" data-correct="false" data-explanation="0 is not the minimum of [-2, 0]."><span class="opt-letter">C</span>0</div>
+          <div class="quiz-option" data-correct="false" data-explanation="We'd have to rescan if we stored one global min — that's the naive O(n) approach this design avoids."><span class="opt-letter">D</span>Unknown without scanning the whole stack</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P40 Evaluate Reverse Polish Notation -->
+  <div class="prob-section" id="p-eval-rpn">
+    <div class="prob-section-header"><span class="prob-section-num">P40 — Medium</span><span class="prob-section-title">Evaluate Reverse Polish Notation</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Stack</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Evaluate an expression in postfix notation. Numbers push onto the stack. Operators (+, −, ×, ÷) pop the top two operands, compute, and push the result. The final stack element is the answer.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-eval-rpn"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For ["2","1","+","3","*"], what is the result?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="7 would result from 2+1=3, then 3*3=9... no. Or 2*(1+3)=8. Let's trace: push 2, push 1, + → pop 1 and 2, push 3. Push 3, * → pop 3 and 3, push 9."><span class="opt-letter">A</span>7</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Stack trace: push 2 → [2]. Push 1 → [2,1]. '+' → pop 1,2, push 3 → [3]. Push 3 → [3,3]. '*' → pop 3,3, push 9 → [9]. Result = 9. This represents (2+1)*3."><span class="opt-letter">B</span>9 — (2+1)×3</div>
+          <div class="quiz-option" data-correct="false" data-explanation="5 would be 2+3 or similar — not matching the RPN trace."><span class="opt-letter">C</span>5</div>
+          <div class="quiz-option" data-correct="false" data-explanation="11 doesn't match the computation — trace the stack step by step."><span class="opt-letter">D</span>11</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In which order do you pop operands for subtraction "a b −"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Popping in push order (a first, then b) and computing a-b would give the wrong answer — in postfix 'a b -' means a-b, but b was pushed last so it's on top."><span class="opt-letter">A</span>Pop a first (bottom), then b (top): compute a − b</div>
+          <div class="quiz-option" data-correct="true" data-explanation="b is on top of the stack (pushed last). Pop b first, then pop a. Compute a − b (the first operand minus the second). Example: '5 3 -' → pop 3, pop 5, compute 5−3=2."><span class="opt-letter">B</span>Pop b first (top), then a: compute a − b (first popped is the right operand)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Order matters for subtraction and division — popping arbitrarily gives wrong results."><span class="opt-letter">C</span>Order doesn't matter for subtraction</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The stack always has exactly the operands we need — no scanning required."><span class="opt-letter">D</span>Scan the stack from bottom to find the two operands</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P41 Number of 1 Bits -->
+  <div class="prob-section" id="p-num-1-bits">
+    <div class="prob-section-header"><span class="prob-section-num">P41 — Easy</span><span class="prob-section-title">Number of 1 Bits (Hamming Weight)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Bit Manipulation</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Count the number of set bits (1s) in an integer's binary representation. Mask approach: check each of 32 bits. Trick: <code>n &amp; (n−1)</code> clears the lowest set bit — count how many times until n=0.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Mask: O(32)</span><span class="prob-compl-chip">n &amp; (n−1): O(k) where k = number of 1-bits</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-num-1-bits"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does n &amp; (n−1) specifically clear the lowest set bit?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="n-1 doesn't clear all bits — it only changes bits from the rightmost 1 downward."><span class="opt-letter">A</span>n−1 clears all bits below the highest set bit</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Subtracting 1 from n flips the lowest set bit to 0 and flips all lower bits to 1. AND-ing with n: since n has 0s where n-1 has 1s (below the lowest set bit), the AND clears that bit and all lower ones — but those lower bits were 0 in n anyway. Net effect: lowest set bit is cleared."><span class="opt-letter">B</span>n−1 flips the lowest set bit to 0 and all lower bits to 1; AND with n clears exactly that set bit</div>
+          <div class="quiz-option" data-correct="false" data-explanation="XOR, not AND, is typically used to toggle bits. AND clears bits."><span class="opt-letter">C</span>AND always preserves all bits except the highest</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The operation is deterministic — it always clears the lowest (rightmost) set bit, not a random one."><span class="opt-letter">D</span>It randomly clears one set bit per iteration</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many iterations does n &amp; (n−1) need for n=12 (binary: 1100)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="4 would be the number of total bits in 1100 — but the trick only loops once per set bit."><span class="opt-letter">A</span>4 — one for each binary digit</div>
+          <div class="quiz-option" data-correct="true" data-explanation="n=12 is 1100 — two 1-bits. Iteration 1: 1100 & 1011 = 1000 (count=1). Iteration 2: 1000 & 0111 = 0000 (count=2). n=0 → stop. 2 iterations."><span class="opt-letter">B</span>2 — one per set bit (12 has two 1s in binary)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="32 would be the mask approach checking all positions — the trick is faster."><span class="opt-letter">C</span>32 — checks all 32 bit positions</div>
+          <div class="quiz-option" data-correct="false" data-explanation="12 is not a power of 2 — it has 2 set bits, so 2 iterations."><span class="opt-letter">D</span>1 — n=12 is close to a power of 2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P42 Missing Number -->
+  <div class="prob-section" id="p-missing-number">
+    <div class="prob-section-header"><span class="prob-section-num">P42 — Easy</span><span class="prob-section-title">Missing Number</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Arrays</span><span class="prob-tag">Math</span><span class="prob-tag">Bit Manipulation</span></div>
+    <p class="prob-section-desc">Given n numbers in range [0,n] with one missing, find it. Sort and scan: O(n log n). Sum formula: <code>expected = n*(n+1)/2</code>, subtract actual sum — O(n) O(1) space. XOR approach also works: XOR all indices and values, missing one remains.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Sort: O(n log n)</span><span class="prob-compl-chip">Sum/XOR: O(n) · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-missing-number"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [3,0,1], n=3. What does the sum formula compute?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="n=3, expected = 3*4/2 = 6. Actual sum = 3+0+1 = 4. Missing = 6-4 = 2. Correct!"><span class="opt-letter">A</span>expected=6, actual=4, missing=2</div>
+          <div class="quiz-option" data-correct="false" data-explanation="n*(n+1)/2 = 3*4/2 = 6, not 3. The sum 0+1+2+3 = 6."><span class="opt-letter">B</span>expected=3, actual=4, missing=−1</div>
+          <div class="quiz-option" data-correct="false" data-explanation="0+1+2+3=6, not 9. n=3, not 4."><span class="opt-letter">C</span>expected=9, actual=4, missing=5</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The expected sum includes all numbers from 0 to n — that's n+1 numbers summing to n*(n+1)/2."><span class="opt-letter">D</span>expected=4, actual=4, missing=0</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why does the XOR approach work for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="XOR is not used for sorting — it's used because XOR of a number with itself is 0."><span class="opt-letter">A</span>XOR sorts numbers in O(n) time</div>
+          <div class="quiz-option" data-correct="true" data-explanation="XOR every index (0..n) with every array value. Each value that exists cancels its matching index (x XOR x = 0). The missing number has no matching array value to cancel it — it remains as the only surviving bit pattern."><span class="opt-letter">B</span>Each present number XORs with its matching index and cancels to 0 — only the missing index survives</div>
+          <div class="quiz-option" data-correct="false" data-explanation="XOR doesn't add numbers — it's a bitwise operation. The cancellation property (x XOR x = 0) is what makes it work."><span class="opt-letter">C</span>XOR adds all indices and subtracts array values simultaneously</div>
+          <div class="quiz-option" data-correct="false" data-explanation="XOR works for any range [0,n], not just powers of 2."><span class="opt-letter">D</span>XOR only works when the missing number is a power of 2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P43 Remove Nth Node From End -->
+  <div class="prob-section" id="p-remove-nth">
+    <div class="prob-section-header"><span class="prob-section-num">P43 — Medium</span><span class="prob-section-title">Remove Nth Node From End of List</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Linked List</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Remove the nth node from the end in one pass. Advance <code>fast</code> n steps ahead, then move both pointers together until <code>fast</code> reaches the last node. <code>slow</code> is then at the node before the target.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Two-pass: O(n)</span><span class="prob-compl-chip">One-pass: O(n) · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-remove-nth"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does advancing fast n steps ahead work to find the nth-from-end node?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="The gap between fast and slow is n nodes, not n-1."><span class="opt-letter">A</span>It creates a gap of n−1 nodes, placing slow at the target</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When fast is n steps ahead and both advance together, fast reaches the end (null) exactly when slow is n steps from the end. So slow points to the node just before the one to remove — perfect for the deletion."><span class="opt-letter">B</span>When fast reaches the end, slow is exactly n steps from the end — pointing to the node before the target</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Fast reaching the middle has no special significance here — it's about reaching the end."><span class="opt-letter">C</span>Fast at the midpoint means slow is at the nth-from-end position</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The gap is fixed at n throughout — both pointers advance at the same rate."><span class="opt-letter">D</span>Fast closes the gap by moving 2 steps while slow moves 1</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For list [1,2,3,4,5] with n=2, which node is removed?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Node 3 is the 3rd from the end — n=2 means the 2nd from the end."><span class="opt-letter">A</span>3 (3rd from end)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="2nd from end: counting from right — 5 is 1st, 4 is 2nd. Node 4 is removed. Result: [1,2,3,5]."><span class="opt-letter">B</span>4 (2nd from end) → result: [1,2,3,5]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="5 is the 1st from the end (the tail), not the 2nd."><span class="opt-letter">C</span>5 (last node)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="2 is the 4th from the end (counting from right: 5=1st, 4=2nd, 3=3rd, 2=4th)."><span class="opt-letter">D</span>2 (2nd from start)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P44 Longest Consecutive Sequence -->
+  <div class="prob-section" id="p-longest-consecutive">
+    <div class="prob-section-header"><span class="prob-section-num">P44 — Medium</span><span class="prob-section-title">Longest Consecutive Sequence</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Arrays</span><span class="prob-tag">Hash Set</span></div>
+    <p class="prob-section-desc">Find the longest streak of consecutive integers in O(n). Key insight: only start counting from the left boundary of a sequence (num−1 not in the set). This way each number is visited at most twice — O(n) total.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Sort: O(n log n)</span><span class="prob-compl-chip">Hash Set: O(n) · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-consecutive"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we only start counting from numbers where (num−1) is NOT in the set?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="We skip mid-sequence numbers to avoid recounting, not because they're guaranteed to be smaller."><span class="opt-letter">A</span>Numbers where (num−1) exists are always smaller than the answer</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If (num-1) is in the set, num is the middle of a sequence — not its start. Starting from mid-sequence would recount the same sequence, making the algorithm O(n²). Starting from left-boundaries only, each number is visited as part of exactly one sequence: O(n) total."><span class="opt-letter">B</span>To avoid recounting: num is mid-sequence if (num−1) exists, so we only count from true left boundaries</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Sorting is one approach (O(n log n)), but the hash set approach avoids sorting entirely."><span class="opt-letter">C</span>To effectively sort the numbers before scanning</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The check is not about ordering inserts — it's about identifying sequence start points."><span class="opt-letter">D</span>To ensure numbers are inserted in the correct order into the hash set</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [100,4,200,1,3,2], what is the longest consecutive sequence?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Sequence [100] has length 1, [200] has length 1. Sequence [1,2,3,4] has length 4."><span class="opt-letter">A</span>3 (sequence [1,2,3])</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Hash set: {100,4,200,1,3,2}. Left boundaries: 1 (0 not in set), 100 (99 not in set), 200 (199 not in set). From 1: 1→2→3→4 = length 4. Best = 4."><span class="opt-letter">B</span>4 (sequence [1,2,3,4])</div>
+          <div class="quiz-option" data-correct="false" data-explanation="There are 6 elements but no 6-element consecutive run."><span class="opt-letter">C</span>6 (all elements form one sequence)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="2 is too small — [1,2,3,4] is a run of 4."><span class="opt-letter">D</span>2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P45 Maximum Product Subarray -->
+  <div class="prob-section" id="p-max-product">
+    <div class="prob-section-header"><span class="prob-section-num">P45 — Medium</span><span class="prob-section-title">Maximum Product Subarray</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Arrays</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Find the subarray with the largest product. The key twist: a negative number can flip the minimum to the maximum. Track both <code>curMax</code> and <code>curMin</code> at every step — the answer is the largest <code>curMax</code> seen.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute: O(n²)</span><span class="prob-compl-chip">DP Track Max+Min: O(n) · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-product"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we track curMin as well as curMax?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="curMin is not for detecting arrays with all negatives — it's to handle sign flips."><span class="opt-letter">A</span>To detect when all elements are negative</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A negative curMin multiplied by a negative number becomes a large positive — potentially the new maximum. Without tracking curMin, we'd miss these sign-flip opportunities."><span class="opt-letter">B</span>A large negative curMin times a negative element can become the new curMax — sign flips matter</div>
+          <div class="quiz-option" data-correct="false" data-explanation="curMin is for products, not for index tracking."><span class="opt-letter">C</span>curMin tracks the index of the minimum element for the result subarray</div>
+          <div class="quiz-option" data-correct="false" data-explanation="curMin is needed at every step, not just at zeros."><span class="opt-letter">D</span>curMin is only needed when a zero is encountered</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [2,3,−2,4], what is the maximum product subarray?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="[2,3] has product 6. [-2,4] = -8. [2,3,-2,4] = -48. [3] = 3. [4] = 4. The max is 6, from subarray [2,3]."><span class="opt-letter">A</span>6 — subarray [2,3]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The full array product is 2*3*(-2)*4 = -48, which is negative."><span class="opt-letter">B</span>−48 — the whole array [2,3,−2,4]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="4 is a valid subarray of product 4, but [2,3] gives 6 which is larger."><span class="opt-letter">C</span>4 — subarray [4]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="48 would require [2,3,-2,4] but that's negative — or some other combination not present."><span class="opt-letter">D</span>48</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P46 Balanced Binary Tree -->
+  <div class="prob-section" id="p-balanced-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P46 — Easy</span><span class="prob-section-title">Balanced Binary Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc">Check if a binary tree is height-balanced (every node's left and right subtree heights differ by at most 1). Naive: compute height separately for each node — O(n²). Optimal DFS: return height or −1 (unbalanced) bottom-up in a single pass — O(n).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Naive: O(n²)</span><span class="prob-compl-chip">One-pass DFS: O(n) · O(h) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-balanced-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the naive approach run in O(n²)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Sorting is not involved in tree height computation."><span class="opt-letter">A</span>It sorts the nodes before checking heights</div>
+          <div class="quiz-option" data-correct="true" data-explanation="For each of the n nodes, the naive approach recomputes heights by traversing the subtree from scratch — up to O(n) work per node. Total: O(n²). The optimal DFS avoids recomputation by returning heights bottom-up."><span class="opt-letter">B</span>For each of n nodes it recomputes heights by traversing the subtree from scratch — O(n) work per node</div>
+          <div class="quiz-option" data-correct="false" data-explanation="O(n²) comparisons is more specific — the issue is redundant height recomputation."><span class="opt-letter">C</span>It compares every pair of nodes to check height differences</div>
+          <div class="quiz-option" data-correct="false" data-explanation="It visits each node multiple times — not just the leaves."><span class="opt-letter">D</span>It visits only leaf nodes and repeats n times</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the optimal DFS, what does returning −1 from a subtree mean?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="-1 is a sentinel value for 'unbalanced' — not a valid height indicator."><span class="opt-letter">A</span>The subtree has height −1 (empty)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="−1 is a sentinel: this subtree is already unbalanced. Any parent receiving −1 immediately propagates −1 upward without further checks — short-circuit pruning that keeps the algorithm O(n)."><span class="opt-letter">B</span>The subtree is unbalanced — propagate −1 upward immediately (short-circuit pruning)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="-1 signals unbalance, not that the node should be removed."><span class="opt-letter">C</span>The node should be removed to restore balance</div>
+          <div class="quiz-option" data-correct="false" data-explanation="-1 from any subtree makes the entire tree unbalanced — it propagates to the root."><span class="opt-letter">D</span>The left and right heights differ by exactly 1</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">36 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">46 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -1439,6 +1749,16 @@
       if(window.DSAProbs.mergeSortedLists&&document.getElementById('prob-merge-sorted-lists'))window.DSAProbs.mergeSortedLists('prob-merge-sorted-lists');
       if(window.DSAProbs.searchRotatedArray&&document.getElementById('prob-search-rotated'))window.DSAProbs.searchRotatedArray('prob-search-rotated');
       if(window.DSAProbs.courseSchedule&&document.getElementById('prob-course-schedule'))window.DSAProbs.courseSchedule('prob-course-schedule');
+      if(window.DSAProbs.invertBinaryTree&&document.getElementById('prob-invert-tree'))window.DSAProbs.invertBinaryTree('prob-invert-tree');
+      if(window.DSAProbs.levelOrderTraversal&&document.getElementById('prob-level-order'))window.DSAProbs.levelOrderTraversal('prob-level-order');
+      if(window.DSAProbs.minStack&&document.getElementById('prob-min-stack'))window.DSAProbs.minStack('prob-min-stack');
+      if(window.DSAProbs.evalRPN&&document.getElementById('prob-eval-rpn'))window.DSAProbs.evalRPN('prob-eval-rpn');
+      if(window.DSAProbs.numberOf1Bits&&document.getElementById('prob-num-1-bits'))window.DSAProbs.numberOf1Bits('prob-num-1-bits');
+      if(window.DSAProbs.missingNumber&&document.getElementById('prob-missing-number'))window.DSAProbs.missingNumber('prob-missing-number');
+      if(window.DSAProbs.removeNthFromEnd&&document.getElementById('prob-remove-nth'))window.DSAProbs.removeNthFromEnd('prob-remove-nth');
+      if(window.DSAProbs.longestConsecutive&&document.getElementById('prob-longest-consecutive'))window.DSAProbs.longestConsecutive('prob-longest-consecutive');
+      if(window.DSAProbs.maxProductSubarray&&document.getElementById('prob-max-product'))window.DSAProbs.maxProductSubarray('prob-max-product');
+      if(window.DSAProbs.balancedBinaryTree&&document.getElementById('prob-balanced-tree'))window.DSAProbs.balancedBinaryTree('prob-balanced-tree');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
