@@ -73,7 +73,7 @@
 <div class="prob-hero">
   <div class="prob-tag-row">
     <span class="prob-tag">NeetCode 150</span>
-    <span class="prob-tag">24 Problems</span>
+    <span class="prob-tag">28 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
   </div>
@@ -176,6 +176,22 @@
   </a>
   <a href="#p-find-min-rotated" class="prob-toc-card">
     <div class="tc-num">P24</div><div class="tc-title">Find Min in Rotated Array</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-reverse-linked-list" class="prob-toc-card">
+    <div class="tc-num">P25</div><div class="tc-title">Reverse Linked List</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-spiral-matrix" class="prob-toc-card">
+    <div class="tc-num">P26</div><div class="tc-title">Spiral Matrix</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-top-k-frequent" class="prob-toc-card">
+    <div class="tc-num">P27</div><div class="tc-title">Top K Frequent Elements</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-longest-palindrome" class="prob-toc-card">
+    <div class="tc-num">P28</div><div class="tc-title">Longest Palindromic Substring</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
 </div>
@@ -818,11 +834,182 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P25 Reverse Linked List -->
+  <div class="prob-section" id="p-reverse-linked-list">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P25 — Easy</span>
+      <span class="prob-section-title">Reverse Linked List</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Linked List</span><span class="prob-tag">Iterative</span><span class="prob-tag">Stack</span>
+    </div>
+    <p class="prob-section-desc">Reverse a singly linked list. Stack approach: push all nodes, pop to build reversed list — O(n) extra space. Iterative: maintain <code>prev</code>, <code>curr</code>, <code>next</code> pointers and flip one link per step — O(1) space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Stack: O(n) · O(n) space</span>
+      <span class="prob-compl-chip">Iterative: O(n) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-reverse-linked-list"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">In the iterative approach, why must you save <code>next = curr.next</code> before modifying the pointer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="prev is updated after curr.next is modified, not before — the save-next step comes first."><span class="opt-letter">A</span>So you can update prev before modifying curr</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When you set curr.next = prev, you overwrite curr.next. If you didn't save the original next pointer first, you lose the rest of the list — it becomes unreachable."><span class="opt-letter">B</span>Because setting curr.next = prev overwrites curr.next — you'd lose the rest of the list</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Saving next does not create a cycle — cycles form when prev eventually points back to a node already in the chain."><span class="opt-letter">C</span>To avoid creating a cycle in the list</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The original list is not compared against the reversed list — the reversal is done in place."><span class="opt-letter">D</span>To maintain a copy of the original list for comparison</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">After reversing [1→2→3→4→5], what is the new head of the list?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Node 1 becomes the tail (points to null) after reversal."><span class="opt-letter">A</span>1 — the original head stays</div>
+          <div class="quiz-option" data-correct="false" data-explanation="3 is the middle, not the new head."><span class="opt-letter">B</span>3 — the middle node becomes the head</div>
+          <div class="quiz-option" data-correct="true" data-explanation="After reversal the list is 5→4→3→2→1. The original tail (5) becomes the new head. In the iterative algorithm, prev ends up pointing to 5 when curr reaches null."><span class="opt-letter">C</span>5 — the original tail becomes the new head</div>
+          <div class="quiz-option" data-correct="false" data-explanation="2 is the second node, not the new head."><span class="opt-letter">D</span>2 — the second node becomes head</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P26 Spiral Matrix -->
+  <div class="prob-section" id="p-spiral-matrix">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P26 — Medium</span>
+      <span class="prob-section-title">Spiral Matrix</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Matrix</span><span class="prob-tag">Simulation</span>
+    </div>
+    <p class="prob-section-desc">Return all elements of an m×n matrix in spiral order. Maintain four boundaries (top, bottom, left, right) and traverse each edge in turn — right across top, down the right, left across bottom, up the left — then shrink each boundary inward.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(m × n) time · O(1) extra space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-spiral-matrix"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">After traversing the top row in a spiral, what boundary update do you make?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="You just finished the top row, so increment top to exclude it from future traversals. The next step traverses the right column from the updated top down to bottom."><span class="opt-letter">A</span>Increment top — the top row is consumed, shrink the boundary inward</div>
+          <div class="quiz-option" data-correct="false" data-explanation="right is decremented after traversing the right column, not after the top row."><span class="opt-letter">B</span>Decrement right — move the right boundary inward</div>
+          <div class="quiz-option" data-correct="false" data-explanation="bottom is decremented after traversing the bottom row (right to left)."><span class="opt-letter">C</span>Decrement bottom — the bottom is now closer to the center</div>
+          <div class="quiz-option" data-correct="false" data-explanation="left is incremented after traversing the left column (bottom to top)."><span class="opt-letter">D</span>Increment left — skip the leftmost column</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">When does the spiral traversal loop terminate?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="The exact center cell is visited last — the loop doesn't detect 'center' explicitly, it terminates on boundary conditions."><span class="opt-letter">A</span>When you reach the exact center cell of the matrix</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The while condition is top ≤ bottom AND left ≤ right. When boundaries cross (top > bottom or left > right), all elements have been visited and the loop exits."><span class="opt-letter">B</span>When top &gt; bottom or left &gt; right — the boundaries have crossed</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The output length reaching m×n is a consequence of termination, not the condition checked."><span class="opt-letter">C</span>When the output list length equals m × n</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The traversal visits every cell exactly once — it does not stop at row boundaries."><span class="opt-letter">D</span>After completing exactly m full loop iterations</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P27 Top K Frequent Elements -->
+  <div class="prob-section" id="p-top-k-frequent">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P27 — Medium</span>
+      <span class="prob-section-title">Top K Frequent Elements</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Hash Map</span><span class="prob-tag">Bucket Sort</span>
+    </div>
+    <p class="prob-section-desc">Return the k most frequent elements. Sort approach: count frequencies then sort by count — O(n log n). Bucket sort: since frequency is bounded by n, use an array of size n+1 where <code>buckets[freq]</code> holds elements with that frequency — O(n).</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Sort: O(n log n)</span>
+      <span class="prob-compl-chip">Bucket Sort: O(n) · O(n) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-top-k-frequent"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">What property of frequency values makes bucket sort possible here?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Input elements don't need to be sorted — bucket sort works on the frequency values, not the elements themselves."><span class="opt-letter">A</span>The input array is already sorted</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Any element's frequency is between 1 and n (length of array). This bounded range [1..n] lets you create n+1 buckets and place each element in the bucket matching its frequency — no comparison sort needed."><span class="opt-letter">B</span>Frequency values are bounded by n (array length), so we need at most n+1 buckets</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Bucket sort works for any integer input here — distinctness is not required."><span class="opt-letter">C</span>All elements in the array are distinct</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Negative numbers are fine — the key constraint is on frequency values, not element values."><span class="opt-letter">D</span>All elements are non-negative integers</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">To collect the top k elements from buckets, which direction do you scan the bucket array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Scanning forward (low to high frequency) gives you the least frequent elements first."><span class="opt-letter">A</span>Left to right (bucket[1] to bucket[n]) — lowest frequency first</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Scan from bucket[n] down to bucket[1]. High-frequency buckets come first, so you collect the most frequent elements until you have k of them."><span class="opt-letter">B</span>Right to left (bucket[n] down to bucket[1]) — highest frequency first</div>
+          <div class="quiz-option" data-correct="false" data-explanation="There is no need to sort the buckets — they are already ordered by index (= frequency)."><span class="opt-letter">C</span>Sort the buckets by size, then scan left to right</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The scan direction determines which elements are collected first — order matters here."><span class="opt-letter">D</span>Direction doesn't matter — all buckets are checked</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P28 Longest Palindromic Substring -->
+  <div class="prob-section" id="p-longest-palindrome">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P28 — Medium</span>
+      <span class="prob-section-title">Longest Palindromic Substring</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Strings</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">DP</span>
+    </div>
+    <p class="prob-section-desc">Find the longest palindromic substring. Brute: O(n³) — check every substring. Expand around center: for each character (odd-length) and each gap between characters (even-length), expand outward while characters match — O(n²) time, O(1) space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O(n³)</span>
+      <span class="prob-compl-chip">Expand Centers: O(n²) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-palindrome"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">For a string of length n, how many centers does the expand-around-center approach check?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="n centers only covers odd-length palindromes (one center per character). Even-length palindromes need gap centers too."><span class="opt-letter">A</span>n centers — one per character</div>
+          <div class="quiz-option" data-correct="true" data-explanation="n centers for odd-length palindromes (each character) + n-1 gap centers for even-length palindromes (each adjacent pair). Total = 2n - 1 centers."><span class="opt-letter">B</span>2n − 1 centers — n character centers plus n − 1 gap centers</div>
+          <div class="quiz-option" data-correct="false" data-explanation="n² is the total time for all expansions, not the number of centers."><span class="opt-letter">C</span>n² centers — one per pair of characters</div>
+          <div class="quiz-option" data-correct="false" data-explanation="n/2 would only cover half the string — all positions must be checked as potential centers."><span class="opt-letter">D</span>n/2 centers — only check the first half</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">For "abba", which type of center produces the full palindrome?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Odd center at 'b' (index 1) expands to 'b', then can't expand further (s[0]='a' ≠ s[2]='b'). It doesn't reach the full 'abba'."><span class="opt-letter">A</span>Odd center at index 1 ('b') — expands outward to cover 'abba'</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Gap center between index 1 ('b') and index 2 ('b'): s[1]==s[2], so expand → 'bb'. Then s[0]=='a'==s[3], expand → 'abba'. Even-length centers are essential for even-length palindromes."><span class="opt-letter">B</span>Even gap center between indices 1 and 2 ('bb') — expands to 'abba'</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Odd center at index 2 ('b') also only expands to 'b' then fails (same as index 1 by symmetry)."><span class="opt-letter">C</span>Odd center at index 2 ('b') — expands outward to cover 'abba'</div>
+          <div class="quiz-option" data-correct="false" data-explanation="'abba' is a palindrome — the expand-around-center approach correctly finds it via the gap center."><span class="opt-letter">D</span>'abba' is not a palindromic substring — no center works</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">24 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">28 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -846,6 +1033,10 @@
       if(window.DSAProbs.trappingRain&&document.getElementById('prob-trapping-rain'))window.DSAProbs.trappingRain('prob-trapping-rain');
       if(window.DSAProbs.wordBreak&&document.getElementById('prob-word-break'))window.DSAProbs.wordBreak('prob-word-break');
       if(window.DSAProbs.findMinRotated&&document.getElementById('prob-find-min-rotated'))window.DSAProbs.findMinRotated('prob-find-min-rotated');
+      if(window.DSAProbs.reverseLinkedList&&document.getElementById('prob-reverse-linked-list'))window.DSAProbs.reverseLinkedList('prob-reverse-linked-list');
+      if(window.DSAProbs.spiralMatrix&&document.getElementById('prob-spiral-matrix'))window.DSAProbs.spiralMatrix('prob-spiral-matrix');
+      if(window.DSAProbs.topKFrequent&&document.getElementById('prob-top-k-frequent'))window.DSAProbs.topKFrequent('prob-top-k-frequent');
+      if(window.DSAProbs.longestPalindrome&&document.getElementById('prob-longest-palindrome'))window.DSAProbs.longestPalindrome('prob-longest-palindrome');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
