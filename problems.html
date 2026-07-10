@@ -73,7 +73,7 @@
 <div class="prob-hero">
   <div class="prob-tag-row">
     <span class="prob-tag">NeetCode 150</span>
-    <span class="prob-tag">32 Problems</span>
+    <span class="prob-tag">36 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
   </div>
@@ -208,6 +208,22 @@
   </a>
   <a href="#p-rotate-array" class="prob-toc-card">
     <div class="tc-num">P32</div><div class="tc-title">Rotate Array</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-linked-list-cycle" class="prob-toc-card">
+    <div class="tc-num">P33</div><div class="tc-title">Linked List Cycle</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-merge-sorted-lists" class="prob-toc-card">
+    <div class="tc-num">P34</div><div class="tc-title">Merge Two Sorted Lists</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-search-rotated" class="prob-toc-card">
+    <div class="tc-num">P35</div><div class="tc-title">Search in Rotated Sorted Array</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-course-schedule" class="prob-toc-card">
+    <div class="tc-num">P36</div><div class="tc-title">Course Schedule</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
 </div>
@@ -1191,11 +1207,182 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P33 Linked List Cycle -->
+  <div class="prob-section" id="p-linked-list-cycle">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P33 — Easy</span>
+      <span class="prob-section-title">Linked List Cycle</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Linked List</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Floyd's Algorithm</span>
+    </div>
+    <p class="prob-section-desc">Detect whether a linked list contains a cycle. Hash Set: track visited node indices — O(n) space. Floyd's slow/fast pointers: if a cycle exists, <code>fast</code> (moving 2 steps) will lap <code>slow</code> (moving 1 step) and they meet — O(1) space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Hash Set: O(n) space</span>
+      <span class="prob-compl-chip">Floyd's: O(1) space · O(n) time</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-linked-list-cycle"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">Why does Floyd's algorithm work — why must slow and fast eventually meet if a cycle exists?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Random chance has nothing to do with it — the meeting is mathematically guaranteed by the relative speeds."><span class="opt-letter">A</span>By random chance — they will collide at some point</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Once both pointers are in the cycle, fast gains 1 step on slow per iteration (2-1=1). The relative speed is 1 step/round, so fast will close the gap from any starting distance within at most cycle-length rounds — guaranteed to meet."><span class="opt-letter">B</span>Inside the cycle, fast gains 1 step per round on slow, so it always catches up within cycle-length steps</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Fast can reach 2× the index of slow, but index comparison is not the mechanism — it's the relative step count that matters."><span class="opt-letter">C</span>Fast reaches index 2× slow, so they overlap when the list length is even</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Fast could skip over slow on some iterations, but on the very next step it will land exactly on slow's position."><span class="opt-letter">D</span>They can never miss each other because fast moves in 1-step increments</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">What happens to <code>fast</code> if there is NO cycle in the list?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Without a cycle, fast cannot lap slow — it will simply fall off the end of the list."><span class="opt-letter">A</span>fast catches slow at the last node</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Since there is no cycle, the list is finite. fast moves 2 steps at a time, so it reaches null (or null.next) first — we detect 'no cycle' by checking fast or fast.next === null before moving."><span class="opt-letter">B</span>fast reaches null (or fast.next reaches null), signalling no cycle</div>
+          <div class="quiz-option" data-correct="false" data-explanation="fast never catches slow from behind when there is no cycle — it exits the list first."><span class="opt-letter">C</span>fast loops back to head and eventually catches slow</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Both pointers are always in the same list — they're at different positions but never in different lists."><span class="opt-letter">D</span>fast diverges into a different branch of the list</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P34 Merge Two Sorted Lists -->
+  <div class="prob-section" id="p-merge-sorted-lists">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P34 — Easy</span>
+      <span class="prob-section-title">Merge Two Sorted Lists</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Linked List</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Recursion</span>
+    </div>
+    <p class="prob-section-desc">Given two sorted linked lists, merge them into one sorted list. Brute: concatenate then sort — O((n+m) log(n+m)). Optimal: two-pointer merge — advance <code>i</code> or <code>j</code> by picking the smaller head each round — O(n+m) time, O(1) extra space.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Brute: O((n+m) log(n+m))</span>
+      <span class="prob-compl-chip">Two Pointers: O(n+m) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-merge-sorted-lists"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">In the two-pointer merge, what do we do when one list is exhausted before the other?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="We don't need to sort the remainder — both input lists are already sorted, so the remaining elements are already in order."><span class="opt-letter">A</span>Sort the remaining elements of the longer list</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Since both lists are sorted, once one pointer hits the end, all remaining elements in the other list are already larger than everything merged so far. Simply append them to the result."><span class="opt-letter">B</span>Append the remaining elements of the other list directly — they're already sorted</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Stopping early would discard elements from the longer list."><span class="opt-letter">C</span>Stop — the merged list is complete</div>
+          <div class="quiz-option" data-correct="false" data-explanation="There's no need to reverse anything — the remaining elements are in order."><span class="opt-letter">D</span>Reverse the remaining list before appending it</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">Merging [1,2,4] and [1,3,4] — what is the step-by-step order the two-pointer picks elements?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Compare heads each round: 1≤1 → take list1[0]=1; 2>1 → take list2[0]=1; 2≤3 → take list1[1]=2; 3≤4 → take list2[1]=3; 4≤4 → take list1[2]=4; take list2[2]=4. Result: [1,1,2,3,4,4]."><span class="opt-letter">A</span>1(L1), 1(L2), 2(L1), 3(L2), 4(L1), 4(L2) → [1,1,2,3,4,4]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Taking all of list1 first would produce an unsorted merged list."><span class="opt-letter">B</span>1(L1), 2(L1), 4(L1), 1(L2), 3(L2), 4(L2) → [1,2,4,1,3,4]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="This order would require taking list2 first, but list1[0]=1 ≤ list2[0]=1, so list1 goes first when equal."><span class="opt-letter">C</span>1(L2), 1(L1), 2(L1), 3(L2), 4(L2), 4(L1) → [1,1,2,3,4,4]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The two-pointer picks the globally smallest remaining element each step, not alternate elements."><span class="opt-letter">D</span>Alternates: 1, 1, 2, 3, 4, 4 in strict alternating order from each list</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P35 Search in Rotated Sorted Array -->
+  <div class="prob-section" id="p-search-rotated">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P35 — Medium</span>
+      <span class="prob-section-title">Search in Rotated Sorted Array</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Binary Search</span><span class="prob-tag">Two Pointers</span>
+    </div>
+    <p class="prob-section-desc">A sorted array is rotated at some pivot. Search for a target in O(log n). Key insight: one half is always sorted. Check which half is sorted, then check if target falls in it — if yes, search that half; otherwise search the other.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">Linear: O(n)</span>
+      <span class="prob-compl-chip">Modified Binary Search: O(log n) · O(1) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-search-rotated"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">How do we determine which half is sorted in a rotated array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Mid alone doesn't tell us which side is sorted — we need to compare it with an endpoint."><span class="opt-letter">A</span>If arr[mid] &gt; target, the left half must be sorted</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If arr[lo] ≤ arr[mid], the left half [lo..mid] is sorted (no rotation break in it). Otherwise the rotation is in the left half, meaning the right half [mid..hi] must be sorted."><span class="opt-letter">B</span>If arr[lo] ≤ arr[mid], the left half [lo..mid] is sorted; otherwise the right half [mid..hi] is sorted</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The pivot is one fixed index — you can find it with a separate binary search, but that isn't needed here."><span class="opt-letter">C</span>We first find the rotation pivot index, then apply normal binary search</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Checking arr[mid] vs arr[hi] also works but comparing to arr[lo] is the more common form shown here."><span class="opt-letter">D</span>Compare arr[mid] with arr[hi] — if arr[mid] &lt; arr[hi] the left is sorted</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">On [4,5,6,7,0,1,2] with target=0: after the first iteration with lo=0, hi=6, mid=3 (arr[mid]=7), which half is searched next and why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Left half [0..3] = [4,5,6,7] is sorted, and target 0 is not in [4,7] — so we do NOT search the left."><span class="opt-letter">A</span>Left half, because arr[mid]=7 &gt; target=0</div>
+          <div class="quiz-option" data-correct="true" data-explanation="arr[lo]=4 ≤ arr[mid]=7 → left half [4,5,6,7] is sorted. Target 0 is NOT in [4,7], so eliminate left: lo=mid+1=4. Now search [0,1,2]."><span class="opt-letter">B</span>Right half: left [4..7] is sorted but 0 ∉ [4,7], so eliminate left and search right [lo=4..6]</div>
+          <div class="quiz-option" data-correct="false" data-explanation="We don't search both halves — that would be linear, not binary."><span class="opt-letter">C</span>Both halves must be searched since the array is rotated</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Rotation doesn't mean the right half is always searched first — it depends on which half is sorted and where the target falls."><span class="opt-letter">D</span>Right half always, because the array is rotated</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P36 Course Schedule -->
+  <div class="prob-section" id="p-course-schedule">
+    <div class="prob-section-header">
+      <span class="prob-section-num">P36 — Medium</span>
+      <span class="prob-section-title">Course Schedule</span>
+    </div>
+    <div class="prob-section-meta">
+      <span class="prob-tag">Graphs</span><span class="prob-tag">DFS</span><span class="prob-tag">Topological Sort</span>
+    </div>
+    <p class="prob-section-desc">Given n courses and prerequisites, determine if all courses can be finished. DFS: detect back-edges (gray → gray = cycle). Kahn's BFS: track in-degrees, process nodes with in-degree 0. If all n nodes are processed, no cycle exists.</p>
+    <div class="prob-complexity">
+      <span class="prob-compl-chip">O(V + E) time · O(V + E) space</span>
+    </div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-course-schedule"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 1 of 2</div>
+        <div class="quiz-q-text">In the DFS approach, what does it mean when we find a GRAY node during traversal?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="Gray means currently being explored on the DFS call stack — not that the node is completely processed."><span class="opt-letter">A</span>The node has been fully processed and all neighbors visited</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Gray means the node is currently on the DFS call stack (in-progress). Encountering a gray node during DFS means we found a path back to an ancestor — a back-edge, which proves a cycle."><span class="opt-letter">B</span>The node is currently on the call stack — reaching it again means we found a back-edge (cycle)</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Unvisited (white) nodes have not been touched yet. Gray specifically means currently being visited."><span class="opt-letter">C</span>The node has not been visited yet</div>
+          <div class="quiz-option" data-correct="false" data-explanation="Being in the queue is a Kahn's BFS concept — DFS uses gray/black, not queues."><span class="opt-letter">D</span>The node is waiting in the processing queue</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-question">
+        <div class="quiz-q-num">Question 2 of 2</div>
+        <div class="quiz-q-text">In Kahn's algorithm, what does it mean if the queue becomes empty before all nodes are processed?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false" data-explanation="An empty queue early means remaining nodes have in-degree > 0 — they can't be processed, which signals a cycle."><span class="opt-letter">A</span>All courses can be completed — the queue empties correctly</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Nodes still unprocessed must have in-degree > 0, meaning they each depend on a node that also hasn't been processed — a circular dependency. The cycle prevents their in-degrees from ever reaching 0."><span class="opt-letter">B</span>The remaining nodes form a cycle — their in-degrees never reach 0, so they're stuck</div>
+          <div class="quiz-option" data-correct="false" data-explanation="The algorithm is deterministic — an empty queue with unprocessed nodes means a cycle, not an implementation issue."><span class="opt-letter">C</span>The algorithm needs to restart from a different starting node</div>
+          <div class="quiz-option" data-correct="false" data-explanation="In-degree 0 nodes are added to the queue during processing — if the queue is empty early, no such nodes remain, indicating a cycle."><span class="opt-letter">D</span>Some nodes were missed — they should be added back to the queue</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">32 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">36 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -1227,6 +1414,10 @@
       if(window.DSAProbs.generateParentheses&&document.getElementById('prob-generate-parens'))window.DSAProbs.generateParentheses('prob-generate-parens');
       if(window.DSAProbs.meetingRooms&&document.getElementById('prob-meeting-rooms'))window.DSAProbs.meetingRooms('prob-meeting-rooms');
       if(window.DSAProbs.rotateArray&&document.getElementById('prob-rotate-array'))window.DSAProbs.rotateArray('prob-rotate-array');
+      if(window.DSAProbs.linkedListCycle&&document.getElementById('prob-linked-list-cycle'))window.DSAProbs.linkedListCycle('prob-linked-list-cycle');
+      if(window.DSAProbs.mergeSortedLists&&document.getElementById('prob-merge-sorted-lists'))window.DSAProbs.mergeSortedLists('prob-merge-sorted-lists');
+      if(window.DSAProbs.searchRotatedArray&&document.getElementById('prob-search-rotated'))window.DSAProbs.searchRotatedArray('prob-search-rotated');
+      if(window.DSAProbs.courseSchedule&&document.getElementById('prob-course-schedule'))window.DSAProbs.courseSchedule('prob-course-schedule');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
