@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeetCode 150 — DSA Illustrated</title>
-  <meta name="description" content="8 essential interview problems visualized with brute → optimal animations, user inputs, and step controls.">
+  <meta name="description" content="200 NeetCode problems — 36 fully animated with brute → optimal step-by-step canvas demos, user input, and quiz questions.">
   <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -46,6 +46,27 @@
     .prob-demo-inner{padding:1rem;}
     .prob-divider{height:1px;background:linear-gradient(to right,transparent,rgba(139,92,246,.18),transparent);
       margin:3rem 0;}
+
+    /* ── Pagination ── */
+    .prob-pagination{display:flex;align-items:center;justify-content:center;gap:.45rem;
+      flex-wrap:wrap;padding:2.5rem 1rem 1rem;}
+    .pag-btn{padding:.42rem .85rem;border-radius:8px;
+      border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.07);
+      color:#C4B5FD;font:600 .78rem "JetBrains Mono",monospace;cursor:pointer;
+      transition:background .15s,border-color .15s,box-shadow .15s;}
+    .pag-btn:hover:not(:disabled){background:rgba(139,92,246,.2);border-color:#8B5CF6;color:#EDE9FE;}
+    .pag-btn.pag-active{background:rgba(139,92,246,.32);border-color:#8B5CF6;color:#EDE9FE;
+      box-shadow:0 0 12px rgba(139,92,246,.3);}
+    .pag-btn:disabled{opacity:.3;cursor:default;}
+    .pag-info{font:.75rem "JetBrains Mono",monospace;color:rgba(167,139,250,.45);margin-left:.5rem;}
+    .pag-range-bar{display:flex;align-items:center;justify-content:space-between;
+      padding:.6rem 0 1.4rem;margin-bottom:0;}
+    .pag-range-label{font:.75rem "JetBrains Mono",monospace;color:rgba(167,139,250,.45);}
+    .pag-jump{display:flex;align-items:center;gap:.4rem;font:.75rem "JetBrains Mono",monospace;color:rgba(167,139,250,.55);}
+    .pag-jump-input{width:46px;padding:.25rem .4rem;background:rgba(139,92,246,.08);
+      border:1px solid rgba(139,92,246,.3);border-radius:6px;color:#C4B5FD;
+      font:.75rem "JetBrains Mono",monospace;text-align:center;outline:none;}
+    .pag-jump-input:focus{border-color:#8B5CF6;}
   </style>
 </head>
 <body>
@@ -72,8 +93,8 @@
 
 <div class="prob-hero">
   <div class="prob-tag-row">
-    <span class="prob-tag">NeetCode 150</span>
-    <span class="prob-tag">36 Problems</span>
+    <span class="prob-tag">NeetCode 200</span>
+    <span class="prob-tag">200 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
   </div>
@@ -1382,7 +1403,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">36 animated NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">36 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -1421,6 +1442,100 @@
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
+})();
+</script>
+<script>
+/* ── Pagination ─────────────────────────────────────────────── */
+(function(){
+  var PAGE_SIZE=9;
+  var wrap=document.querySelector('.prob-sections');
+  if(!wrap)return;
+  var allSections=Array.from(wrap.querySelectorAll('.prob-section'));
+  var n=allSections.length;
+  var totalPages=Math.ceil(n/PAGE_SIZE);
+  var cur=1;
+
+  /* Range bar at the top of the sections area */
+  var rangeBar=document.createElement('div');
+  rangeBar.className='pag-range-bar';
+  rangeBar.innerHTML='<span class="pag-range-label"></span><span class="pag-jump">Go to problem: <input class="pag-jump-input" type="number" min="1" max="'+n+'" placeholder="#"></span>';
+  wrap.insertBefore(rangeBar,wrap.firstChild);
+  var rangeLabel=rangeBar.querySelector('.pag-range-label');
+  var jumpInput=rangeBar.querySelector('.pag-jump-input');
+  jumpInput.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      var idx=parseInt(jumpInput.value,10)-1;
+      if(isNaN(idx)||idx<0||idx>=n)return;
+      var tp=Math.floor(idx/PAGE_SIZE)+1;
+      showPage(tp,function(){
+        setTimeout(function(){allSections[idx].scrollIntoView({behavior:'smooth',block:'start'});},80);
+      });
+      jumpInput.value='';
+    }
+  });
+
+  /* Pagination bar below the sections */
+  var pagEl=document.createElement('div');
+  pagEl.className='prob-pagination';
+  wrap.parentNode.insertBefore(pagEl,wrap.nextSibling);
+
+  function showPage(p,cb){
+    cur=p;
+    var start=(p-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,n);
+    allSections.forEach(function(s,i){
+      var vis=i>=start&&i<end;
+      s.style.display=vis?'':'none';
+      /* show the divider that immediately precedes this section,
+         but not the one before the first visible section on this page */
+      var prev=s.previousElementSibling;
+      if(prev&&prev.classList.contains('prob-divider'))
+        prev.style.display=(vis&&i>start)?'':'none';
+    });
+    rangeLabel.textContent='Showing P'+(start+1)+' – P'+end+' of '+n+' animated problems';
+    render();
+    if(cb)cb();
+  }
+
+  function render(){
+    pagEl.innerHTML='';
+    function mkBtn(label,page,active,disabled){
+      var b=document.createElement('button');
+      b.textContent=label;
+      b.className='pag-btn'+(active?' pag-active':'');
+      b.disabled=disabled;
+      if(!disabled)b.addEventListener('click',function(){
+        showPage(page);
+        wrap.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      return b;
+    }
+    pagEl.appendChild(mkBtn('← Prev',cur-1,false,cur===1));
+    for(var i=1;i<=totalPages;i++)pagEl.appendChild(mkBtn(String(i),i,i===cur,false));
+    pagEl.appendChild(mkBtn('Next →',cur+1,false,cur===totalPages));
+    var info=document.createElement('span');
+    info.className='pag-info';
+    info.textContent='Page '+cur+' of '+totalPages;
+    pagEl.appendChild(info);
+  }
+
+  /* TOC cards: click navigates to the right page, then scrolls */
+  document.querySelectorAll('.prob-toc-card').forEach(function(card){
+    card.addEventListener('click',function(e){
+      var href=card.getAttribute('href');
+      if(!href)return;
+      var target=document.querySelector(href);
+      if(!target)return;
+      var idx=allSections.indexOf(target);
+      if(idx===-1)return;
+      e.preventDefault();
+      var tp=Math.floor(idx/PAGE_SIZE)+1;
+      showPage(tp,function(){
+        setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},80);
+      });
+    });
+  });
+
+  showPage(1);
 })();
 </script>
 </body>
