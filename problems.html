@@ -367,6 +367,46 @@
     <div class="tc-num">P66</div><div class="tc-title">House Robber II</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
+  <a href="#p-trie" class="prob-toc-card">
+    <div class="tc-num">P67</div><div class="tc-title">Implement Trie</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-find-median" class="prob-toc-card">
+    <div class="tc-num">P68</div><div class="tc-title">Find Median from Data Stream</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-decode-ways" class="prob-toc-card">
+    <div class="tc-num">P69</div><div class="tc-title">Decode Ways</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-jump-game-ii" class="prob-toc-card">
+    <div class="tc-num">P70</div><div class="tc-title">Jump Game II</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-kth-largest" class="prob-toc-card">
+    <div class="tc-num">P71</div><div class="tc-title">Kth Largest Element</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-task-scheduler" class="prob-toc-card">
+    <div class="tc-num">P72</div><div class="tc-title">Task Scheduler</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-gas-station" class="prob-toc-card">
+    <div class="tc-num">P73</div><div class="tc-title">Gas Station</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-non-overlapping" class="prob-toc-card">
+    <div class="tc-num">P74</div><div class="tc-title">Non-overlapping Intervals</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-palindromic-substrings" class="prob-toc-card">
+    <div class="tc-num">P75</div><div class="tc-title">Palindromic Substrings</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-min-window" class="prob-toc-card">
+    <div class="tc-num">P76</div><div class="tc-title">Minimum Window Substring</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -2329,11 +2369,281 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P67 Implement Trie -->
+  <div class="prob-section" id="p-trie">
+    <div class="prob-section-header"><span class="prob-section-num">P67 — Medium</span><span class="prob-section-title">Implement Trie (Prefix Tree)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tries</span><span class="prob-tag">Design</span><span class="prob-tag">HashMap</span></div>
+    <p class="prob-section-desc">A Trie stores strings as paths of characters in a tree. Each node holds a map of children and an <code>isEnd</code> flag. Insert and search both run in O(m) where m is the word length — far faster than scanning an array of strings.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m) insert / search · O(n·m) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-trie"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does the <code>isEnd</code> flag on a Trie node signify?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The node has no children</div>
+          <div class="quiz-option" data-correct="true" data-explanation="isEnd=true means a complete inserted word ends at this node. A node can have isEnd=true AND children — e.g. after inserting 'app' and 'apple', the 'p' node at depth 3 has isEnd=true (for 'app') and a child 'l' (continuing to 'apple')."><span class="opt-letter">B</span>A complete inserted word ends here — the node can still have children (e.g. both 'app' and 'apple' share a path)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>This is the deepest node in the trie</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The character at this node is a vowel</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why is a Trie preferred over a HashSet for prefix queries like <code>startsWith</code>?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Tries use less memory than hash sets</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A HashSet can only check if an exact string exists — it can't efficiently answer 'does any stored word start with prefix X?' A Trie naturally supports startsWith by traversing the prefix path; no scanning of all stored words needed."><span class="opt-letter">B</span>HashSet can only check exact matches; Trie traverses the prefix path in O(m) to answer startsWith without scanning all words</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Tries have O(1) search while HashSets are O(m)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>HashSets can't store strings longer than 26 characters</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P68 Find Median from Data Stream -->
+  <div class="prob-section" id="p-find-median">
+    <div class="prob-section-header"><span class="prob-section-num">P68 — Hard</span><span class="prob-section-title">Find Median from Data Stream</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heaps</span><span class="prob-tag">Design</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Maintain the running median as numbers stream in. Use two heaps: a max-heap <code>lo</code> (lower half) and a min-heap <code>hi</code> (upper half). Keep them balanced so <code>|lo| - |hi| ≤ 1</code>. Median = <code>lo.top</code> (odd count) or average of both tops (even).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log n) addNum · O(1) findMedian</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-median"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does lo use a max-heap and hi use a min-heap?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To allow O(1) insertion into both halves</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We need the tops of both heaps to compute the median: lo.top is the largest of the lower half, hi.top is the smallest of the upper half. Max-heap gives the largest in lo instantly; min-heap gives the smallest in hi instantly. Together they give us the two middle values in O(1)."><span class="opt-letter">B</span>We need lo's max (largest in lower half) and hi's min (smallest in upper half) in O(1) to compute the median</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>So elements automatically sort themselves between the two heaps</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Min-heaps are faster for even-length streams</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When must we rebalance after adding a number?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Every time a new number is added</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Two conditions require rebalancing: (1) lo.top > hi.top — lo has a value larger than hi's minimum, violating the partition invariant; move lo.top to hi. (2) sizes differ by more than 1 — move a top element from the larger heap to the smaller one to restore balance."><span class="opt-letter">B</span>When lo.top > hi.top (partition violated) or when size difference exceeds 1 — move the offending top element to the other heap</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Only when the total count exceeds 100</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When the new number equals the current median</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P69 Decode Ways -->
+  <div class="prob-section" id="p-decode-ways">
+    <div class="prob-section-header"><span class="prob-section-num">P69 — Medium</span><span class="prob-section-title">Decode Ways</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Strings</span></div>
+    <p class="prob-section-desc">Count ways to decode a digit string where 'A'=1 … 'Z'=26. <code>dp[i]</code> = ways to decode <code>s[0..i-1]</code>. At each position: add <code>dp[i-1]</code> if single digit is valid (1–9); add <code>dp[i-2]</code> if two digits form 10–26.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space (O(1) with two variables)</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-decode-ways"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does a '0' digit make dp[i] = 0 (from the single-digit path)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Zero is not a valid ASCII character</div>
+          <div class="quiz-option" data-correct="true" data-explanation="'0' has no mapping (there is no letter '0'). So s[i]='0' cannot be decoded as a standalone digit. The only valid decoding using position i is if the two-digit number s[i-1..i] is 10 or 20 — otherwise dp[i]=0 and the whole string may be impossible."><span class="opt-letter">B</span>'0' has no single-digit mapping — it can only be valid as part of '10' or '20'; any other combination yields 0 ways</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Strings starting with '0' always have exactly 1 decoding</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because dp[0] is initialized to 0</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many ways can "226" be decoded?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Decodings: '2','2','6'=BBF; '22','6'=VF; '2','26'=BZ. Total = 3. dp=[1,1,2,3]."><span class="opt-letter">A</span>3 — BBF, VF, BZ</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1 — only "226" maps to "VZ"</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P70 Jump Game II -->
+  <div class="prob-section" id="p-jump-game-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P70 — Medium</span><span class="prob-section-title">Jump Game II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Find the minimum number of jumps to reach the last index. Greedy: maintain a current window <code>[0..curEnd]</code> and track the <code>farthest</code> reachable index. When you exhaust the current window, increment jumps and extend to <code>farthest</code>.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-jump-game-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we stop the loop at index n-2 instead of n-1?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the last element's jump value is always 0</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We're counting jumps needed to REACH the last index, not jump FROM it. Once we're at or can reach n-1, we don't need another jump. Processing n-1 would count an extra jump unnecessarily."><span class="opt-letter">B</span>We count jumps to reach the last index — processing index n-1 would trigger an extra unnecessary jump from the destination</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Arrays are 0-indexed so n-2 is the last valid index</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To avoid reading out of bounds in nums[i+1]</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [2,3,1,1,4], what is the minimum number of jumps?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Jump 1: from index 0 (jump=2), reach index 1. Jump 2: from index 1 (jump=3), reach index 4 (end). Total = 2 jumps. Path: 0→1→4."><span class="opt-letter">A</span>2 — jump from index 0 to 1, then index 1 to 4 (end)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1 — jump directly from index 0</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P71 Kth Largest Element -->
+  <div class="prob-section" id="p-kth-largest">
+    <div class="prob-section-header"><span class="prob-section-num">P71 — Medium</span><span class="prob-section-title">Kth Largest Element in an Array</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heap</span><span class="prob-tag">Sorting</span><span class="prob-tag">QuickSelect</span></div>
+    <p class="prob-section-desc">Find the kth largest element without full sorting. Max-heap approach: build a max-heap then extract k times — the kth extraction is the answer. Optimal: QuickSelect runs O(n) average by partitioning around a pivot, discarding half the array each time.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Heap O(n + k log n)</span><span class="prob-compl-chip">QuickSelect O(n) avg</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-kth-largest"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is a min-heap of size k more space-efficient than a max-heap for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>A min-heap stores smaller values which take less memory</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A size-k min-heap keeps the k largest elements seen so far. The root is the kth largest. For each new element: if it's larger than the root, replace the root and heapify. Final root = kth largest. This uses O(k) space instead of O(n) for a full max-heap."><span class="opt-letter">B</span>Keep only k elements in a min-heap; root = kth largest. Uses O(k) space vs O(n) for a full heap.</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Min-heap insertion is O(1) while max-heap is O(log n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Min-heaps support the kth query natively</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [3,2,1,5,6,4] and k=2, what is the 2nd largest?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Sorted descending: [6,5,4,3,2,1]. The 2nd largest is 5. After building max-heap and extracting once (6), the next extraction yields 5."><span class="opt-letter">A</span>5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>6</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>3</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P72 Task Scheduler -->
+  <div class="prob-section" id="p-task-scheduler">
+    <div class="prob-section-header"><span class="prob-section-num">P72 — Medium</span><span class="prob-section-title">Task Scheduler</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Heap</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Given tasks and cooldown n, find the minimum CPU intervals needed. Math formula: <code>(maxFreq-1)×(n+1) + maxCount</code> where maxCount = number of tasks tied for max frequency. Answer is <code>max(formula, tasks.length)</code>.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space (26 task types)</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-task-scheduler"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For tasks=["A","A","A","B","B","B"] and n=2, what is the minimum intervals?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A and B both have freq=3. maxFreq=3, maxCount=2. Formula: (3-1)×(2+1)+2 = 6+2 = 8. Schedule: A,B,idle,A,B,idle,A,B = 8 intervals."><span class="opt-letter">A</span>8 — schedule: A,B,idle,A,B,idle,A,B</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>6</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>9</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>7</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When does the answer equal <code>tasks.length</code> instead of the formula?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>When n=0 (no cooldown required)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When there are many distinct tasks, they can fill all idle slots — no idles needed. The formula can give a value smaller than tasks.length when variety is high. The actual answer can never be less than tasks.length (every task must run at least once), so we take the max."><span class="opt-letter">B</span>When there are enough distinct tasks to fill idle slots — the schedule has no idles and takes exactly tasks.length intervals</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When all tasks are the same type</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When maxFreq equals 1</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P73 Gas Station -->
+  <div class="prob-section" id="p-gas-station">
+    <div class="prob-section-header"><span class="prob-section-num">P73 — Medium</span><span class="prob-section-title">Gas Station</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Find the starting station to complete a circular route. Key insight: if total gas ≥ total cost, a solution always exists and is unique. Greedy: track running tank; when it goes negative, the start must be after the current position — reset.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-gas-station"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the candidate starting station always the position AFTER where the tank goes negative?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because we skip the station that caused the deficit</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If starting from some station s, the tank goes negative at station i, then NO station between s and i can be a valid start. If they were, we'd have a non-negative prefix from that station, but we showed the cumulative from s is negative at i — contradiction. So the start must be i+1 or later."><span class="opt-letter">B</span>If tank goes negative at i starting from s, then every station from s to i fails as a start — they'd all face the same deficit, so start must be i+1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Station i+1 always has the highest gas value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The circular route means we always start one past the end</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For gas=[1,2,3,4,5] cost=[3,4,5,1,2], what is the starting station?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="net=[-2,-2,-2,3,3]. Running total: start=0, tank=-2→reset start=1; tank=-2→reset start=2; tank=-2→reset start=3; tank=3; tank=6. Final start=3. Total net=0≥0 so solution exists."><span class="opt-letter">A</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P74 Non-overlapping Intervals -->
+  <div class="prob-section" id="p-non-overlapping">
+    <div class="prob-section-header"><span class="prob-section-num">P74 — Medium</span><span class="prob-section-title">Non-overlapping Intervals</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Intervals</span><span class="prob-tag">Sorting</span></div>
+    <p class="prob-section-desc">Find the minimum number of intervals to remove so no two overlap. Sort by end time, then greedily keep intervals with the earliest end — this maximizes space for future intervals. Count kept intervals; answer = total − kept.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-non-overlapping"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we sort by END time rather than start time?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Sorting by start time requires O(n²) comparisons</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sorting by end time lets us greedily keep the interval that ends earliest — freeing the maximum time for future intervals. An interval that ends late blocks more future intervals than one ending early, even if they start at the same time."><span class="opt-letter">B</span>Keeping the interval with the earliest end leaves the most room for future intervals — an early end blocks fewer successors</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Start times may not be unique, causing ties</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The problem asks to minimize removals from the end of the list</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [[1,2],[2,3],[3,4],[1,3]], how many intervals must be removed?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Sort by end: [1,2],[2,3],[1,3],[3,4]. Keep [1,2] (prevEnd=2). Keep [2,3] (2≥2, prevEnd=3). Skip [1,3] (1<3, overlap). Keep [3,4] (3≥3, prevEnd=4). Kept=3, removed=1."><span class="opt-letter">A</span>1 — remove [1,3]; keep [1,2],[2,3],[3,4]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>0 — none overlap</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>3</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P75 Palindromic Substrings -->
+  <div class="prob-section" id="p-palindromic-substrings">
+    <div class="prob-section-header"><span class="prob-section-num">P75 — Medium</span><span class="prob-section-title">Palindromic Substrings</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Strings</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Count all palindromic substrings. Expand-around-center: for each of the 2n-1 centers (each character + each gap), expand outward while characters match. Each successful expansion is one palindrome. Total O(n²) but simpler than DP.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-palindromic-substrings"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we check both odd-length and even-length centers?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Odd strings have odd palindromes; even strings have even ones</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Odd-length palindromes (like 'aba') have a single character center. Even-length palindromes (like 'abba') have a center between two equal characters. Missing either type means we miss some palindromes entirely."><span class="opt-letter">B</span>Odd-length palindromes (e.g. 'aba') have a char center; even-length (e.g. 'abba') have a gap center — missing either type loses valid palindromes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To avoid counting the same palindrome twice</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because the loop runs from 0 to 2n-1</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many palindromic substrings does "aaa" have?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Single chars: 'a'(0), 'a'(1), 'a'(2) = 3. Length-2: 'aa'(0-1), 'aa'(1-2) = 2. Length-3: 'aaa' = 1. Total = 6."><span class="opt-letter">A</span>6 — 'a'×3, 'aa'×2, 'aaa'×1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3 — only unique palindromes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>9 — all substrings of "aaa" are palindromes</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P76 Minimum Window Substring -->
+  <div class="prob-section" id="p-min-window">
+    <div class="prob-section-header"><span class="prob-section-num">P76 — Hard</span><span class="prob-section-title">Minimum Window Substring</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Sliding Window</span><span class="prob-tag">Strings</span><span class="prob-tag">HashMap</span></div>
+    <p class="prob-section-desc">Find the smallest window in <code>s</code> containing all characters of <code>t</code>. Expand the right pointer until the window is valid (contains all of <code>t</code>), then shrink the left pointer to minimize — tracking the best valid window throughout.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(|s| + |t|) time · O(|t|) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-window"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When do we move the left pointer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Every time we move the right pointer</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We shrink from the left only when the window is already valid (contains all characters of t). Shrinking while invalid would make it worse. Once valid, we shrink to find the smallest valid window, recording each valid state as a potential answer."><span class="opt-letter">B</span>Only when the window is valid — shrink left to minimize size, recording each valid state as a candidate answer</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When left and right pointers meet in the middle</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When the window size exceeds |t|×2</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For s="ADOBECODEBANC", t="ABC", what is the minimum window?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The window 'BANC' (indices 9-12) contains A, B, C and has length 4. Earlier windows like 'ADOBEC' are larger. 'BANC' is the minimum."><span class="opt-letter">A</span>"BANC" (length 4)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>"ADOBEC" (length 6)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>"ABC" (not a contiguous substring here)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>"CODEBA" (length 6)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">66 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">76 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -2399,6 +2709,16 @@
       if(window.DSAProbs.coinChangeII&&document.getElementById('prob-coin-change-ii'))window.DSAProbs.coinChangeII('prob-coin-change-ii');
       if(window.DSAProbs.partitionSubset&&document.getElementById('prob-partition-subset'))window.DSAProbs.partitionSubset('prob-partition-subset');
       if(window.DSAProbs.houseRobberII&&document.getElementById('prob-house-robber-ii'))window.DSAProbs.houseRobberII('prob-house-robber-ii');
+      if(window.DSAProbs.trie&&document.getElementById('prob-trie'))window.DSAProbs.trie('prob-trie');
+      if(window.DSAProbs.findMedian&&document.getElementById('prob-find-median'))window.DSAProbs.findMedian('prob-find-median');
+      if(window.DSAProbs.decodeWays&&document.getElementById('prob-decode-ways'))window.DSAProbs.decodeWays('prob-decode-ways');
+      if(window.DSAProbs.jumpGameII&&document.getElementById('prob-jump-game-ii'))window.DSAProbs.jumpGameII('prob-jump-game-ii');
+      if(window.DSAProbs.kthLargest&&document.getElementById('prob-kth-largest'))window.DSAProbs.kthLargest('prob-kth-largest');
+      if(window.DSAProbs.taskScheduler&&document.getElementById('prob-task-scheduler'))window.DSAProbs.taskScheduler('prob-task-scheduler');
+      if(window.DSAProbs.gasStation&&document.getElementById('prob-gas-station'))window.DSAProbs.gasStation('prob-gas-station');
+      if(window.DSAProbs.nonOverlappingIntervals&&document.getElementById('prob-non-overlapping'))window.DSAProbs.nonOverlappingIntervals('prob-non-overlapping');
+      if(window.DSAProbs.palindromicSubstrings&&document.getElementById('prob-palindromic-substrings'))window.DSAProbs.palindromicSubstrings('prob-palindromic-substrings');
+      if(window.DSAProbs.minWindowSubstring&&document.getElementById('prob-min-window'))window.DSAProbs.minWindowSubstring('prob-min-window');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
