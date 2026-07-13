@@ -407,6 +407,46 @@
     <div class="tc-num">P76</div><div class="tc-title">Minimum Window Substring</div>
     <div class="tc-diff diff-hard">Hard</div>
   </a>
+  <a href="#p-max-path-sum" class="prob-toc-card">
+    <div class="tc-num">P77</div><div class="tc-title">Binary Tree Max Path Sum</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-construct-bt" class="prob-toc-card">
+    <div class="tc-num">P78</div><div class="tc-title">Construct Binary Tree</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-letter-combinations" class="prob-toc-card">
+    <div class="tc-num">P79</div><div class="tc-title">Letter Combinations of Phone Number</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-rotate-image" class="prob-toc-card">
+    <div class="tc-num">P80</div><div class="tc-title">Rotate Image</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-set-matrix-zeroes" class="prob-toc-card">
+    <div class="tc-num">P81</div><div class="tc-title">Set Matrix Zeroes</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-longest-palin-subseq" class="prob-toc-card">
+    <div class="tc-num">P82</div><div class="tc-title">Longest Palindromic Subsequence</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-single-number" class="prob-toc-card">
+    <div class="tc-num">P83</div><div class="tc-title">Single Number</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-counting-bits" class="prob-toc-card">
+    <div class="tc-num">P84</div><div class="tc-title">Counting Bits</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-sum-two-integers" class="prob-toc-card">
+    <div class="tc-num">P85</div><div class="tc-title">Sum of Two Integers</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-happy-number" class="prob-toc-card">
+    <div class="tc-num">P86</div><div class="tc-title">Happy Number</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -2639,11 +2679,281 @@
     </div>
   </div>
 
+  <div class="prob-divider"></div>
+
+  <!-- P77 Binary Tree Maximum Path Sum -->
+  <div class="prob-section" id="p-max-path-sum">
+    <div class="prob-section-header"><span class="prob-section-num">P77 — Hard</span><span class="prob-section-title">Binary Tree Maximum Path Sum</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">DFS</span><span class="prob-tag">Post-order</span></div>
+    <p class="prob-section-desc">Find the maximum sum path between any two nodes. Post-order DFS: for each node, compute the maximum <em>gain</em> from each child — <code>max(0, child_return)</code>. Path through a node = <code>node.val + leftGain + rightGain</code>. Track the global max across all nodes.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space — h = tree height</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-path-sum"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we use <code>max(0, child_return)</code> when computing a child's gain?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because all node values are positive</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If a subtree's max gain is negative, including it only reduces the path sum. By capping at 0 (i.e. choosing not to extend into that subtree), we ensure we never hurt our path sum. This is the key insight: we can 'cut off' a negative subtree."><span class="opt-letter">B</span>A negative subtree gain would reduce the path sum — capping at 0 means we simply don't extend into that subtree</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To handle null nodes cleanly (null returns 0)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To avoid overflow when values are large</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [-10,9,20,null,null,15,7], what is the maximum path sum?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The path 15→20→7 gives 15+20+7=42. Node 20: leftGain=max(0,15)=15, rightGain=max(0,7)=7, path=20+15+7=42. Node -10: leftGain=max(0,9)=9, rightGain=max(0,20+max(15,7))=35, path=-10+9+35=34. Global max=42."><span class="opt-letter">A</span>42 — path 15→20→7</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>35</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>34</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>15</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P78 Construct Binary Tree from Preorder and Inorder -->
+  <div class="prob-section" id="p-construct-bt">
+    <div class="prob-section-header"><span class="prob-section-num">P78 — Medium</span><span class="prob-section-title">Construct Binary Tree from Preorder &amp; Inorder</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trees</span><span class="prob-tag">Divide &amp; Conquer</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc"><code>preorder[0]</code> is always the root. Find that value in <code>inorder</code> — everything to its left is the left subtree, everything to its right is the right subtree. The left subtree size tells you how many of the next preorder elements belong to the left.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) naive · O(n) with inorder hashmap</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-construct-bt"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the inorder traversal let us split left and right subtrees?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Inorder is always sorted in a BST</div>
+          <div class="quiz-option" data-correct="true" data-explanation="In inorder traversal, the root appears between its entire left subtree (all to the left) and its entire right subtree (all to the right). Once we locate the root in the inorder array, we know exactly which nodes belong to the left subtree and which to the right."><span class="opt-letter">B</span>In inorder, the root sits between all left-subtree nodes and all right-subtree nodes — it's a natural split point</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because inorder gives us nodes in sorted BFS order</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The split point is always the middle of the inorder array</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For preorder=[3,9,20,15,7] and inorder=[9,3,15,20,7], how many nodes are in the left subtree of root 3?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Root=3. Find 3 in inorder at index 1. Everything before index 1 (just [9]) is the left subtree. Left subtree size = 1. So preorder[1..1]=[9] is the left subtree's preorder, and preorder[2..4]=[20,15,7] is the right."><span class="opt-letter">A</span>1 — only node 9 (inorder index of 3 is 1, so 1 node to its left)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>0 — root 3 has no left child</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P79 Letter Combinations of Phone Number -->
+  <div class="prob-section" id="p-letter-combinations">
+    <div class="prob-section-header"><span class="prob-section-num">P79 — Medium</span><span class="prob-section-title">Letter Combinations of a Phone Number</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Backtracking</span><span class="prob-tag">Strings</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc">Map each digit to its phone letters (2→abc, 3→def, …). Backtrack: for each digit position, try each mapped letter, build the path recursively. A complete path (length = digits.length) is one combination. No pruning needed — every path is valid.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(4^n · n) time — 4 letters max per digit, n digits</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-letter-combinations"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How many combinations does digits="23" produce?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="2→abc (3 letters), 3→def (3 letters). 3×3 = 9 combinations: ad, ae, af, bd, be, bf, cd, ce, cf."><span class="opt-letter">A</span>9 — ad, ae, af, bd, be, bf, cd, ce, cf</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>6</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>12</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8 — digit 2 has 3 letters, digit 3 has 3, but they share 2</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why is this O(4^n) instead of O(3^n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because we have 4 digits on most phones</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Digits 7 and 9 map to 4 letters each (PQRS and WXYZ). In the worst case, every digit maps to 4 letters, giving 4^n total combinations. Most digits give 3 letters, so the actual count is often less, but the worst-case bound is 4^n."><span class="opt-letter">B</span>Digits 7 (PQRS) and 9 (WXYZ) each map to 4 letters — worst case is 4 choices per digit</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because we consider 4 recursive branches at each level regardless</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The extra factor of 4 comes from the string concatenation cost</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P80 Rotate Image -->
+  <div class="prob-section" id="p-rotate-image">
+    <div class="prob-section-header"><span class="prob-section-num">P80 — Medium</span><span class="prob-section-title">Rotate Image</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Math</span><span class="prob-tag">In-place</span></div>
+    <p class="prob-section-desc">Rotate an n×n matrix 90° clockwise in-place. Two-step trick: <strong>Transpose</strong> (swap <code>matrix[i][j]</code> with <code>matrix[j][i]</code> for j &gt; i), then <strong>reverse each row</strong>. No extra matrix needed.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotate-image"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does transposing a matrix do?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Reverses every row</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Transposing flips the matrix along its main diagonal: matrix[i][j] becomes matrix[j][i]. Row i becomes column i, and column j becomes row j. Combined with reversing each row, this achieves a 90° clockwise rotation."><span class="opt-letter">B</span>Flips along the main diagonal — matrix[i][j] swaps with matrix[j][i]; rows become columns</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Rotates the matrix 180°</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Sorts each row in ascending order</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [[1,2,3],[4,5,6],[7,8,9]], what is the result after 90° clockwise rotation?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Transpose: [[1,4,7],[2,5,8],[3,6,9]]. Reverse rows: [[7,4,1],[8,5,2],[9,6,3]]. This matches a 90° clockwise rotation where the left column becomes the top row."><span class="opt-letter">A</span>[[7,4,1],[8,5,2],[9,6,3]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[[3,6,9],[2,5,8],[1,4,7]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[[1,4,7],[2,5,8],[3,6,9]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[[9,8,7],[6,5,4],[3,2,1]]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P81 Set Matrix Zeroes -->
+  <div class="prob-section" id="p-set-matrix-zeroes">
+    <div class="prob-section-header"><span class="prob-section-num">P81 — Medium</span><span class="prob-section-title">Set Matrix Zeroes</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Matrix</span><span class="prob-tag">In-place</span></div>
+    <p class="prob-section-desc">If a cell is 0, set its entire row and column to 0 in-place. Naive: collect zero positions in a set, then zero those rows/cols — O(m+n) extra space. Optimal: use the first row and first column themselves as marker arrays — O(1) space.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(1) space (first row/col as markers)</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-set-matrix-zeroes"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't we zero out rows/columns immediately when we find a zero?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because zeroing is an O(n²) operation</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Zeroing immediately introduces new zeros into the matrix. In a subsequent scan, these new zeros would be mistaken for original zeros, causing rows/columns that should remain non-zero to be zeroed out incorrectly."><span class="opt-letter">B</span>Newly introduced zeros would be misidentified as original zeros in subsequent scans, cascading incorrectly</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The zeroing order matters — left-to-right only works</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We need the original values to determine which rows and columns to zero</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [[1,1,1],[1,0,1],[1,1,1]], what is the result?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Zero at [1][1]. Row 1 becomes [0,0,0]. Column 1 becomes 0 throughout. Result: [[1,0,1],[0,0,0],[1,0,1]]."><span class="opt-letter">A</span>[[1,0,1],[0,0,0],[1,0,1]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[[0,0,0],[0,0,0],[0,0,0]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[[1,1,1],[0,0,0],[1,1,1]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[[1,0,1],[1,0,1],[1,0,1]]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P82 Longest Palindromic Subsequence -->
+  <div class="prob-section" id="p-longest-palin-subseq">
+    <div class="prob-section-header"><span class="prob-section-num">P82 — Medium</span><span class="prob-section-title">Longest Palindromic Subsequence</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Strings</span><span class="prob-tag">2D DP</span></div>
+    <p class="prob-section-desc"><code>dp[i][j]</code> = length of longest palindromic subsequence in <code>s[i..j]</code>. Match: <code>dp[i][j] = dp[i+1][j-1] + 2</code>. No match: <code>max(dp[i+1][j], dp[i][j-1])</code>. Fill by increasing substring length (diagonally).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(n²) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-palin-subseq"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we fill the DP table by increasing substring length rather than row by row?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because row-by-row filling leads to negative indices</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i][j] depends on dp[i+1][j-1] (the shorter inner substring), dp[i+1][j] and dp[i][j-1]. All three reference shorter substrings. By filling from length 1 upward, all dependencies are computed before they're needed."><span class="opt-letter">B</span>dp[i][j] depends on shorter substrings dp[i+1][j-1], dp[i+1][j], dp[i][j-1] — filling by length ensures all dependencies exist</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Row-by-row would double count palindromes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To avoid recomputing the same substring twice</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For "bbbab", what is the longest palindromic subsequence length?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="LPS = 4. The subsequence 'bbbb' is a palindrome of length 4 (pick indices 0,1,3,4 — b,b,b,b — note index 3 is 'a', so correct picks are 0,1,2,4 → b,b,b,b)."><span class="opt-letter">A</span>4 — "bbbb" (skip the 'a')</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5 — the whole string</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P83 Single Number -->
+  <div class="prob-section" id="p-single-number">
+    <div class="prob-section-header"><span class="prob-section-num">P83 — Easy</span><span class="prob-section-title">Single Number</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Bit Manipulation</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Every element appears twice except one. XOR all elements: <code>a ^ a = 0</code> (pairs cancel), <code>0 ^ b = b</code> (single survives). Since XOR is commutative and associative, order doesn't matter — the result is always the unique element.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-single-number"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does <code>a ^ a = 0</code> make XOR perfect for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because XOR is faster than subtraction</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Every element appearing twice contributes a ^ a = 0 to the running XOR. Zero XORed with anything is that thing (0 ^ b = b). So after XORing all n elements, only the unpaired element survives. Commutativity/associativity mean order doesn't matter."><span class="opt-letter">B</span>Paired elements cancel to 0; XOR with 0 leaves the single element unchanged — so it's the only survivor</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>XOR can only be applied to elements that appear exactly twice</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It only works when the array is sorted</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For [4,1,2,1,2], what is the result of XORing all elements?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="4^1=5, 5^2=7, 7^1=6, 6^2=4. Result=4. Or: 1^1=0, 2^2=0, so they cancel; only 4 remains."><span class="opt-letter">A</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>10</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P84 Counting Bits -->
+  <div class="prob-section" id="p-counting-bits">
+    <div class="prob-section-header"><span class="prob-section-num">P84 — Easy</span><span class="prob-section-title">Counting Bits</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Bit Manipulation</span></div>
+    <p class="prob-section-desc">For each number 0 to n, count the number of 1-bits. DP recurrence: <code>dp[i] = dp[i &gt;&gt; 1] + (i &amp; 1)</code>. Shifting right by 1 removes the last bit — the count of 1s in the remaining bits is already known. Add 1 if the last bit is set.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-counting-bits"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is dp[i] = dp[i >> 1] + (i & 1) correct?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because all numbers are even</div>
+          <div class="quiz-option" data-correct="true" data-explanation="i >> 1 removes the least significant bit (LSB). The number of 1-bits in i equals the number of 1-bits in i>>1 (already computed) plus whether the LSB itself is 1 (i&1). This reuse makes it O(n) instead of O(n log n)."><span class="opt-letter">B</span>i>>1 removes the LSB — we already know its 1-bit count; we just add whether i's LSB is 1 (i&1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because every number's bit count is half of its value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>i>>1 always rounds down, so we need to add 1 to compensate</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is dp[7]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="7 in binary = 111. Three 1-bits. dp[7]=dp[3]+1=dp[1]+1+1=1+1+1=3. Or directly: 111b has 3 ones."><span class="opt-letter">A</span>3 — 7 = 111b (three 1-bits)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>7</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P85 Sum of Two Integers -->
+  <div class="prob-section" id="p-sum-two-integers">
+    <div class="prob-section-header"><span class="prob-section-num">P85 — Medium</span><span class="prob-section-title">Sum of Two Integers (without + or -)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Bit Manipulation</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Add two integers without using <code>+</code> or <code>-</code>. <code>a XOR b</code> gives the sum bits without carries. <code>(a AND b) &lt;&lt; 1</code> gives the carry bits. Repeat with <code>sum = XOR result</code> and <code>carry = AND&lt;&lt;1</code> until carry is zero.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(1) — at most 32 iterations for 32-bit integers</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-sum-two-integers"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does <code>a XOR b</code> compute in binary addition?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The carry bits that propagate to the next position</div>
+          <div class="quiz-option" data-correct="true" data-explanation="XOR is exactly binary addition without carry: 0+0=0, 0+1=1, 1+0=1, 1+1=0 (no carry). The carry from 1+1 is handled separately by (a AND b) << 1."><span class="opt-letter">B</span>The sum bits without carry — 1+1 gives 0 (the carry is separate), matching XOR truth table</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The product of a and b in binary</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The absolute difference between a and b</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For a=5 (101b) and b=3 (011b), how many iterations does the loop run?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Iter 1: sum=5^3=6(110b), carry=(5&3)<<1=(001)<<1=010=2. Iter 2: sum=6^2=4(100b), carry=(6&2)<<1=(010)<<1=100=4. Iter 3: sum=4^4=0, carry=(4&4)<<1=8. Wait, let me recalc: 5=101, 3=011. XOR=110=6, AND=001<<1=010=2. 6=110, 2=010, XOR=100=4, AND=010<<1=100=4. 4=100, 4=100, XOR=000=0, AND=100<<1=1000=8. 0=0000, 8=1000, XOR=1000=8, AND=0. Result=8. That's 5+3=8. Hmm wait, 5+3=8. Let me recount iterations: 3 iterations until carry=0."><span class="opt-letter">A</span>3 iterations until carry reaches 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>1 iteration</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>8 iterations — one per bit</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>2 iterations</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="prob-divider"></div>
+
+  <!-- P86 Happy Number -->
+  <div class="prob-section" id="p-happy-number">
+    <div class="prob-section-header"><span class="prob-section-num">P86 — Easy</span><span class="prob-section-title">Happy Number</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Math</span><span class="prob-tag">HashSet</span><span class="prob-tag">Floyd's Cycle</span></div>
+    <p class="prob-section-desc">Repeatedly replace a number with the sum of squares of its digits. A <em>happy number</em> reaches 1 and stays there. An unhappy number falls into a cycle that never includes 1. Detect the cycle with a HashSet or Floyd's slow/fast pointer.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log n) per step · O(log n) steps until cycle</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-happy-number"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">All unhappy numbers eventually reach the number 89 before cycling. Why does this guarantee we only need to check for 1?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because 89 is always the first repeated number</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The cycle for all unhappy numbers is the same fixed cycle: 89→145→42→20→4→16→37→58→89. Since every non-happy sequence enters this cycle, we only need to detect if we hit 1 (happy) or any repeated number (unhappy). We don't need to know the actual cycle members."><span class="opt-letter">B</span>All unhappy numbers share the same cycle through 89; detecting ANY repeat is enough — we don't need to enumerate cycle members</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>89 is a prime number so all paths lead to it</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because 8²+9²=145 and 1+4+5=10=1+0=1</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Is 19 a happy number?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="19→1²+9²=82→8²+2²=68→6²+8²=100→1²+0²+0²=1. Yes, happy!"><span class="opt-letter">A</span>Yes — 19→82→68→100→1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>No — 19 eventually cycles through 89</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Yes — 19 reaches 1 in exactly one step</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>No — 1+9=10, which is even, so it can't be happy</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">76 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">86 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -2719,6 +3029,16 @@
       if(window.DSAProbs.nonOverlappingIntervals&&document.getElementById('prob-non-overlapping'))window.DSAProbs.nonOverlappingIntervals('prob-non-overlapping');
       if(window.DSAProbs.palindromicSubstrings&&document.getElementById('prob-palindromic-substrings'))window.DSAProbs.palindromicSubstrings('prob-palindromic-substrings');
       if(window.DSAProbs.minWindowSubstring&&document.getElementById('prob-min-window'))window.DSAProbs.minWindowSubstring('prob-min-window');
+      if(window.DSAProbs.maxPathSum&&document.getElementById('prob-max-path-sum'))window.DSAProbs.maxPathSum('prob-max-path-sum');
+      if(window.DSAProbs.constructBinaryTree&&document.getElementById('prob-construct-bt'))window.DSAProbs.constructBinaryTree('prob-construct-bt');
+      if(window.DSAProbs.letterCombinations&&document.getElementById('prob-letter-combinations'))window.DSAProbs.letterCombinations('prob-letter-combinations');
+      if(window.DSAProbs.rotateImage&&document.getElementById('prob-rotate-image'))window.DSAProbs.rotateImage('prob-rotate-image');
+      if(window.DSAProbs.setMatrixZeroes&&document.getElementById('prob-set-matrix-zeroes'))window.DSAProbs.setMatrixZeroes('prob-set-matrix-zeroes');
+      if(window.DSAProbs.longestPalinSubseq&&document.getElementById('prob-longest-palin-subseq'))window.DSAProbs.longestPalinSubseq('prob-longest-palin-subseq');
+      if(window.DSAProbs.singleNumber&&document.getElementById('prob-single-number'))window.DSAProbs.singleNumber('prob-single-number');
+      if(window.DSAProbs.countingBits&&document.getElementById('prob-counting-bits'))window.DSAProbs.countingBits('prob-counting-bits');
+      if(window.DSAProbs.sumTwoIntegers&&document.getElementById('prob-sum-two-integers'))window.DSAProbs.sumTwoIntegers('prob-sum-two-integers');
+      if(window.DSAProbs.happyNumber&&document.getElementById('prob-happy-number'))window.DSAProbs.happyNumber('prob-happy-number');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
