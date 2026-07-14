@@ -447,6 +447,46 @@
     <div class="tc-num">P86</div><div class="tc-title">Happy Number</div>
     <div class="tc-diff diff-easy">Easy</div>
   </a>
+  <a href="#p-palin-partition" class="prob-toc-card">
+    <div class="tc-num">P87</div><div class="tc-title">Palindrome Partitioning</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-subsets-ii" class="prob-toc-card">
+    <div class="tc-num">P88</div><div class="tc-title">Subsets II</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-insert-interval" class="prob-toc-card">
+    <div class="tc-num">P89</div><div class="tc-title">Insert Interval</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-reverse-bits" class="prob-toc-card">
+    <div class="tc-num">P90</div><div class="tc-title">Reverse Bits</div>
+    <div class="tc-diff diff-easy">Easy</div>
+  </a>
+  <a href="#p-min-cost-points" class="prob-toc-card">
+    <div class="tc-num">P91</div><div class="tc-title">Min Cost to Connect All Points</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-network-delay" class="prob-toc-card">
+    <div class="tc-num">P92</div><div class="tc-title">Network Delay Time</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-redundant-connection" class="prob-toc-card">
+    <div class="tc-num">P93</div><div class="tc-title">Redundant Connection</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
+  <a href="#p-burst-balloons" class="prob-toc-card">
+    <div class="tc-num">P94</div><div class="tc-title">Burst Balloons</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-regex-match" class="prob-toc-card">
+    <div class="tc-num">P95</div><div class="tc-title">Regular Expression Matching</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-word-dict" class="prob-toc-card">
+    <div class="tc-num">P96</div><div class="tc-title">Design Add and Search Words</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -2949,11 +2989,262 @@
     </div>
   </div>
 
+
+  <!-- P87 Palindrome Partitioning -->
+  <div class="prob-section" id="p-palin-partition">
+    <div class="prob-section-header"><span class="prob-section-num">P87 — Medium</span><span class="prob-section-title">Palindrome Partitioning</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Backtracking</span><span class="prob-tag">DP</span><span class="prob-tag">String</span></div>
+    <p class="prob-section-desc">Given string <em>s</em>, partition it so every substring is a palindrome. Return all possible partitions. Backtrack by trying every prefix — if it is a palindrome, recurse on the remainder. Optimal: precompute a 2D palindrome table to eliminate redundant checks.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n·2ⁿ) time · O(n) stack space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-palin-partition"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">In the backtracking solution, when do we add the current path to results?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>When the current substring is a palindrome</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We add the path when start reaches the end of the string — meaning we've successfully partitioned the entire string into palindromic substrings."><span class="opt-letter">B</span>When start index reaches the length of the string</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>At every recursive call regardless</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When path length equals the string length</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does the optimal approach reduce palindrome checking time from O(n) to O(1)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>By sorting the characters first</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>By using two pointers simultaneously</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Precompute a 2D boolean table dp[i][j] = true if s[i..j] is a palindrome using DP. Then each check is O(1) lookup during backtracking."><span class="opt-letter">C</span>Precompute a 2D DP table dp[i][j]=isPalindrome(i,j) so each check is O(1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>By memoizing the entire partition results</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P88 Subsets II -->
+  <div class="prob-section" id="p-subsets-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P88 — Medium</span><span class="prob-section-title">Subsets II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Backtracking</span><span class="prob-tag">Array</span><span class="prob-tag">Duplicates</span></div>
+    <p class="prob-section-desc">Like Subsets but the input may contain duplicates. Sort the array first, then during backtracking skip a number if it equals the previous number at the same recursion depth. This prevents duplicate subsets without using a set.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n·2ⁿ) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-subsets-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we sort the array before applying the duplicate-skip logic?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Sorting groups duplicates together so nums[i]==nums[i-1] correctly identifies a duplicate at the same recursion level. Without sorting, duplicates could be non-adjacent and the skip condition would miss them."><span class="opt-letter">A</span>Sorting groups duplicates adjacently so the skip condition nums[i]==nums[i-1] works correctly</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Sorting makes the subsets come out in lexicographic order</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sorting reduces time complexity from O(2ⁿ) to O(n log n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Sorting is not actually needed for this problem</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For input [1,2,2], how many unique subsets should the result contain?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>6</div>
+          <div class="quiz-option" data-correct="true" data-explanation="[],[1],[2],[1,2],[2,2],[1,2,2] — 6 subsets total."><span class="opt-letter">B</span>6 subsets: [], [1], [2], [1,2], [2,2], [1,2,2]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>8 (2³ for 3 elements)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>4</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P89 Insert Interval -->
+  <div class="prob-section" id="p-insert-interval">
+    <div class="prob-section-header"><span class="prob-section-num">P89 — Medium</span><span class="prob-section-title">Insert Interval</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Intervals</span><span class="prob-tag">Array</span><span class="prob-tag">Greedy</span></div>
+    <p class="prob-section-desc">Insert a new interval into a sorted list of non-overlapping intervals, merging as necessary. Three phases: (1) add all intervals ending before the new one starts, (2) merge all overlapping intervals into the new one, (3) add the rest.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-insert-interval"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How do you determine that an existing interval overlaps with the new interval [a,b]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>existing.start &gt;= a AND existing.end &lt;= b</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Intervals [a,b] and [c,d] overlap when c<=b AND a<=d, i.e., neither ends before the other starts. Equivalently, existing.start <= newEnd AND existing.end >= newStart."><span class="opt-letter">B</span>existing.start &lt;= b AND existing.end &gt;= a (neither ends before the other starts)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>existing.start == a OR existing.end == b</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>existing.end &lt; a (they don't touch)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Insert [2,5] into [[1,3],[6,9]]. What is the result?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="[2,5] overlaps [1,3] (merge → [1,5]). [6,9] starts after 5 → keep. Result: [[1,5],[6,9]]."><span class="opt-letter">A</span>[[1,5],[6,9]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[[1,3],[2,5],[6,9]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[[1,9]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[[2,5],[6,9]]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P90 Reverse Bits -->
+  <div class="prob-section" id="p-reverse-bits">
+    <div class="prob-section-header"><span class="prob-section-num">P90 — Easy</span><span class="prob-section-title">Reverse Bits</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Bit Manipulation</span><span class="prob-tag">Divide &amp; Conquer</span></div>
+    <p class="prob-section-desc">Reverse the bits of a given 32-bit unsigned integer. Shift bits out one by one and build the result in reverse. Optimized: divide-and-conquer by swapping groups of bits (16, 8, 4, 2, 1) halving the number of operations.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(1) time — exactly 32 iterations · O(1) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-reverse-bits"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">After reversing 32 bits of 00000010100101000001111010011100 (43261596), what is the decimal result?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Reversed: 00111001011110000010100101000000 = 964176192."><span class="opt-letter">A</span>964176192</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>43261596</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>2147483648</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>86523192</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why must we use unsigned right shift (>>>) instead of signed (>>) when working with bit reversal in JavaScript?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because >>> is faster for 32-bit numbers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Because >> only works on even numbers</div>
+          <div class="quiz-option" data-correct="true" data-explanation="JavaScript numbers are 64-bit floats but bitwise ops work on 32-bit signed ints. If the high bit is set, signed >> fills with 1s (sign extension), corrupting the reversal. >>> fills with 0s, treating the value as unsigned 32-bit."><span class="opt-letter">C</span>Signed &gt;&gt; sign-extends with 1s when high bit is set; &gt;&gt;&gt; always fills with 0s, preserving unsigned 32-bit semantics</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>No difference; both work the same for positive integers</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P91 Min Cost to Connect All Points -->
+  <div class="prob-section" id="p-min-cost-points">
+    <div class="prob-section-header"><span class="prob-section-num">P91 — Medium</span><span class="prob-section-title">Min Cost to Connect All Points</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graphs</span><span class="prob-tag">MST</span><span class="prob-tag">Prim's</span><span class="prob-tag">Manhattan Distance</span></div>
+    <p class="prob-section-desc">Find the minimum cost to connect all points where cost = Manhattan distance between them. This is a Minimum Spanning Tree problem. Prim's is optimal here: maintain a min-cost array for each unvisited point and greedily pick the cheapest edge.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(n) space (Prim's without priority queue)</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-cost-points"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is Prim's algorithm preferred over Kruskal's for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Kruskal's doesn't work with Manhattan distance</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We have n points and n² potential edges. Kruskal's needs to sort all O(n²) edges = O(n² log n). Prim's with a simple array is O(n²) because we avoid materializing all edges — we compute distances on the fly as we add each point."><span class="opt-letter">B</span>The graph has O(n²) edges; Kruskal's sorting costs O(n² log n) while Prim's runs O(n²) by computing distances on the fly</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Prim's always gives a smaller MST weight</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Kruskal's requires Union-Find which doesn't work with coordinates</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What does minCost[v] represent in Prim's algorithm for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The total path cost from the starting point to v</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The number of neighbors of v in the MST</div>
+          <div class="quiz-option" data-correct="true" data-explanation="minCost[v] holds the cheapest single-edge cost to connect point v to any already-visited point in the growing MST. When we add v to the MST we add minCost[v] to the total."><span class="opt-letter">C</span>The minimum Manhattan distance from point v to any already-visited MST node</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The average distance from v to all other points</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P92 Network Delay Time -->
+  <div class="prob-section" id="p-network-delay">
+    <div class="prob-section-header"><span class="prob-section-num">P92 — Medium</span><span class="prob-section-title">Network Delay Time</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graphs</span><span class="prob-tag">Dijkstra</span><span class="prob-tag">Shortest Path</span><span class="prob-tag">Heap</span></div>
+    <p class="prob-section-desc">Given a directed weighted graph, a source node <em>k</em>, and edge travel times, find the minimum time for a signal to reach all nodes. This is single-source shortest path. Use Dijkstra for non-negative weights, or Bellman-Ford if negative weights are possible.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O((V+E) log V) time · O(V+E) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-network-delay"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we return the maximum of all shortest distances, not the sum?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the signal travels to all nodes in parallel simultaneously</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The signal propagates to all nodes in parallel, so it reaches node v at time dist[v]. The last node to receive the signal determines when ALL nodes have received it. That's the maximum dist value."><span class="opt-letter">B</span>The signal reaches all nodes in parallel; the delay is when the LAST node receives it = max(dist)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To avoid integer overflow from adding all distances</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because Dijkstra only computes the maximum path</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What happens if not all nodes are reachable from k?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Dijkstra automatically handles this by setting unreachable nodes to 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The result is the sum of all reachable distances</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If any node remains at dist=Infinity after Dijkstra, it is unreachable. The problem asks for the time for ALL nodes to receive the signal — impossible, so return -1."><span class="opt-letter">C</span>Return -1 because at least one node has dist = Infinity (never receives the signal)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Return the largest finite distance found</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P93 Redundant Connection -->
+  <div class="prob-section" id="p-redundant-connection">
+    <div class="prob-section-header"><span class="prob-section-num">P93 — Medium</span><span class="prob-section-title">Redundant Connection</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Union-Find</span><span class="prob-tag">Graphs</span><span class="prob-tag">Cycle Detection</span></div>
+    <p class="prob-section-desc">Find the edge that, when removed, leaves a valid tree (connected, no cycles). Process edges one by one with Union-Find. When both endpoints already share a root, adding the edge creates a cycle — that is the redundant edge. Return the last such edge found.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n α(n)) time · O(n) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-redundant-connection"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does α(n) represent in the Union-Find complexity O(n α(n))?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The average depth of the union-find tree</div>
+          <div class="quiz-option" data-correct="true" data-explanation="α is the inverse Ackermann function, which grows so slowly it is effectively a constant (≤4) for all practical inputs. With path compression + union by rank, each find/union is nearly O(1)."><span class="opt-letter">B</span>The inverse Ackermann function — effectively a constant ≤ 4 for all practical n</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The number of connected components</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>log log n — double logarithm of n</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For edges [[1,2],[1,3],[2,3]], which is the redundant edge and why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>[1,2] — it is the first edge added</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>[1,3] — it connects to the root node</div>
+          <div class="quiz-option" data-correct="true" data-explanation="After adding [1,2] and [1,3], nodes 1,2,3 are all connected. Adding [2,3] finds both 2 and 3 already share root 1 → cycle → redundant."><span class="opt-letter">C</span>[2,3] — when processed, both 2 and 3 already share the same root, creating a cycle</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>There is no redundant edge</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P94 Burst Balloons -->
+  <div class="prob-section" id="p-burst-balloons">
+    <div class="prob-section-header"><span class="prob-section-num">P94 — Hard</span><span class="prob-section-title">Burst Balloons</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Interval DP</span><span class="prob-tag">Divide &amp; Conquer</span></div>
+    <p class="prob-section-desc">Burst balloons to maximize coins — bursting index <em>i</em> gives <code>nums[i-1]*nums[i]*nums[i+1]</code>. Think in reverse: instead of deciding which balloon to burst first, decide which balloon to burst <strong>last</strong> in a range. This gives the interval DP recurrence dp[l][r] = max over k (nums[l-1]*nums[k]*nums[r+1] + dp[l][k-1] + dp[k+1][r]).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n³) time · O(n²) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-burst-balloons"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is it easier to think about which balloon to burst LAST rather than first?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the last balloon always gives the maximum coins</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When balloon k is burst last in range [l,r], its left and right neighbors are the padded boundaries (nums[l-1] and nums[r+1]) — fixed, known values. If we think 'first', the neighbors change as balloons are popped, making subproblems interdependent."><span class="opt-letter">B</span>When k is burst last, its neighbors are the range boundaries (fixed), making the subproblems dp[l][k-1] and dp[k+1][r] independent</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because bursting last avoids the padding boundary trick</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Both approaches give the same recurrence</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The padded array [1, nums[0], ..., nums[n-1], 1] adds 1s at the boundaries. What problem does this solve?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>It prevents array index out-of-bounds errors only</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Without padding, bursting the first or last balloon requires special-casing missing neighbors. By padding with 1s, the coin formula nums[i-1]*nums[i]*nums[i+1] always has valid neighbors, and multiplying by 1 has no effect on coins."><span class="opt-letter">B</span>Padding gives every balloon valid neighbors so the coin formula always applies — the virtual 1s contribute 0 extra coins</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It converts the problem into a simpler Kadane's variant</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Padding is not needed; the standard DP works without it</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P95 Regular Expression Matching -->
+  <div class="prob-section" id="p-regex-match">
+    <div class="prob-section-header"><span class="prob-section-num">P95 — Hard</span><span class="prob-section-title">Regular Expression Matching</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">String</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc">Implement pattern matching with <code>.</code> (any single char) and <code>*</code> (zero or more of the preceding char). 2D DP: dp[i][j] = true if s[0..i-1] matches p[0..j-1]. For <code>*</code>: either use zero occurrences (dp[i][j-2]) or one more (dp[i-1][j] when chars match).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(mn) time · O(mn) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-regex-match"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When pattern char is '*', what are the two DP choices?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'*' can match zero occurrences of the preceding char (skip x* by using dp[i][j-2]) or one-more occurrence (use dp[i-1][j] when p[j-2] matches s[i-1] or is '.'). These are the only two cases."><span class="opt-letter">A</span>Zero occurrences: dp[i][j] = dp[i][j-2]; OR one-more: dp[i][j] = dp[i-1][j] when p[j-2] matches s[i-1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Match exactly one char, or match exactly two chars</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Skip the '*' character, or match the entire remaining string</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[i][j] = dp[i][j-1] OR dp[i-1][j]</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Does "aab" match "c*a*b"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="c* matches zero c's, a* matches two a's, b matches b. Result: true."><span class="opt-letter">A</span>Yes — c* matches 0 c's, a* matches 'aa', b matches 'b'</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>No — 'c*' must match at least one 'c'</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>No — the pattern has too many characters</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Yes — but only because '.' wildcards are used</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P96 Design Add and Search Words -->
+  <div class="prob-section" id="p-word-dict">
+    <div class="prob-section-header"><span class="prob-section-num">P96 — Medium</span><span class="prob-section-title">Design Add and Search Words</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trie</span><span class="prob-tag">DFS</span><span class="prob-tag">Design</span><span class="prob-tag">Wildcard</span></div>
+    <p class="prob-section-desc">Design a data structure supporting <code>addWord(word)</code> and <code>search(word)</code> where <code>.</code> matches any letter. Use a Trie for O(m) word insertion. For search, DFS through the trie — at a <code>.</code> node, branch into all children.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m) insert · O(26^m) worst search (wildcards) · O(total chars) space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-dict"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can search take O(26^m) in the worst case?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the Trie has up to 26^m nodes</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If the pattern is all dots (e.g., '...'), each '.' branches into all 26 possible children at each level, creating a branching factor of 26 for m levels = O(26^m) total paths to explore."><span class="opt-letter">B</span>A pattern of all dots branches into 26 children at every level — 26^m paths to explore for an m-character query</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because DFS visits every node in the Trie once per character</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because we must check all words of length m in the dictionary</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After adding ["bad","dad","mad"], does search("pad") return true?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Yes — the Trie contains words ending in 'ad'</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Only b/d/m are in the Trie at the first level. 'p' is not a child of root, so the search fails immediately. search('pad') = false."><span class="opt-letter">B</span>No — 'p' is not in the Trie, so search fails at the first character</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Yes — '.ad' would match but 'pad' does not use a wildcard</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It depends on insertion order</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">86 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">96 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -3039,6 +3330,16 @@
       if(window.DSAProbs.countingBits&&document.getElementById('prob-counting-bits'))window.DSAProbs.countingBits('prob-counting-bits');
       if(window.DSAProbs.sumTwoIntegers&&document.getElementById('prob-sum-two-integers'))window.DSAProbs.sumTwoIntegers('prob-sum-two-integers');
       if(window.DSAProbs.happyNumber&&document.getElementById('prob-happy-number'))window.DSAProbs.happyNumber('prob-happy-number');
+      if(window.DSAProbs.palinPartition&&document.getElementById('prob-palin-partition'))window.DSAProbs.palinPartition('prob-palin-partition');
+      if(window.DSAProbs.subsetsII&&document.getElementById('prob-subsets-ii'))window.DSAProbs.subsetsII('prob-subsets-ii');
+      if(window.DSAProbs.insertInterval&&document.getElementById('prob-insert-interval'))window.DSAProbs.insertInterval('prob-insert-interval');
+      if(window.DSAProbs.reverseBits&&document.getElementById('prob-reverse-bits'))window.DSAProbs.reverseBits('prob-reverse-bits');
+      if(window.DSAProbs.minCostPoints&&document.getElementById('prob-min-cost-points'))window.DSAProbs.minCostPoints('prob-min-cost-points');
+      if(window.DSAProbs.networkDelay&&document.getElementById('prob-network-delay'))window.DSAProbs.networkDelay('prob-network-delay');
+      if(window.DSAProbs.redundantConnection&&document.getElementById('prob-redundant-connection'))window.DSAProbs.redundantConnection('prob-redundant-connection');
+      if(window.DSAProbs.burstBalloons&&document.getElementById('prob-burst-balloons'))window.DSAProbs.burstBalloons('prob-burst-balloons');
+      if(window.DSAProbs.regexMatch&&document.getElementById('prob-regex-match'))window.DSAProbs.regexMatch('prob-regex-match');
+      if(window.DSAProbs.wordDictionary&&document.getElementById('prob-word-dict'))window.DSAProbs.wordDictionary('prob-word-dict');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();

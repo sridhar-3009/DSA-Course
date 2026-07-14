@@ -6454,6 +6454,630 @@ function initHappyNumber(id){
   });
 }
 
+/* ── P87 Palindrome Partitioning ───────────────────────────── */
+function initPalinPartition(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defS='aab';
+  function isPalin(s,l,r){while(l<r){if(s[l]!==s[r])return false;l++;r--;}return true;}
+  function buildSteps(s){
+    var steps=[],results=[];
+    function bt(start,path){
+      if(start===s.length){
+        results.push(path.slice());
+        steps.push({s:s,path:path.slice(),results:results.slice(),start:start,
+          msg:'Partition complete: ['+path.map(function(p){return'"'+p+'"';}).join(',')+']'});
+        return;
+      }
+      for(var end=start;end<s.length;end++){
+        var sub=s.slice(start,end+1);
+        if(isPalin(s,start,end)){
+          path.push(sub);
+          steps.push({s:s,path:path.slice(),results:results.slice(),start:start,end:end,
+            msg:'s['+start+'..'+end+']="'+sub+'" is palindrome → recurse'});
+          bt(end+1,path);
+          path.pop();
+        } else {
+          steps.push({s:s,path:path.slice(),results:results.slice(),start:start,end:end,skip:true,
+            msg:'s['+start+'..'+end+']="'+sub+'" not palindrome → skip'});
+        }
+      }
+    }
+    steps.push({s:s,path:[],results:[],start:0,msg:'Backtrack: try every prefix that is a palindrome.'});
+    bt(0,[]);
+    steps[steps.length-1].done=true;
+    return steps;
+  }
+  function draw(s_,ctx,W,H){
+    bg(ctx,W,H);if(!s_||!s_.s)return;
+    var s=s_.s,cw=28,gap=3,ox=(W-(s.length*(cw+gap)))/2;
+    for(var i=0;i<s.length;i++){
+      var st='default';
+      if(s_.start!=null&&s_.end!=null){
+        if(i>=s_.start&&i<=s_.end)st=s_.skip?'water':'active';
+        else if(s_.path&&i<s_.path.join('').length)st='sorted';
+      }
+      cell(ctx,ox+i*(cw+gap),H/2-52,cw,26,s[i],st);
+    }
+    if(s_.path&&s_.path.length>0)
+      lbl(ctx,'Path: ['+s_.path.map(function(p){return'"'+p+'"';}).join(', ')+']',W/2,H/2+8,'#c4b5fd',11,'center');
+    if(s_.results&&s_.results.length>0)
+      lbl(ctx,'Results ('+s_.results.length+'): '+s_.results.slice(0,3).map(function(r){return'['+r.map(function(p){return'"'+p+'"';}).join(',')+']';}).join(' | '),W/2,H-10,'#34d399',9,'center');
+  }
+  makeProbUI(container,{canvasW:560,canvasH:220,
+    approaches:[
+      {key:'a1',label:'Brute: try all splits, check palindrome each'},
+      {key:'a2',label:'Optimal: precompute palin table + backtrack'}
+    ],
+    inputs:[{id:'s',lbl:'s:',elem:inp(defS,'string (max 7)',100)}],
+    onInputs:function(v){if(v.s&&v.s.length>=1&&v.s.length<=7)defS=v.s;},
+    buildSteps:function(){return buildSteps(defS);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({s:defS,path:[],results:[],start:0},ctx,W,H);}
+  });
+}
+
+/* ── P88 Subsets II ────────────────────────────────────────── */
+function initSubsetsII(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defArr=[1,2,2];
+  function buildSteps(arr){
+    var steps=[],results=[];
+    var nums=arr.slice().sort(function(a,b){return a-b;});
+    function bt(start,path){
+      results.push(path.slice());
+      steps.push({nums:nums,path:path.slice(),results:results.slice(),start:start,skipIdx:-1,
+        msg:'Add subset ['+path.join(',')+']'});
+      for(var i=start;i<nums.length;i++){
+        if(i>start&&nums[i]===nums[i-1]){
+          steps.push({nums:nums,path:path.slice(),results:results.slice(),start:start,skipIdx:i,
+            msg:'Skip duplicate nums['+i+']='+nums[i]+' at same recursion level'});
+          continue;
+        }
+        path.push(nums[i]);
+        bt(i+1,path);
+        path.pop();
+      }
+    }
+    steps.push({nums:nums,path:[],results:[],start:0,skipIdx:-1,msg:'Sort: ['+nums.join(',')+'] → skip duplicates at same level'});
+    bt(0,[]);
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Total unique subsets: '+results.length;
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.nums)return;
+    var nums=s.nums,cw=32,gap=4,ox=(W-(nums.length*(cw+gap)))/2;
+    for(var i=0;i<nums.length;i++){
+      var st=s.skipIdx===i?'water':(s.path&&s.path.indexOf(nums[i])>=0?'active':'default');
+      lbl(ctx,i,ox+i*(cw+gap)+cw/2,H/2-60,'rgba(255,255,255,0.35)',8,'center');
+      cell(ctx,ox+i*(cw+gap),H/2-50,cw,26,nums[i],st);
+    }
+    if(s.path!=null)lbl(ctx,'Current: ['+s.path.join(',')+']',W/2,H/2+8,'#c4b5fd',11,'center');
+    if(s.results&&s.results.length>0)lbl(ctx,'Subsets so far: '+s.results.length,W/2,H-10,'#34d399',11,'center');
+  }
+  makeProbUI(container,{canvasW:520,canvasH:210,
+    approaches:[
+      {key:'a1',label:'Brute: all subsets, deduplicate with set'},
+      {key:'a2',label:'Optimal: sort + skip duplicate at same level'}
+    ],
+    inputs:[{id:'arr',lbl:'Array:',elem:inp(defArr.join(','),'nums (max 5)',120)}],
+    onInputs:function(v){var a=v.arr.split(',').map(function(x){return parseInt(x.trim(),10);}).filter(function(x){return!isNaN(x);});if(a.length>=1&&a.length<=5)defArr=a;},
+    buildSteps:function(){return buildSteps(defArr);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({nums:defArr.slice().sort(function(a,b){return a-b;}),path:[],results:[],skipIdx:-1},ctx,W,H);}
+  });
+}
+
+/* ── P89 Insert Interval ───────────────────────────────────── */
+function initInsertInterval(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defIntervals=[[1,3],[6,9]];
+  var defNew=[2,5];
+  function buildSteps(intervals,newInt){
+    var steps=[],result=[],i=0,n=intervals.length;
+    steps.push({intervals:intervals,newInt:newInt.slice(),result:[],i:-1,phase:'start',
+      msg:'Insert ['+newInt+'] into sorted non-overlapping intervals.'});
+    while(i<n&&intervals[i][1]<newInt[0]){
+      result.push(intervals[i]);
+      steps.push({intervals:intervals,newInt:newInt.slice(),result:result.slice(),i:i,phase:'before',
+        msg:'['+intervals[i]+'] ends before new starts → add as-is'});
+      i++;
+    }
+    while(i<n&&intervals[i][0]<=newInt[1]){
+      newInt=[Math.min(newInt[0],intervals[i][0]),Math.max(newInt[1],intervals[i][1])];
+      steps.push({intervals:intervals,newInt:newInt.slice(),result:result.slice(),i:i,phase:'merge',
+        msg:'Overlap with ['+intervals[i]+'] → merge → new=['+newInt+']'});
+      i++;
+    }
+    result.push(newInt);
+    steps.push({intervals:intervals,newInt:newInt.slice(),result:result.slice(),i:i,phase:'insert',
+      msg:'Insert merged ['+newInt+']'});
+    while(i<n){
+      result.push(intervals[i]);
+      steps.push({intervals:intervals,newInt:newInt.slice(),result:result.slice(),i:i,phase:'after',
+        msg:'Add remaining ['+intervals[i]+']'});
+      i++;
+    }
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Result: ['+result.map(function(r){return'['+r[0]+','+r[1]+']';}).join(',')+']';
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.intervals)return;
+    var ints=s.intervals,ni=s.newInt;
+    var iw=54,gap=6,ox=16,oy=H/2-58;
+    lbl(ctx,'Intervals:',ox,oy-4,'rgba(255,255,255,0.5)',9,'left');
+    ints.forEach(function(iv,idx){
+      var st=idx===s.i?(s.phase==='before'?'sorted':s.phase==='merge'?'active':'default'):'default';
+      cell(ctx,ox+idx*(iw+gap),oy,iw,22,'['+iv[0]+','+iv[1]+']',st);
+    });
+    if(ni){
+      lbl(ctx,'New:',ox,oy+38,'rgba(255,255,255,0.5)',9,'left');
+      cell(ctx,ox+44,oy+28,iw,22,'['+ni[0]+','+ni[1]+']','selected');
+    }
+    if(s.result&&s.result.length>0)
+      lbl(ctx,'Result: ['+s.result.map(function(r){return'['+r[0]+','+r[1]+']';}).join(',')+']',W/2,H-10,s.done?'#34d399':'#c4b5fd',11,'center');
+  }
+  makeProbUI(container,{canvasW:560,canvasH:220,
+    approaches:[
+      {key:'a1',label:'Brute: insert+sort+merge O(n log n)'},
+      {key:'a2',label:'Optimal: 3-phase linear scan O(n)'}
+    ],
+    inputs:[
+      {id:'ivs',lbl:'Intervals:',elem:inp('1,3,6,9','s,e pairs',130)},
+      {id:'ni',lbl:'New:',elem:inp('2,5','start,end',80)}
+    ],
+    onInputs:function(v){
+      var a=v.ivs.split(',').map(function(x){return parseInt(x.trim(),10);});
+      if(a.length>=2&&a.length%2===0){defIntervals=[];for(var i=0;i<a.length;i+=2)defIntervals.push([a[i],a[i+1]]);}
+      var b=v.ni.split(',').map(function(x){return parseInt(x.trim(),10);});
+      if(b.length===2)defNew=[b[0],b[1]];
+    },
+    buildSteps:function(){return buildSteps(defIntervals.map(function(iv){return iv.slice();}),defNew.slice());},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({intervals:defIntervals,newInt:defNew,result:[],i:-1,phase:'start'},ctx,W,H);}
+  });
+}
+
+/* ── P90 Reverse Bits ──────────────────────────────────────── */
+function initReverseBits(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defN=43261596;
+  function buildSteps(n){
+    var steps=[],bits=[];
+    for(var b=31;b>=0;b--)bits.push((n>>>b)&1);
+    var rev=new Array(32).fill(0);
+    steps.push({orig:bits.slice(),rev:rev.slice(),pos:-1,n:n,ans:null,
+      msg:'Reverse 32-bit unsigned integer bit by bit. Input: '+n});
+    for(var i=0;i<32;i++){
+      rev[31-i]=bits[i];
+      var ans=0;for(var b2=0;b2<32;b2++)ans=(ans|(rev[b2]<<(31-b2)))>>>0;
+      steps.push({orig:bits.slice(),rev:rev.slice(),pos:i,n:n,ans:ans,
+        msg:'bit['+i+']='+bits[i]+' → rev['+(31-i)+']='+bits[i]+'. Result so far: '+ans});
+    }
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Reversed: '+steps[steps.length-1].ans;
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s)return;
+    var bw=14,gap=1,ox=(W-32*(bw+gap))/2;
+    if(s.orig){
+      lbl(ctx,'Input:',ox-4,H/2-40,'rgba(255,255,255,0.5)',9,'right');
+      for(var i=0;i<32;i++){
+        var st=i===s.pos?'active':(i<s.pos?'sorted':'default');
+        cell(ctx,ox+i*(bw+gap),H/2-50,bw,18,s.orig[i],st);
+      }
+    }
+    if(s.rev){
+      lbl(ctx,'Output:',ox-4,H/2+8,'rgba(255,255,255,0.5)',9,'right');
+      for(var j=0;j<32;j++){
+        var st2=j===31-s.pos?'active':(j>31-s.pos?'sorted':'default');
+        cell(ctx,ox+j*(bw+gap),H/2-4,bw,18,s.rev[j],st2);
+      }
+    }
+    if(s.ans!=null)lbl(ctx,'Result: '+s.ans,W/2,H-10,s.done?'#34d399':'#c4b5fd',12,'center');
+  }
+  makeProbUI(container,{canvasW:540,canvasH:210,
+    approaches:[{key:'a1',label:'Bit-by-bit reversal O(32) time O(1) space'}],
+    inputs:[{id:'n',lbl:'n:',elem:inp(String(defN),'uint32',130)}],
+    onInputs:function(v){var n=parseInt(v.n,10);if(!isNaN(n)&&n>=0)defN=n>>>0;},
+    buildSteps:function(){return buildSteps(defN);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){var bits=[];for(var b=31;b>=0;b--)bits.push((defN>>>b)&1);draw({orig:bits,rev:new Array(32).fill(0),pos:-1,n:defN},ctx,W,H);}
+  });
+}
+
+/* ── P91 Min Cost to Connect All Points ─────────────────────── */
+function initMinCostPoints(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defPts=[[0,0],[2,2],[3,10],[5,2],[7,0]];
+  function mdist(a,b){return Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1]);}
+  function buildSteps(pts){
+    var n=pts.length,steps=[];
+    var inMST=new Array(n).fill(false);
+    var minCost=new Array(n).fill(Infinity),from=new Array(n).fill(-1);
+    minCost[0]=0;
+    var totalCost=0,edges=[];
+    steps.push({pts:pts,inMST:inMST.slice(),minCost:minCost.slice(),edges:[],totalCost:0,cur:-1,
+      msg:"Prim's MST: start at point 0, always add cheapest edge to unvisited point."});
+    for(var iter=0;iter<n;iter++){
+      var u=-1;
+      for(var i=0;i<n;i++)if(!inMST[i]&&(u===-1||minCost[i]<minCost[u]))u=i;
+      inMST[u]=true;totalCost+=minCost[u];
+      if(from[u]>=0)edges.push([from[u],u]);
+      steps.push({pts:pts,inMST:inMST.slice(),minCost:minCost.slice(),edges:edges.slice(),totalCost:totalCost,cur:u,
+        msg:'Add point '+u+' cost='+minCost[u]+'. Total cost='+totalCost});
+      for(var v=0;v<n;v++){
+        if(!inMST[v]){
+          var d=mdist(pts[u],pts[v]);
+          if(d<minCost[v]){minCost[v]=d;from[v]=u;}
+        }
+      }
+      if(iter<n-1)steps.push({pts:pts,inMST:inMST.slice(),minCost:minCost.slice(),edges:edges.slice(),totalCost:totalCost,cur:u,
+        msg:'Update min distances from point '+u});
+    }
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Min cost = '+totalCost;
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.pts)return;
+    var pts=s.pts,n=pts.length;
+    var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+    var minX=Math.min.apply(null,xs),maxX=Math.max.apply(null,xs)||1;
+    var minY=Math.min.apply(null,ys),maxY=Math.max.apply(null,ys)||1;
+    var pw=W-60,ph=H-60,ox=30,oy=30;
+    function px(p){return ox+((p[0]-minX)/((maxX-minX)||1))*pw;}
+    function py(p){return oy+((maxY-p[1])/((maxY-minY)||1))*ph;}
+    if(s.edges){s.edges.forEach(function(e){
+      var a=pts[e[0]],b=pts[e[1]];
+      ctx.beginPath();ctx.moveTo(px(a),py(a));ctx.lineTo(px(b),py(b));
+      ctx.strokeStyle='rgba(52,211,153,0.6)';ctx.lineWidth=2;ctx.stroke();
+    });}
+    for(var i=0;i<n;i++){
+      var st=s.inMST&&s.inMST[i]?(i===s.cur?'active':'found'):'default';
+      var x=px(pts[i]),y=py(pts[i]);
+      ctx.beginPath();ctx.arc(x,y,10,0,2*Math.PI);
+      ctx.fillStyle=CS[st]||CS.default;ctx.fill();
+      lbl(ctx,i,x,y+4,'#fff',8,'center');
+      if(s.minCost&&!s.inMST[i]&&s.minCost[i]<Infinity)
+        lbl(ctx,s.minCost[i],x,y-16,'rgba(196,181,253,0.8)',8,'center');
+    }
+    if(s.totalCost!=null)lbl(ctx,'Cost: '+s.totalCost,W/2,H-8,s.done?'#34d399':'#c4b5fd',12,'center');
+  }
+  makeProbUI(container,{canvasW:480,canvasH:280,
+    approaches:[
+      {key:'a1',label:"Kruskal: all O(n² log n)"},
+      {key:'a2',label:"Prim's O(n²) — optimal for dense graphs"}
+    ],
+    inputs:[],
+    onInputs:function(){},
+    buildSteps:function(){return buildSteps(defPts);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({pts:defPts,inMST:new Array(defPts.length).fill(false),minCost:new Array(defPts.length).fill(Infinity),edges:[],totalCost:0,cur:-1},ctx,W,H);}
+  });
+}
+
+/* ── P92 Network Delay Time ────────────────────────────────── */
+function initNetworkDelay(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defTimes=[[2,1,1],[2,3,1],[3,4,1]];
+  var defN=4,defK=2;
+  function buildSteps(times,n,k){
+    var steps=[],adj={};
+    for(var i=1;i<=n;i++)adj[i]=[];
+    times.forEach(function(t){adj[t[0]].push([t[1],t[2]]);});
+    var dist={};for(var i=1;i<=n;i++)dist[i]=Infinity;
+    dist[k]=0;
+    var visited={},pq=[[0,k]];
+    steps.push({dist:Object.assign({},dist),visited:{},cur:null,n:n,k:k,
+      msg:'Dijkstra from node '+k+'. dist['+k+']=0, others=∞'});
+    while(pq.length>0){
+      pq.sort(function(a,b){return a[0]-b[0];});
+      var top=pq.shift(),d=top[0],u=top[1];
+      if(visited[u])continue;
+      visited[u]=true;
+      steps.push({dist:Object.assign({},dist),visited:Object.assign({},visited),cur:u,n:n,k:k,
+        msg:'Visit node '+u+' dist='+d+'. Relax neighbors.'});
+      (adj[u]||[]).forEach(function(e){
+        var v=e[0],w=e[1];
+        if(!visited[v]&&d+w<dist[v]){
+          dist[v]=d+w;pq.push([dist[v],v]);
+          steps.push({dist:Object.assign({},dist),visited:Object.assign({},visited),cur:u,relax:v,n:n,k:k,
+            msg:'Relax: dist['+v+']='+d+'+'+w+'='+dist[v]});
+        }
+      });
+    }
+    var ans=0;for(var i=1;i<=n;i++){if(dist[i]===Infinity){ans=-1;break;}if(dist[i]>ans)ans=dist[i];}
+    steps[steps.length-1].done=true;steps[steps.length-1].ans=ans;
+    steps[steps.length-1].msg='Network delay = '+ans+(ans===-1?' (unreachable node)':'');
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s)return;
+    var n=s.n||4,r=75,cx=W/2,cy=H/2-10;
+    var pos=[];for(var i=0;i<n;i++)pos.push([cx+r*Math.cos(2*Math.PI*i/n-Math.PI/2),cy+r*Math.sin(2*Math.PI*i/n-Math.PI/2)]);
+    defTimes.forEach(function(t){
+      var a=pos[t[0]-1],b=pos[t[1]-1];
+      ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);
+      ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.stroke();
+      lbl(ctx,t[2],(a[0]+b[0])/2,(a[1]+b[1])/2,'rgba(255,255,255,0.4)',8,'center');
+    });
+    for(var i=0;i<n;i++){
+      var node=i+1,x=pos[i][0],y=pos[i][1];
+      var st=s.cur===node?'active':(s.relax===node?'comparing':(s.visited&&s.visited[node]?'found':'default'));
+      ctx.beginPath();ctx.arc(x,y,14,0,2*Math.PI);ctx.fillStyle=CS[st]||CS.default;ctx.fill();
+      lbl(ctx,node,x,y+4,'#fff',9,'center');
+      var d=s.dist?s.dist[node]:Infinity;
+      lbl(ctx,d===Infinity?'∞':d,x,y-22,'rgba(196,181,253,0.9)',9,'center');
+    }
+    if(s.ans!=null)lbl(ctx,'Delay = '+s.ans,W/2,H-8,s.done?'#34d399':'#c4b5fd',13,'center');
+  }
+  makeProbUI(container,{canvasW:480,canvasH:280,
+    approaches:[
+      {key:'a1',label:'Bellman-Ford O(VE)'},
+      {key:'a2',label:'Dijkstra O((V+E)logV)'}
+    ],
+    inputs:[],
+    onInputs:function(){},
+    buildSteps:function(){return buildSteps(defTimes,defN,defK);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){var d={};for(var i=1;i<=defN;i++)d[i]=Infinity;d[defK]=0;draw({dist:d,visited:{},cur:null,n:defN,k:defK},ctx,W,H);}
+  });
+}
+
+/* ── P93 Redundant Connection ──────────────────────────────── */
+function initRedundantConnection(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defEdges=[[1,2],[1,3],[2,3]];
+  function buildSteps(edges){
+    var steps=[],n=0;
+    edges.forEach(function(e){if(e[0]>n)n=e[0];if(e[1]>n)n=e[1];});
+    var parent=[];for(var i=0;i<=n;i++)parent[i]=i;
+    var rank=new Array(n+1).fill(0);
+    function find(x){while(parent[x]!==x){parent[x]=parent[parent[x]];x=parent[x];}return x;}
+    function union(x,y){var px=find(x),py=find(y);if(px===py)return false;if(rank[px]<rank[py])parent[px]=py;else if(rank[px]>rank[py])parent[py]=px;else{parent[py]=px;rank[px]++;}return true;}
+    steps.push({edges:edges,parent:parent.slice(),cur:-1,ans:null,
+      msg:'Union-Find: process each edge. Same root = cycle = redundant.'});
+    for(var i=0;i<edges.length;i++){
+      var u=edges[i][0],v=edges[i][1];
+      var pu=find(u),pv=find(v);
+      steps.push({edges:edges,parent:parent.slice(),cur:i,u:u,v:v,pu:pu,pv:pv,ans:null,
+        msg:'Edge ['+u+','+v+']: root('+u+')='+pu+' root('+v+')='+pv+(pu===pv?' → CYCLE!':' → union')});
+      if(!union(u,v)){
+        var ans=[u,v];
+        steps.push({edges:edges,parent:parent.slice(),cur:i,ans:ans,done:true,
+          msg:'Redundant edge: ['+u+','+v+']'});
+        break;
+      }
+    }
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.edges)return;
+    var edges=s.edges,cw=54,gap=8,ox=(W-edges.length*(cw+gap))/2;
+    edges.forEach(function(e,i){
+      var isAns=s.ans&&e[0]===s.ans[0]&&e[1]===s.ans[1];
+      var st=isAns?'water':(i===s.cur?'active':'default');
+      cell(ctx,ox+i*(cw+gap),H/2-50,cw,26,'['+e[0]+','+e[1]+']',st);
+    });
+    if(s.parent){
+      var pTxt='parent: ['+s.parent.slice(1).join(',')+']';
+      lbl(ctx,pTxt,W/2,H/2+12,'rgba(196,181,253,0.8)',10,'center');
+    }
+    if(s.ans)lbl(ctx,'Redundant: ['+s.ans+']',W/2,H-10,'#ef4444',13,'center');
+  }
+  makeProbUI(container,{canvasW:520,canvasH:210,
+    approaches:[
+      {key:'a1',label:'DFS cycle check each edge O(n²)'},
+      {key:'a2',label:'Union-Find O(n α(n))'}
+    ],
+    inputs:[{id:'edges',lbl:'Edges:',elem:inp('1,2,1,3,2,3','u,v pairs',140)}],
+    onInputs:function(v){var a=v.edges.split(',').map(function(x){return parseInt(x.trim(),10);});if(a.length>=2&&a.length%2===0){defEdges=[];for(var i=0;i<a.length;i+=2)defEdges.push([a[i],a[i+1]]);  }},
+    buildSteps:function(){return buildSteps(defEdges);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){var n=0;defEdges.forEach(function(e){if(e[0]>n)n=e[0];if(e[1]>n)n=e[1];});var p=[];for(var i=0;i<=n;i++)p[i]=i;draw({edges:defEdges,parent:p,cur:-1},ctx,W,H);}
+  });
+}
+
+/* ── P94 Burst Balloons ────────────────────────────────────── */
+function initBurstBalloons(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defNums=[3,1,5,8];
+  function buildSteps(nums){
+    var steps=[],a=[1].concat(nums).concat([1]),n=nums.length;
+    var dp=[];
+    for(var i=0;i<a.length;i++){dp[i]=[];for(var j=0;j<a.length;j++)dp[i][j]=0;}
+    steps.push({dp:dp.map(function(r){return r.slice();}),a:a,n:n,fill:null,
+      msg:'Interval DP: dp[l][r]=max coins bursting balloons between padded l and r exclusively.'});
+    for(var len=1;len<=n;len++){
+      for(var left=1;left<=n-len+1;left++){
+        var right=left+len-1;
+        for(var k=left;k<=right;k++){
+          var coins=a[left-1]*a[k]*a[right+1]+dp[left][k-1]+dp[k+1][right];
+          if(coins>dp[left][right]){
+            dp[left][right]=coins;
+            steps.push({dp:dp.map(function(r){return r.slice();}),a:a,n:n,fill:{l:left,r:right,k:k,coins:coins},
+              msg:'dp['+left+']['+right+']: last burst k='+k+'(val='+a[k]+') → '+a[left-1]+'\xd7'+a[k]+'\xd7'+a[right+1]+'+dp['+left+']['+(k-1)+']+dp['+(k+1)+']['+right+']='+coins});
+          }
+        }
+      }
+    }
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Max coins = '+dp[1][n];
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.dp)return;
+    var n=s.n||defNums.length,dp=s.dp;
+    var cw=Math.min(34,(W-60)/(n+1)),gap=2,ox=40,oy=28;
+    lbl(ctx,'dp[left][right]:',ox,oy-10,'rgba(255,255,255,0.4)',8,'left');
+    for(var i=1;i<=n;i++){
+      lbl(ctx,i,ox-14,oy+(i-1)*(cw+gap)+cw/2,'rgba(255,255,255,0.35)',8,'right');
+      for(var j=1;j<=n;j++){
+        if(j===1)lbl(ctx,j,ox+(j-1)*(cw+gap)+cw/2,oy-2,'rgba(255,255,255,0.35)',8,'center');
+        var st='default';
+        if(s.fill){if(i===s.fill.l&&j===s.fill.r)st='active';else if(i===s.fill.l||j===s.fill.r)st='comparing';}
+        if(j<i)st='water';
+        cell(ctx,ox+(j-1)*(cw+gap),oy+(i-1)*(cw+gap),cw,cw,j>=i&&dp[i]&&dp[i][j]?dp[i][j]:'',st);
+      }
+    }
+    if(s.done)lbl(ctx,'Max coins = '+dp[1][n],W/2,H-8,'#34d399',13,'center');
+  }
+  makeProbUI(container,{canvasW:440,canvasH:280,
+    approaches:[
+      {key:'a1',label:'Brute: all permutations O(n!)'},
+      {key:'a2',label:'Interval DP O(n³) time O(n²) space'}
+    ],
+    inputs:[{id:'nums',lbl:'Balloons:',elem:inp(defNums.join(','),'nums (max 6)',110)}],
+    onInputs:function(v){var a=v.nums.split(',').map(function(x){return parseInt(x.trim(),10);}).filter(function(x){return!isNaN(x);});if(a.length>=1&&a.length<=6)defNums=a;},
+    buildSteps:function(){return buildSteps(defNums);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){var n=defNums.length;var dp=[];for(var i=0;i<=n+1;i++){dp[i]=[];for(var j=0;j<=n+1;j++)dp[i][j]=0;}draw({dp:dp,a:[1].concat(defNums).concat([1]),n:n},ctx,W,H);}
+  });
+}
+
+/* ── P95 Regular Expression Matching ──────────────────────── */
+function initRegexMatch(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defS='aab',defP='c*a*b';
+  function buildSteps(s,p){
+    var steps=[],m=s.length,n=p.length,dp=[];
+    for(var i=0;i<=m;i++){dp[i]=[];for(var j=0;j<=n;j++)dp[i][j]=false;}
+    dp[0][0]=true;
+    for(var j=1;j<=n;j++)if(p[j-1]==='*'&&j>=2)dp[0][j]=dp[0][j-2];
+    steps.push({dp:dp.map(function(r){return r.slice();}),s:s,p:p,fill:null,
+      msg:'2D DP: dp[i][j]=s[0..i-1] matches p[0..j-1]. Base dp[0][0]=true.'});
+    for(var i=1;i<=m;i++){
+      for(var j=1;j<=n;j++){
+        var val;
+        if(p[j-1]==='*'){
+          val=dp[i][j-2]||(dp[i-1][j]&&(p[j-2]==='.'||p[j-2]===s[i-1]));
+        } else {
+          val=dp[i-1][j-1]&&(p[j-1]==='.'||p[j-1]===s[i-1]);
+        }
+        dp[i][j]=!!val;
+        steps.push({dp:dp.map(function(r){return r.slice();}),s:s,p:p,fill:{i:i,j:j,val:!!val},
+          msg:'dp['+i+']['+j+']: s["'+s[i-1]+'"] p["'+p[j-1]+'"] → '+!!val});
+      }
+    }
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Match: '+dp[m][n];
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.dp)return;
+    var str=s.s,pat=s.p,m=str.length,n=pat.length;
+    var cw=Math.min(28,(W-60)/(n+1)),gap=2,ox=34,oy=22;
+    for(var j=0;j<=n;j++)lbl(ctx,j===0?'ε':pat[j-1],ox+j*(cw+gap)+cw/2,oy,'rgba(255,255,255,0.55)',9,'center');
+    for(var i=0;i<=m;i++){
+      lbl(ctx,i===0?'ε':str[i-1],ox-6,oy+(i+1)*(cw+gap)+4,'rgba(255,255,255,0.55)',9,'right');
+      for(var j=0;j<=n;j++){
+        var v=s.dp[i]&&s.dp[i][j];
+        var st=s.fill&&s.fill.i===i&&s.fill.j===j?'active':(v?'found':'default');
+        cell(ctx,ox+j*(cw+gap),oy+(i+1)*(cw+gap)-cw/2,cw,cw,v?'T':'',st);
+      }
+    }
+    if(s.done)lbl(ctx,'Match: '+s.dp[m][n],W/2,H-8,s.dp[m][n]?'#34d399':'#ef4444',13,'center');
+  }
+  makeProbUI(container,{canvasW:520,canvasH:300,
+    approaches:[
+      {key:'a1',label:'Recursive + memo O(mn)'},
+      {key:'a2',label:'Bottom-up DP O(mn) time/space'}
+    ],
+    inputs:[
+      {id:'s',lbl:'s:',elem:inp(defS,'string (max 6)',80)},
+      {id:'p',lbl:'p:',elem:inp(defP,'pattern (max 8)',90)}
+    ],
+    onInputs:function(v){if(v.s&&v.s.length>=0&&v.s.length<=6)defS=v.s;if(v.p&&v.p.length>=0&&v.p.length<=8)defP=v.p;},
+    buildSteps:function(){return buildSteps(defS,defP);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){var m=defS.length,n=defP.length,dp=[];for(var i=0;i<=m;i++){dp[i]=[];for(var j=0;j<=n;j++)dp[i][j]=false;}dp[0][0]=true;draw({dp:dp,s:defS,p:defP},ctx,W,H);}
+  });
+}
+
+/* ── P96 Design Add and Search Words ──────────────────────── */
+function initWordDictionary(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defWords=['bad','dad','mad'],defSearch='pad';
+  function buildTrieSteps(words,query){
+    var steps=[],root={ch:{},end:false};
+    function addWord(w){
+      var node=root;
+      for(var c=0;c<w.length;c++){var ch=w[c];if(!node.ch[ch])node.ch[ch]={ch:{},end:false};node=node.ch[ch];}
+      node.end=true;
+    }
+    steps.push({words:[],query:query,root:JSON.parse(JSON.stringify(root)),adding:null,found:null,
+      msg:'Empty trie. Add words, then search with . wildcard.'});
+    for(var wi=0;wi<words.length;wi++){
+      addWord(words[wi]);
+      steps.push({words:words.slice(0,wi+1),query:query,root:JSON.parse(JSON.stringify(root)),adding:words[wi],found:null,
+        msg:'Added "'+words[wi]+'" to trie.'});
+    }
+    function search(node,w,idx){
+      if(idx===w.length)return node.end;
+      var c=w[idx];
+      if(c==='.'){for(var k in node.ch){if(search(node.ch[k],w,idx+1))return true;}return false;}
+      return node.ch[c]?search(node.ch[c],w,idx+1):false;
+    }
+    var matchFound=search(root,query,0);
+    steps.push({words:words,query:query,root:JSON.parse(JSON.stringify(root)),adding:null,found:matchFound,done:true,
+      msg:'Search "'+query+'" → '+(matchFound?'FOUND':'NOT FOUND')});
+    return steps;
+  }
+  function drawTrieNode(node,x,y,lv,ctx){
+    ctx.beginPath();ctx.arc(x,y,10,0,2*Math.PI);
+    ctx.fillStyle=lv===0?CS.default:(node.end?CS.found:CS.sorted);ctx.fill();
+    if(lv===0)lbl(ctx,'root',x,y+4,'#fff',7,'center');
+    var keys=Object.keys(node.ch),nk=keys.length;
+    if(nk===0)return;
+    var spread=Math.min(160,nk*44);
+    keys.forEach(function(c,ki){
+      var cx=x+(ki-(nk-1)/2)*(nk>1?spread/(nk-1):0),cy=y+50;
+      ctx.beginPath();ctx.moveTo(x,y+10);ctx.lineTo(cx,cy-10);
+      ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.stroke();
+      lbl(ctx,c,(x+cx)/2+4,(y+cy)/2,'rgba(196,181,253,0.8)',9,'left');
+      drawTrieNode(node.ch[c],cx,cy,lv+1,ctx);
+    });
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s)return;
+    if(s.root)drawTrieNode(s.root,W/2,H/5,0,ctx);
+    if(s.words&&s.words.length>0)
+      lbl(ctx,'Words: '+s.words.map(function(w){return'"'+w+'"';}).join(', '),W/2,H-24,'rgba(255,255,255,0.5)',10,'center');
+    if(s.query){
+      var color=s.found==null?'#c4b5fd':(s.found?'#34d399':'#ef4444');
+      lbl(ctx,'Search "'+s.query+'": '+(s.found==null?'…':s.found?'FOUND':'NOT FOUND'),W/2,H-8,color,12,'center');
+    }
+  }
+  makeProbUI(container,{canvasW:480,canvasH:300,
+    approaches:[{key:'a1',label:'Trie + DFS wildcard: O(m) insert, O(26^m) worst search'}],
+    inputs:[
+      {id:'words',lbl:'Words:',elem:inp(defWords.join(','),'comma sep',150)},
+      {id:'q',lbl:'Search:',elem:inp(defSearch,'w/ . wildcard',100)}
+    ],
+    onInputs:function(v){
+      var ws=v.words.split(',').map(function(w){return w.trim();}).filter(function(w){return/^[a-z.]+$/.test(w)&&w.length>0;});
+      if(ws.length>0)defWords=ws;
+      if(v.q&&/^[a-z.]+$/.test(v.q))defSearch=v.q;
+    },
+    buildSteps:function(){return buildTrieSteps(defWords,defSearch);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({words:[],query:defSearch,root:{ch:{},end:false}},ctx,W,H);}
+  });
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -6542,6 +7166,16 @@ window.DSAProbs={
   countingBits:initCountingBits,
   sumTwoIntegers:initSumTwoIntegers,
   happyNumber:initHappyNumber,
+  palinPartition:initPalinPartition,
+  subsetsII:initSubsetsII,
+  insertInterval:initInsertInterval,
+  reverseBits:initReverseBits,
+  minCostPoints:initMinCostPoints,
+  networkDelay:initNetworkDelay,
+  redundantConnection:initRedundantConnection,
+  burstBalloons:initBurstBalloons,
+  regexMatch:initRegexMatch,
+  wordDictionary:initWordDictionary,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -6633,6 +7267,16 @@ window.DSAProbs={
     if(document.getElementById('prob-counting-bits'))initCountingBits('prob-counting-bits');
     if(document.getElementById('prob-sum-two-integers'))initSumTwoIntegers('prob-sum-two-integers');
     if(document.getElementById('prob-happy-number'))initHappyNumber('prob-happy-number');
+    if(document.getElementById('prob-palin-partition'))initPalinPartition('prob-palin-partition');
+    if(document.getElementById('prob-subsets-ii'))initSubsetsII('prob-subsets-ii');
+    if(document.getElementById('prob-insert-interval'))initInsertInterval('prob-insert-interval');
+    if(document.getElementById('prob-reverse-bits'))initReverseBits('prob-reverse-bits');
+    if(document.getElementById('prob-min-cost-points'))initMinCostPoints('prob-min-cost-points');
+    if(document.getElementById('prob-network-delay'))initNetworkDelay('prob-network-delay');
+    if(document.getElementById('prob-redundant-connection'))initRedundantConnection('prob-redundant-connection');
+    if(document.getElementById('prob-burst-balloons'))initBurstBalloons('prob-burst-balloons');
+    if(document.getElementById('prob-regex-match'))initRegexMatch('prob-regex-match');
+    if(document.getElementById('prob-word-dict'))initWordDictionary('prob-word-dict');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
