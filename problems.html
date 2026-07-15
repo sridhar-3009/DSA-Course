@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeetCode 150 — DSA Illustrated</title>
-  <meta name="description" content="200 NeetCode problems — 36 fully animated with brute → optimal step-by-step canvas demos, user input, and quiz questions.">
+  <meta name="description" content="100 NeetCode problems fully animated — brute → optimal step-by-step canvas demos, key insights, quiz questions, and user input. Zero dependencies.">
   <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -67,6 +67,17 @@
       border:1px solid rgba(139,92,246,.3);border-radius:6px;color:#C4B5FD;
       font:.75rem "JetBrains Mono",monospace;text-align:center;outline:none;}
     .pag-jump-input:focus{border-color:#8B5CF6;}
+
+    /* ── Key Insight callout ── */
+    .prob-insight{display:flex;gap:.6rem;align-items:flex-start;
+      background:rgba(139,92,246,.07);
+      border:1px solid rgba(139,92,246,.22);
+      border-left:3px solid #8B5CF6;
+      border-radius:0 8px 8px 0;
+      padding:.65rem 1rem;margin-bottom:1rem;
+      font-size:.82rem;line-height:1.55;color:#C4B5FD;}
+    .prob-insight .pi-icon{font-size:.95rem;flex-shrink:0;margin-top:.05rem;}
+    .prob-insight strong{color:#EDE9FE;font-weight:700;}
   </style>
 </head>
 <body>
@@ -515,12 +526,29 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Hash Map</span>
     </div>
-    <p class="prob-section-desc">Given array <code>nums</code> and integer <code>target</code>, return indices of two numbers summing to target.</p>
+    <p class="prob-section-desc">Given an array <code>nums</code> and a <code>target</code>, return the indices of the two numbers that add up to target. Exactly one valid answer always exists. Brute force tries every pair in O(n²). The HashMap approach stores each number's complement — if the complement is already in the map, the pair is found in one pass.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Brute: O(n²) · O(1) space</span>
       <span class="prob-compl-chip">HashMap: O(n) · O(n) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>For each number, store its <strong>complement (target − num)</strong> in a HashMap. When you see a number already in the map as a complement, you've found the pair — one pass, O(n).</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-two-sum"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does using a HashMap reduce time complexity from O(n²) to O(n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The HashMap sorts the array first</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Instead of checking every pair (nested loop), we store each visited number's complement in a HashMap. The complement lookup is O(1), so the single pass is O(n) total."><span class="opt-letter">B</span>We replace the inner loop with an O(1) HashMap lookup for the complement</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>HashMap uses less memory so it runs faster</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We only scan the first half of the array</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For nums=[2,7,11,15] and target=9, what gets stored in the HashMap after processing index 0?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>{2: 0} — the value mapped to its index</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We store complement → index: target−nums[0] = 9−2 = 7, so we store {7: 0}. When we reach index 1 and see nums[1]=7, we find 7 in the map and return [0, 1]."><span class="opt-letter">B</span>{7: 0} — the complement (9−2=7) mapped to index 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>{9: 2} — the target mapped to the number</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>{0: 2} — the index mapped to the number</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -531,14 +559,31 @@
       <span class="prob-section-title">Best Time to Buy &amp; Sell Stock</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Arrays</span><span class="prob-tag">Sliding Window</span>
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Greedy</span>
     </div>
-    <p class="prob-section-desc">Find maximum profit from a single buy-sell. Must buy before you sell.</p>
+    <p class="prob-section-desc">Given daily stock prices, find the maximum profit from one buy and one sell (buy before sell). Brute force checks all pairs in O(n²). The optimal solution tracks the minimum price seen so far — at each day, profit = price − minSoFar. Update the global max profit as you go.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²)</span>
+      <span class="prob-compl-chip">Brute: O(n²) · O(1) space</span>
       <span class="prob-compl-chip">Optimal: O(n) · O(1) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Track a <strong>running minimum</strong> (cheapest buy so far). At each price, profit = price − minSoFar. Update the global max profit. You never need to look backwards.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-best-stock"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why doesn't finding the global minimum price and global maximum price always give the right answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because prices can be negative</div>
+          <div class="quiz-option" data-correct="true" data-explanation="You must buy BEFORE you sell. If the global minimum occurs after the global maximum, that trade is impossible. Example: [3,2,6,1,5] — global min=1 (day 4), but you can't sell on day 2 (price=6) after buying on day 4."><span class="opt-letter">B</span>The global minimum might occur after the global maximum — you must buy before selling</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>There might be multiple global minimums</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The algorithm would produce a negative profit</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For prices=[7,1,5,3,6,4], what is the maximum profit and on which days?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Profit=7, buy day 2 (price=1), sell day 1 (price=7)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Buy at price 1 (index 1), sell at price 6 (index 4) = profit 5. The minimum so far on day 4 is 1, and day 4's price 6 gives 6−1=5, the best."><span class="opt-letter">B</span>Profit=5, buy at price 1 (day 2), sell at price 6 (day 5)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Profit=4, buy at price 1, sell at price 5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Profit=3, buy at price 3, sell at price 6</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -551,11 +596,28 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Stack</span><span class="prob-tag">String</span>
     </div>
-    <p class="prob-section-desc">Determine if a bracket string is valid. Open brackets must close in correct order. Watch the stack live.</p>
+    <p class="prob-section-desc">Given a string of brackets <code>()[]&#123;&#125;</code>, determine if it is valid — every open bracket must close in the correct order and every close bracket must match the most recent open one. A stack is the natural tool: push opens, pop on closes and verify the match.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">O(n) time · O(n) space</span>
+      <span class="prob-compl-chip">O(n) time · O(n) space (stack)</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>A <strong>stack enforces LIFO order</strong>: push open brackets, pop and verify match on close brackets. If the stack is empty at the end, the string is valid.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-parens"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is a stack the right data structure for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Stacks are faster than arrays for string problems</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Brackets must close in reverse order of opening — the most recently opened bracket must close first. This is exactly LIFO (Last In, First Out), which is what a stack provides."><span class="opt-letter">B</span>Brackets close in reverse order of opening — LIFO matches this nesting structure perfectly</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>A stack allows O(1) access to any bracket</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only stacks can handle three types of brackets</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Is "([])" valid? Walk through the stack state.</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="( → push. [ → push. ] → pop [, matches ✓. ) → pop (, matches ✓. Stack empty → valid!"><span class="opt-letter">A</span>Yes — push '(', push '[', pop ']' matches '[', pop ')' matches '(', stack empty = valid</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>No — the inner [] is inside (), which is not allowed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>No — you can't mix different bracket types</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Yes, but only because the total count of each type is equal</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -566,14 +628,31 @@
       <span class="prob-section-title">Longest Substring Without Repeating Characters</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Sliding Window</span><span class="prob-tag">Hash Set</span>
+      <span class="prob-tag">Sliding Window</span><span class="prob-tag">Hash Map</span>
     </div>
-    <p class="prob-section-desc">Length of the longest substring without repeating characters. Active window is outlined in real time.</p>
+    <p class="prob-section-desc">Find the length of the longest substring with all unique characters. Sliding window: expand the right pointer adding characters; when a duplicate is found, advance the left pointer past the previous occurrence. A HashMap stores each character's most recent index for O(1) jump-ahead.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²)</span>
-      <span class="prob-compl-chip">Sliding Window: O(n)</span>
+      <span class="prob-compl-chip">Brute: O(n²) · O(n) space</span>
+      <span class="prob-compl-chip">Sliding Window: O(n) · O(min(n,k)) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Expand right; when a <strong>duplicate appears, jump left pointer</strong> past the previous occurrence of that character. Store each char's last-seen index in a map for O(1) jump.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-substr"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For s="abcabcbb", when the window hits the second 'a' at index 3, where does the left pointer move?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Left stays at 0 — only the right pointer moves</div>
+          <div class="quiz-option" data-correct="true" data-explanation="'a' last appeared at index 0. Left jumps to index 1 (past index 0), so the window [1,3] = 'bca' is now duplicate-free."><span class="opt-letter">B</span>Left moves to index 1 — past the previous 'a' at index 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Left moves to index 3 — to the current 'a'</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Left moves to index 2 — one step forward</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why store each character's most recent index (not just a "seen" set)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>A set doesn't support fast lookup</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A seen-set tells you a duplicate exists, but you'd still need to scan to find WHERE the previous occurrence was, costing O(n) per move. Storing the last index lets you jump the left pointer directly in O(1)."><span class="opt-letter">B</span>The index lets us jump left directly past the duplicate in O(1); a set would require scanning to find the position</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We need to count how many times each char appears</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Sets cannot store characters</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -586,13 +665,30 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Fibonacci</span>
     </div>
-    <p class="prob-section-desc">Count distinct ways to climb n stairs taking 1 or 2 steps. Three approaches: exponential recursion, DP table, O(1)-space roll.</p>
+    <p class="prob-section-desc">Count distinct ways to reach the top of <em>n</em> stairs, taking 1 or 2 steps at a time. The number of ways to reach step n equals ways(n−1) + ways(n−2) — exactly the Fibonacci recurrence. Brute recursion is O(2ⁿ). A DP table is O(n) time/space. Rolling two variables reduces space to O(1).</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(2ⁿ)</span>
-      <span class="prob-compl-chip">DP: O(n)</span>
-      <span class="prob-compl-chip">Optimal: O(1) space</span>
+      <span class="prob-compl-chip">Brute recursive: O(2ⁿ)</span>
+      <span class="prob-compl-chip">DP table: O(n) time · O(n) space</span>
+      <span class="prob-compl-chip">Optimized: O(n) time · O(1) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>ways(n) = ways(n−1) + ways(n−2)</strong> — the last step was either a 1-step or 2-step. This is the Fibonacci recurrence. Two rolling variables are all the state you need.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-climbing-stairs"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does ways(n) = ways(n−1) + ways(n−2)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because n stairs can be divided into two halves</div>
+          <div class="quiz-option" data-correct="true" data-explanation="To reach stair n, your last step was either 1 step from stair n−1, or 2 steps from stair n−2. The number of ways = ways to reach n−1 + ways to reach n−2. No other options exist."><span class="opt-letter">B</span>You can only arrive at stair n from stair n−1 (1-step) or stair n−2 (2-step) — those two subproblems cover all cases</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It's a coincidence that it equals Fibonacci</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because each stair doubles the number of paths</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many distinct ways are there to climb 4 stairs?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>4</div>
+          <div class="quiz-option" data-correct="true" data-explanation="ways(1)=1, ways(2)=2, ways(3)=3, ways(4)=5. The 5 paths: 1+1+1+1, 1+1+2, 1+2+1, 2+1+1, 2+2."><span class="opt-letter">B</span>5 — paths: 1+1+1+1, 2+1+1, 1+2+1, 1+1+2, 2+2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>8</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>3</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -603,14 +699,31 @@
       <span class="prob-section-title">Coin Change</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Greedy</span>
+      <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">BFS</span>
     </div>
-    <p class="prob-section-desc">Fewest coins to make an amount. See why greedy fails, then watch DP table build bottom-up.</p>
+    <p class="prob-section-desc">Given coin denominations and a target amount, find the fewest coins needed. Greedy (always pick the largest coin) fails when denominations are non-standard — e.g., coins [1,3,4], amount 6: greedy gives 4+1+1=3 coins, DP finds 3+3=2. Bottom-up DP: dp[a] = 1 + min(dp[a−coin]) for each coin.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Greedy: fast but wrong sometimes</span>
-      <span class="prob-compl-chip">DP: O(amount × k)</span>
+      <span class="prob-compl-chip">Greedy: fast but incorrect for non-standard coins</span>
+      <span class="prob-compl-chip">DP: O(amount × k) time · O(amount) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>dp[a] = 1 + min(dp[a−coin])</strong> for all coins ≤ a. Build from amount=1 upward. Greedy fails because it commits to a large coin that blocks a better combination.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-coin-change"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Coins=[1,3,4], amount=6. Why does greedy give the wrong answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Greedy always gives the wrong answer</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Greedy picks 4 first (largest ≤ 6), then needs 2 more → uses 1+1 = total 3 coins. But 3+3 = 2 coins is better. Greedy makes locally optimal choices that are globally suboptimal."><span class="opt-letter">B</span>Greedy picks 4+1+1=3 coins, but 3+3=2 coins is optimal — greedy's local choice (pick largest) prevents the better combination</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Greedy doesn't work for even amounts</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>6 cannot be made from these coins</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What value is stored at dp[0] and why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>dp[0] = ∞ (base case: amount 0 is impossible)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="To make amount 0, you use 0 coins. dp[0]=0 is the base case from which all other dp values are built: dp[coin] = 1 + dp[0] = 1."><span class="opt-letter">B</span>dp[0] = 0 — it takes zero coins to make amount zero, the essential base case</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>dp[0] = 1 — you start with one "free" coin</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[0] is uninitialized and irrelevant</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -621,14 +734,31 @@
       <span class="prob-section-title">Merge Intervals</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Arrays</span><span class="prob-tag">Sorting</span>
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Sorting</span><span class="prob-tag">Intervals</span>
     </div>
-    <p class="prob-section-desc">Merge all overlapping intervals. Brute: repeatedly scan for overlaps. Optimal: sort by start, linear scan.</p>
+    <p class="prob-section-desc">Given a list of intervals, merge all overlapping ones. After sorting by start time, two consecutive intervals overlap when <code>current.start ≤ last.end</code>. In that case, extend the end to <code>max(last.end, current.end)</code>. Otherwise start a new merged interval.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²)</span>
-      <span class="prob-compl-chip">Optimal: O(n log n)</span>
+      <span class="prob-compl-chip">Brute: O(n²) · O(1) space</span>
+      <span class="prob-compl-chip">Optimal: O(n log n) sort + O(n) scan</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Sort by start time</strong>, then one linear scan: if the new interval's start ≤ last merged end, extend the end. Otherwise append a new interval. Sorting is the only non-linear step.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-merge-intervals"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we sort by start time before the linear scan?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To avoid comparing intervals with themselves</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Without sorting, an interval on the left could overlap one far to its right, requiring O(n²) comparisons. After sorting by start, any overlapping interval must be the very next one — a single linear scan suffices."><span class="opt-letter">B</span>Sorting guarantees that if any interval overlaps the current one, it's the very next in the list — enabling a single O(n) pass</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sorting by start ensures no two intervals overlap</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To find the maximum end value in O(1)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Merge [[1,4],[2,3],[5,7],[6,8]]. What is the result?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>[[1,4],[5,8]]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sort: [[1,4],[2,3],[5,7],[6,8]]. [2,3] start=2 ≤ 4, extend → [1,4]. [5,7] start=5 > 4, new. [6,8] start=6 ≤ 7, extend → [5,8]. Result: [[1,4],[5,8]]."><span class="opt-letter">B</span>[[1,4],[5,8]] — [2,3] merges into [1,4], [6,8] extends [5,7] to [5,8]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[[1,8]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[[1,3],[2,4],[5,8]]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -639,14 +769,31 @@
       <span class="prob-section-title">Number of Islands</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Graphs</span><span class="prob-tag">DFS / BFS</span>
+      <span class="prob-tag">Graphs</span><span class="prob-tag">DFS / BFS</span><span class="prob-tag">Matrix</span>
     </div>
-    <p class="prob-section-desc">Count islands in a 2D grid. Each visited cell glows as DFS/BFS floods the connected component.</p>
+    <p class="prob-section-desc">Given a 2D binary grid of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and formed by connecting adjacent land cells (4-directional). For each unvisited '1', launch a DFS/BFS that marks all reachable connected '1's as visited — that entire flood is one island.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">O(m × n) time</span>
-      <span class="prob-compl-chip">O(m × n) space</span>
+      <span class="prob-compl-chip">O(m × n) time — each cell visited once</span>
+      <span class="prob-compl-chip">O(m × n) space — recursion/queue depth</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>DFS from each unvisited land cell</strong> sinks the entire connected island (mark as visited). Count how many times you launch a DFS — that's the island count.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-num-islands"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we mark visited cells as '0' (or "visited") during DFS?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To convert land to water for correctness</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Without marking, DFS would revisit cells infinitely (cycles between adjacent '1's). Marking prevents re-visiting so each cell is processed exactly once — O(mn) total."><span class="opt-letter">B</span>To prevent infinite loops — unvisited '1's adjacent to each other would cycle endlessly without a visited guard</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To reduce memory usage</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To merge all islands into one</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Does the problem use 4-directional or 8-directional connectivity?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The standard Number of Islands problem uses 4-directional (up/down/left/right). Diagonal neighbors are NOT connected. This is explicitly stated as 'horizontally or vertically adjacent.'"><span class="opt-letter">A</span>4-directional — only up/down/left/right neighbors count, not diagonals</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>8-directional — diagonals also connect islands</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It depends on the input grid size</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only horizontal — rows form islands</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -660,12 +807,30 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Recursion</span><span class="prob-tag">Memoization</span><span class="prob-tag">Dynamic Programming</span>
     </div>
-    <p class="prob-section-desc">See the full <strong>recursion call tree</strong> and call stack. Switch to Memoization to watch cache hits collapse entire subtrees — turning O(2ⁿ) to O(n).</p>
+    <p class="prob-section-desc">Compute the nth Fibonacci number. Naive recursion calls fib(n−1) AND fib(n−2), each of which does the same — the call tree grows exponentially with many repeated sub-computations. Memoization stores each result the first time it's computed; every subsequent call is an O(1) cache hit that collapses the entire subtree.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(2ⁿ) time · O(n) stack</span>
-      <span class="prob-compl-chip">Memo: O(n) time · O(n) space</span>
+      <span class="prob-compl-chip">Naive recursion: O(2ⁿ) time · O(n) stack</span>
+      <span class="prob-compl-chip">Memoization: O(n) time · O(n) space</span>
+      <span class="prob-compl-chip">Iterative: O(n) time · O(1) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>The naive recursion recomputes fib(2) exponentially many times. <strong>Memoization turns each unique call (n=0..n) into a single computation</strong> — O(n) unique states, each solved once.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-fibonacci"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is naive recursive Fibonacci O(2ⁿ) rather than O(n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because Fibonacci numbers grow exponentially</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Each call to fib(n) spawns two more calls: fib(n−1) and fib(n−2). Without caching, fib(2) is called ~2^(n-2) times. The total number of calls is O(2ⁿ)."><span class="opt-letter">B</span>Each call branches into two sub-calls, creating a binary call tree of depth n with ~2ⁿ total nodes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The stack overhead makes it quadratic</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It loops through all pairs of previous values</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After memoizing fib(5), how many unique function calls are made?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>31 (2⁵−1)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="With memoization, each unique value n=0,1,2,3,4,5 is computed exactly once. That's 6 unique calls — linear in n, not exponential."><span class="opt-letter">B</span>6 — fib(0) through fib(5) each computed exactly once, all other calls are cache hits</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>10</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>25</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -679,12 +844,29 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Arrays</span>
     </div>
-    <p class="prob-section-desc">Rob houses without hitting adjacent ones. DP table fills left-to-right, taking the max of robbing now vs skipping. O(1) space uses just two variables.</p>
+    <p class="prob-section-desc">Rob houses in a row — you cannot rob two adjacent houses. Find the maximum money you can steal. At each house, your decision is binary: rob it (add nums[i] to what you had two steps ago) or skip it (keep the best from one step ago). <strong>dp[i] = max(dp[i−1], dp[i−2] + nums[i])</strong>. Only two rolling variables are needed.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">DP Table: O(n) · O(n) space</span>
-      <span class="prob-compl-chip">Optimized: O(n) · O(1) space</span>
+      <span class="prob-compl-chip">DP Table: O(n) time · O(n) space</span>
+      <span class="prob-compl-chip">Optimized: O(n) time · O(1) space</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>dp[i] = max(dp[i−1], dp[i−2] + nums[i])</strong> — either skip house i (keep previous best) or rob it (add to two-steps-ago best). Two rolling variables replace the full table.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-house-robber"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For nums=[2,7,9,3,1], what does dp[2] equal and why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>9 — just house 2's value</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[0]=2, dp[1]=7. dp[2] = max(dp[1], dp[0]+nums[2]) = max(7, 2+9) = max(7,11) = 11. We rob houses 0 and 2."><span class="opt-letter">B</span>11 — max(dp[1]=7, dp[0]+nums[2]=2+9=11) = rob houses 0 and 2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>7 — better to rob just house 1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>16 — rob houses 1 and 2</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we only need two variables (prev1, prev2) instead of the full dp array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the array is sorted</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i] only depends on dp[i−1] and dp[i−2]. Once we compute dp[i], dp[i−3] and earlier are never needed again. We can overwrite them with just two rolling variables."><span class="opt-letter">B</span>dp[i] only depends on the previous two values — older entries are never referenced again</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The two variables store the current minimum and maximum</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Rolling variables only work for even-length arrays</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -696,13 +878,31 @@
       <span class="prob-section-title">Subsets — Backtracking Tree</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span>
+      <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span><span class="prob-tag">Bit Mask</span>
     </div>
-    <p class="prob-section-desc">At each element, the algorithm <em>includes</em> or <em>excludes</em> it — forming a binary decision tree. The call stack and backtracking are shown live.</p>
+    <p class="prob-section-desc">Return all possible subsets (the power set) of a distinct integer array. At each element, the algorithm makes exactly two choices — <em>include</em> or <em>exclude</em> — forming a binary decision tree of depth n with 2ⁿ leaves. The animation shows the live call stack and backtracking as it builds every subset.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">O(2ⁿ) time · O(n) stack depth</span>
+      <span class="prob-compl-chip">O(2ⁿ × n) time — 2ⁿ subsets, each takes O(n) to copy</span>
+      <span class="prob-compl-chip">O(n) stack depth</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>At each element make <strong>two choices: include or exclude</strong>. The binary decision tree has 2ⁿ leaves — one per subset. Backtrack by removing the last added element after recursing.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-subsets"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why are there exactly 2ⁿ subsets for an n-element array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because n! arrangements are possible</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Each of the n elements has exactly 2 independent choices: in or out. By the multiplication principle, total subsets = 2 × 2 × … × 2 (n times) = 2ⁿ."><span class="opt-letter">B</span>Each element has exactly 2 independent choices (in/out) → 2 × 2 × … × 2 n times = 2ⁿ by the multiplication principle</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because subsets of size k count as C(n,k), and summing all k gives 2ⁿ</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Both B and C are valid explanations</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the backtracking code, why do we add the current path to results at every recursive call (not just at leaf nodes)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To allow the algorithm to terminate early</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Every subset — including the empty set and all partial subsets — is a valid answer. Each call represents a valid subset at that depth: the path so far. Adding at every call captures all 2ⁿ subsets, not just the full-length ones."><span class="opt-letter">B</span>Every path at any depth is a valid subset. Subsets are not just leaves — [], [1], [1,2], [2] are all valid answers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To detect and remove duplicate subsets</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because leaf nodes don't exist in this tree</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -716,11 +916,29 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span>
     </div>
-    <p class="prob-section-desc">Generate all permutations via backtracking. Each level of the tree chooses one of the remaining elements — the full n! decision tree is shown with the live call stack.</p>
+    <p class="prob-section-desc">Generate all permutations of an array with distinct integers. At each recursion depth, pick one of the remaining unused elements and place it at the current position. After all n elements are placed, one complete permutation is added to the results. Backtrack by undoing the choice (swap back) and trying the next element.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">O(n! × n) time · O(n) stack depth</span>
+      <span class="prob-compl-chip">O(n! × n) time — n! permutations, each O(n) to copy</span>
+      <span class="prob-compl-chip">O(n) stack depth</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>At depth i, choose any of the <strong>n−i remaining elements</strong> for position i. There are n choices at depth 0, n−1 at depth 1, … → n × (n−1) × … × 1 = n! total permutations.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-permutations"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why are there n! total permutations for an n-element array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because n is multiplied by itself n times</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Position 0 has n choices, position 1 has n−1 remaining choices, …, position n−1 has 1 choice. By the multiplication principle: n × (n−1) × … × 1 = n!"><span class="opt-letter">B</span>Multiplication principle: n choices for position 0, n−1 for position 1, … → n × (n−1) × … × 1 = n!</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because there are n levels and each level doubles</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Because 2ⁿ ≈ n! for small n</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the swap-and-fix approach, what does "backtrack" mean after placing element at position i?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Delete the last permutation added and restart</div>
+          <div class="quiz-option" data-correct="true" data-explanation="After recursing with element X at position i, we swap X back to its original position so the array is restored. Then we try the next candidate for position i. This 'undo' is backtracking."><span class="opt-letter">B</span>Swap the chosen element back to its original position, restoring the array so the next candidate can be tried for position i</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Move back to position i−1 and try a different element there</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Skip the current element entirely and move to the next</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -732,14 +950,31 @@
       <span class="prob-section-title">Binary Search</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span>
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Divide &amp; Conquer</span>
     </div>
-    <p class="prob-section-desc">Watch L, M, R pointers narrow the search window. Linear search checks every element; binary search halves the range each step — O(n) vs O(log n) on a sorted array.</p>
+    <p class="prob-section-desc">Search for a target in a sorted array. Maintain left (L) and right (R) pointers. At each step, compute mid = (L+R)//2 and compare. If target &lt; mid, search left half; if target &gt; mid, search right half; else found. Each step eliminates half the search space — log₂(n) steps maximum.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Linear: O(n)</span>
-      <span class="prob-compl-chip">Binary: O(log n)</span>
+      <span class="prob-compl-chip">Linear search: O(n) · O(1)</span>
+      <span class="prob-compl-chip">Binary search: O(log n) · O(1)</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Each comparison <strong>eliminates half the remaining candidates</strong>. After k steps, n/2ᵏ elements remain. Solving n/2ᵏ=1 gives k=log₂n — that's why binary search is O(log n).</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-binary-search"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must the array be sorted for binary search to work?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Sorting makes the algorithm faster to implement</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Binary search relies on order to discard halves: if target < mid, the target CANNOT be in the right half (because everything right is even larger). Without sorted order, this guarantee doesn't hold."><span class="opt-letter">B</span>Without sorted order, we can't conclude "target is definitely not in this half" — the discard step would be invalid</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sorted arrays have fewer elements to check</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Sorting enables O(1) index computation</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why compute mid as L + (R-L)//2 rather than (L+R)//2?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>L + (R-L)//2 is always a smaller number</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If L and R are both large ints (near INT_MAX), L+R overflows. L + (R-L)//2 computes the same midpoint but avoids overflow: (R-L) is small when the window is narrow."><span class="opt-letter">B</span>To prevent integer overflow — (L+R) can overflow if both are near the max integer value; (R−L) stays small</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It produces a different, more accurate midpoint</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It rounds up instead of rounding down</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -748,17 +983,34 @@
   <div class="prob-section" id="p-max-subarray">
     <div class="prob-section-header">
       <span class="prob-section-num">P14 — Medium</span>
-      <span class="prob-section-title">Maximum Subarray (Kadane's)</span>
+      <span class="prob-section-title">Maximum Subarray (Kadane's Algorithm)</span>
     </div>
     <div class="prob-section-meta">
-      <span class="prob-tag">Arrays</span><span class="prob-tag">Dynamic Programming</span>
+      <span class="prob-tag">Arrays</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Greedy</span>
     </div>
-    <p class="prob-section-desc">Find the contiguous subarray with largest sum. Brute O(n²) tries every pair; Kadane's O(n) decides at each step: extend the window or restart from here.</p>
+    <p class="prob-section-desc">Find the contiguous subarray with the largest sum. Kadane's algorithm scans once: at each index, decide whether to extend the current subarray or start fresh. If the running sum drops below 0, it's always better to restart — a negative prefix only hurts future sums.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²)</span>
-      <span class="prob-compl-chip">Kadane: O(n) · O(1) space</span>
+      <span class="prob-compl-chip">Brute: O(n²) · O(1)</span>
+      <span class="prob-compl-chip">Kadane's: O(n) · O(1)</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>current = max(num, current + num)</strong> — if current_sum + num &lt; num, reset. A negative running sum can only drag down future elements, so restarting is always better.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-subarray"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">In Kadane's, why do we reset the current sum to 0 (or just the current element) when it goes negative?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To handle negative arrays correctly</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A negative current sum is a liability: adding it to any future element makes that element's contribution worse. Starting fresh from the current element gives a better (or equal) starting point for the next candidate subarray."><span class="opt-letter">B</span>A negative prefix can only reduce future sums — fresh start from the current element always gives a better or equal result</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To keep the window from growing too large</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Negative numbers are invalid and should be skipped</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For nums=[-2,1,-3,4,-1,2,1,-5,4], what is the maximum subarray sum?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>7</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Subarray [4,−1,2,1] has sum 6. Kadane's traces: reset at -2, track 1, reset after -3, build 4,3,5,6 — max=6."><span class="opt-letter">B</span>6 — subarray [4,−1,2,1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -772,12 +1024,29 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Sorting</span>
     </div>
-    <p class="prob-section-desc">Find all unique triplets summing to zero. Brute: O(n³) triple loop. Two-pointer: sort, fix one element, shrink L/R window — O(n²) with duplicate skipping.</p>
+    <p class="prob-section-desc">Find all unique triplets that sum to zero. Sort the array, then fix one element at each outer loop iteration and use two pointers (L, R) on the remaining subarray. Move L right when sum &lt; 0, move R left when sum &gt; 0. Skip duplicate values at both the outer and pointer levels to avoid repeated triplets.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n³)</span>
-      <span class="prob-compl-chip">Two Pointers: O(n²)</span>
+      <span class="prob-compl-chip">Brute: O(n³) · O(1)</span>
+      <span class="prob-compl-chip">Two Pointers: O(n²) · O(1)</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Fix one element</strong> at index i, then reduce to Two Sum on the remaining sorted subarray with L/R pointers. Skip duplicates at each level to avoid repeated triplets — O(n²) total.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-three-sum"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we sort the array before applying the two-pointer technique?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To bring duplicate values adjacent to each other for easy skipping</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Two pointers work because sorted order lets us reason: if sum > 0, moving R left decreases the sum; if sum < 0, moving L right increases it. This directional reasoning is only valid on a sorted array."><span class="opt-letter">B</span>Sorted order gives the two pointers directionality — moving L right increases sum, moving R left decreases it, so we can always make progress</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To make the outer loop O(n) instead of O(n²)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Sorting is not actually needed; a HashSet works without it</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For nums=[-1,0,1,2,-1,-4], what are the unique triplets summing to 0?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>[[-1,0,1],[-1,1,0]]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sorted: [-4,-1,-1,0,1,2]. Fix -1 (idx 1): L=0,R=2 → (-1)+0+1=0 ✓. Fix -1 (idx 2): skip (dup). Result: [[-1,-1,2],[-1,0,1]]."><span class="opt-letter">B</span>[[-1,-1,2],[-1,0,1]] — two unique triplets</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[[-4,2,2],[-1,0,1]]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[[-1,0,1]]</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
   <div class="prob-divider"></div>
@@ -791,12 +1060,29 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">2D Grid</span><span class="prob-tag">Strings</span>
     </div>
-    <p class="prob-section-desc">Watch the 2D DP table fill cell by cell. Character matches glow green; mismatches take the max of left/above. The bottom-right cell holds the final LCS length.</p>
+    <p class="prob-section-desc">Find the length of the longest subsequence present in both strings (characters don't need to be contiguous). 2D DP: <strong>dp[i][j]</strong> = LCS length for text1[0..i−1] and text2[0..j−1]. If chars match: dp[i][j] = dp[i−1][j−1]+1. Otherwise: dp[i][j] = max(dp[i−1][j], dp[i][j−1]). The answer is at dp[m][n].</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">O(m × n) time</span>
-      <span class="prob-compl-chip">O(m × n) space</span>
+      <span class="prob-compl-chip">O(m × n) space — reducible to O(min(m,n)) with rolling row</span>
     </div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>If <strong>text1[i]==text2[j]</strong>: dp[i][j] = dp[i−1][j−1]+1 (extend). Else: dp[i][j] = max(dp[i−1][j], dp[i][j−1]) (skip one char from either string, take the better result).</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-lcs"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does dp[i][j] represent in the LCS table?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The number of matching characters at positions i and j</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i][j] is the length of the LCS considering only the first i characters of text1 and the first j characters of text2. The final answer dp[m][n] considers the full strings."><span class="opt-letter">B</span>The LCS length of text1[0..i−1] and text2[0..j−1] — considering the first i and j characters of each string</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The position of the last matching character in both strings</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The minimum edit distance between the two prefixes</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the LCS of "abcde" and "ace"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>2 — "ac"</div>
+          <div class="quiz-option" data-correct="true" data-explanation="LCS = 'ace', length 3. 'a' at index 0 in both; 'c' at index 2 in abcde, index 1 in ace; 'e' at index 4 in abcde, index 2 in ace. All appear in order."><span class="opt-letter">B</span>3 — "ace" (a, c, and e appear in order in both strings)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5 — "abcde" (entire first string)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1 — "a"</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
   </div>
 
 
@@ -817,6 +1103,8 @@
       <span class="prob-compl-chip">Prefix×Suffix: O(n) · O(1) output</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-product-except-self"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Two passes: <strong>prefix[i]</strong> = product of everything left of i; <strong>suffix[i]</strong> = product of everything right. output[i] = prefix[i] × suffix[i] — no division, handles zeros correctly.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -860,6 +1148,8 @@
       <span class="prob-compl-chip">Two Pointers: O(n) · O(1)</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-container-water"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Always move the <strong>shorter wall inward</strong> — the height is bounded by the shorter side, so moving it is the only way to potentially find a taller boundary.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -903,6 +1193,8 @@
       <span class="prob-compl-chip">Greedy: O(n) · O(1)</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-jump-game"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Track <strong>maxReach</strong>, the farthest index reachable so far. If your current index exceeds maxReach, you're stranded. If maxReach ≥ last index, return true.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -945,6 +1237,8 @@
       <span class="prob-compl-chip">O(2^(t/m)) time · O(t/m) depth</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-combination-sum"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Backtrack: at each step, <strong>include the same element again</strong> (unbounded) or move to the next one. The key: you can reuse elements, so don't advance the index on inclusion.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -988,6 +1282,8 @@
       <span class="prob-compl-chip">Two Pointers: O(n) · O(1) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-palindrome"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Two pointers from both ends — <strong>skip non-alphanumeric characters</strong>, lowercase and compare. O(n) time, O(1) space without any string preprocessing.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1031,6 +1327,8 @@
       <span class="prob-compl-chip">Two Pointers: O(n) · O(1)</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-trapping-rain"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Water at index i = <strong>min(maxLeft, maxRight) − height[i]</strong>. Two-pointer approach: maintain running max from each side and move the pointer with the smaller max inward.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1074,6 +1372,8 @@
       <span class="prob-compl-chip">DP: O(n² × L) · O(n) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-break"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>dp[i] = true</strong> if any j &lt; i satisfies dp[j]=true AND s[j..i−1] is in the dictionary. Build left to right, checking all valid split points.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1117,6 +1417,8 @@
       <span class="prob-compl-chip">Binary Search: O(log n) · O(1)</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-min-rotated"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>One half is always sorted. If <strong>mid > right</strong>, the minimum is in the right half; otherwise it's in the left (including mid). Binary search, O(log n).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1160,6 +1462,8 @@
       <span class="prob-compl-chip">Iterative: O(n) · O(1) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-reverse-linked-list"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Three-pointer dance: <strong>prev → curr → next</strong>. Redirect curr.next to prev, then advance all three. No extra space needed.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1202,6 +1506,8 @@
       <span class="prob-compl-chip">O(m × n) time · O(1) extra space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-spiral-matrix"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Shrink four boundaries (top/bottom/left/right) after traversing each edge — peel the matrix layer by layer from the outside in.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1245,6 +1551,8 @@
       <span class="prob-compl-chip">Bucket Sort: O(n) · O(n) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-top-k-frequent"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Bucket sort by frequency</strong>: array of size n+1 where index = frequency. Scan from high to low frequency collecting k elements — beats sorting O(n log n).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1288,6 +1596,8 @@
       <span class="prob-compl-chip">Expand Centers: O(n²) · O(1) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-palindrome"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Expand around each of the <strong>2n−1 centers</strong> (n single characters + n−1 pairs). Track the longest expansion — O(n²) simple, O(n) Manacher's algorithm.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1330,6 +1640,8 @@
       <span class="prob-compl-chip">O(n) time · O(h) space (h = height)</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-depth-tree"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS returns <strong>1 + max(left depth, right depth)</strong>. Base case: null node returns 0. The entire tree is visited once, O(n).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1372,6 +1684,8 @@
       <span class="prob-compl-chip">O(4ⁿ / √n) combinations · O(n) depth</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-generate-parens"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Backtrack: add <strong>'(' if open &lt; n</strong>, add <strong>')' if close &lt; open</strong> — only valid intermediate states are ever explored, no post-filtering needed.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1415,6 +1729,8 @@
       <span class="prob-compl-chip">Min-Heap: O(n log n) · O(n) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-meeting-rooms"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort by start time. Two meetings conflict if <strong>sorted[i].start &lt; sorted[i−1].end</strong>. One scan is sufficient after sorting.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1458,6 +1774,8 @@
       <span class="prob-compl-chip">Reversal: O(n) · O(1) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotate-array"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Three reverses: <strong>reverse all → reverse first k → reverse last n−k</strong>. Each element is moved exactly once, O(n) time O(1) space.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1501,6 +1819,8 @@
       <span class="prob-compl-chip">Floyd's: O(1) space · O(n) time</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-linked-list-cycle"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Floyd's tortoise & hare</strong>: slow moves 1 step, fast 2 steps. In a cycle they must meet — like runners on a circular track.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1544,6 +1864,8 @@
       <span class="prob-compl-chip">Two Pointers: O(n+m) · O(1) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-merge-sorted-lists"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Compare both heads, <strong>attach the smaller one</strong> to the result list, advance that pointer. Recursion or iteration — O(m+n) time.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1587,6 +1909,8 @@
       <span class="prob-compl-chip">Modified Binary Search: O(log n) · O(1) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-search-rotated"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>At least one half is always sorted. Identify it with a midpoint comparison, then <strong>check if target falls in the sorted half</strong> and binary search accordingly.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1629,6 +1953,8 @@
       <span class="prob-compl-chip">O(V + E) time · O(V + E) space</span>
     </div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-course-schedule"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Topological sort via DFS: a <strong>cycle in the prerequisite graph</strong> = impossible to finish. Track node state: unvisited / visiting / done.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question">
         <div class="quiz-q-num">Question 1 of 2</div>
@@ -1664,6 +1990,8 @@
     <p class="prob-section-desc">Mirror a binary tree. DFS: swap left↔right children at each node, then recurse. BFS: use a queue and swap children level by level. Both are O(n) — every node visited once.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space DFS · O(n) space BFS</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-invert-tree"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>At each node, <strong>swap left and right children</strong>, then recurse on both. Post-order DFS, O(n) — every node visited once.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What happens if you don't swap the children before recursing in the DFS approach?</div>
         <div class="quiz-options">
@@ -1691,6 +2019,8 @@
     <p class="prob-section-desc">Return nodes grouped by level: <code>[[3],[9,20],[15,7]]</code>. BFS: at each step, snapshot the queue size — that's how many nodes are on the current level. Process exactly that many nodes, then enqueue their children.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-level-order"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>BFS with a queue</strong>: process all nodes at the current level, enqueue their children, then move to the next level. Level boundary = queue size at loop start.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How does BFS know where one level ends and the next begins?</div>
         <div class="quiz-options">
@@ -1718,6 +2048,8 @@
     <p class="prob-section-desc">Design a stack that supports push, pop, top, and <code>getMin</code> in O(1). Trick: each push also records the running minimum up to that point. When you pop, the minimum for the remaining stack is already stored.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">All operations O(1) · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-stack"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Maintain a <strong>parallel min-stack</strong>: push the current minimum alongside each push. getMin() = top of the min-stack — O(1) always.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">After push(-2), push(0), push(-3) — what does getMin() return?</div>
         <div class="quiz-options">
@@ -1745,6 +2077,8 @@
     <p class="prob-section-desc">Evaluate an expression in postfix notation. Numbers push onto the stack. Operators (+, −, ×, ÷) pop the top two operands, compute, and push the result. The final stack element is the answer.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-eval-rpn"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Stack</strong>: push numbers; on an operator, pop two operands, compute, push result. Final stack top is the answer.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For ["2","1","+","3","*"], what is the result?</div>
         <div class="quiz-options">
@@ -1772,6 +2106,8 @@
     <p class="prob-section-desc">Count the number of set bits (1s) in an integer's binary representation. Mask approach: check each of 32 bits. Trick: <code>n &amp; (n−1)</code> clears the lowest set bit — count how many times until n=0.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Mask: O(32)</span><span class="prob-compl-chip">n &amp; (n−1): O(k) where k = number of 1-bits</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-num-1-bits"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>n & (n−1) clears the lowest set bit</strong>. Count how many times until n=0 — that count is the number of 1-bits.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does n &amp; (n−1) specifically clear the lowest set bit?</div>
         <div class="quiz-options">
@@ -1799,6 +2135,8 @@
     <p class="prob-section-desc">Given n numbers in range [0,n] with one missing, find it. Sort and scan: O(n log n). Sum formula: <code>expected = n*(n+1)/2</code>, subtract actual sum — O(n) O(1) space. XOR approach also works: XOR all indices and values, missing one remains.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Sort: O(n log n)</span><span class="prob-compl-chip">Sum/XOR: O(n) · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-missing-number"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>XOR all indices 0..n with all values</strong>: every pair cancels (x^x=0), leaving only the missing number. Or use Gauss: n(n+1)/2 − sum.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [3,0,1], n=3. What does the sum formula compute?</div>
         <div class="quiz-options">
@@ -1826,6 +2164,8 @@
     <p class="prob-section-desc">Remove the nth node from the end in one pass. Advance <code>fast</code> n steps ahead, then move both pointers together until <code>fast</code> reaches the last node. <code>slow</code> is then at the node before the target.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Two-pass: O(n)</span><span class="prob-compl-chip">One-pass: O(n) · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-remove-nth"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Two pointers <strong>n nodes apart</strong>: advance fast n steps first, then move both until fast reaches the tail — slow is now at the node before the target.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does advancing fast n steps ahead work to find the nth-from-end node?</div>
         <div class="quiz-options">
@@ -1853,6 +2193,8 @@
     <p class="prob-section-desc">Find the longest streak of consecutive integers in O(n). Key insight: only start counting from the left boundary of a sequence (num−1 not in the set). This way each number is visited at most twice — O(n) total.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Sort: O(n log n)</span><span class="prob-compl-chip">Hash Set: O(n) · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-consecutive"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Only <strong>start counting from a sequence beginning</strong> (no predecessor in the HashSet). This ensures each sequence is counted exactly once — O(n).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we only start counting from numbers where (num−1) is NOT in the set?</div>
         <div class="quiz-options">
@@ -1880,6 +2222,8 @@
     <p class="prob-section-desc">Find the subarray with the largest product. The key twist: a negative number can flip the minimum to the maximum. Track both <code>curMax</code> and <code>curMin</code> at every step — the answer is the largest <code>curMax</code> seen.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Brute: O(n²)</span><span class="prob-compl-chip">DP Track Max+Min: O(n) · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-product"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Track both <strong>max and min</strong> at each step — a large negative × another negative becomes the new maximum. max_prod = max(num, num×maxPrev, num×minPrev).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we track curMin as well as curMax?</div>
         <div class="quiz-options">
@@ -1907,6 +2251,8 @@
     <p class="prob-section-desc">Check if a binary tree is height-balanced (every node's left and right subtree heights differ by at most 1). Naive: compute height separately for each node — O(n²). Optimal DFS: return height or −1 (unbalanced) bottom-up in a single pass — O(n).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Naive: O(n²)</span><span class="prob-compl-chip">One-pass DFS: O(n) · O(h) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-balanced-tree"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS returns height; if any subtree height difference &gt; 1, <strong>return −1 immediately to short-circuit</strong>. Avoids O(n²) repeated height calls.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the naive approach run in O(n²)?</div>
         <div class="quiz-options">
@@ -1934,6 +2280,8 @@
     <p class="prob-section-desc">Find the longest path between any two nodes (number of edges). Brute: for every node compute <code>height(left) + height(right)</code> — O(n) per node = O(n²). Optimal: single DFS returns height bottom-up and updates diameter as a side effect — O(n).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n²)</span><span class="prob-compl-chip">Optimal O(n) · O(h) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-diameter-tree"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>The diameter through a node = <strong>left_depth + right_depth</strong>. Update a global max during the standard height DFS — diameter found in one O(n) pass.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the brute force approach run in O(n²)?</div>
         <div class="quiz-options">
@@ -1961,6 +2309,8 @@
     <p class="prob-section-desc">Check if two binary trees are structurally identical with the same node values. Recursive DFS: compare root values, then recursively check left subtrees and right subtrees. Base cases: both null → true; one null → false.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-same-tree"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Recursively verify: <strong>same value at root AND same left subtree AND same right subtree</strong>. Base cases: both null = true, one null = false.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What base cases must the recursive function handle?</div>
         <div class="quiz-options">
@@ -1988,6 +2338,8 @@
     <p class="prob-section-desc">Check if <code>subRoot</code> is a subtree of <code>root</code>. At each node of root, run <code>sameTree(node, subRoot)</code>. If any matches, return true. Time: O(m·n) where m and n are sizes of both trees.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(max(h₁,h₂)) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-subtree"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>At each node of the main tree, call <strong>isSameTree</strong>. O(m×n) worst case — optimize with Merkle hashing or KMP on serialized trees.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is it O(m·n) and not O(m+n)?</div>
         <div class="quiz-options">
@@ -2015,6 +2367,8 @@
     <p class="prob-section-desc">Return the values visible when looking at the tree from the right side — one value per level. BFS: last node dequeued at each level. DFS right-first: first node visited at each depth is the rightmost.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space BFS · O(h) space DFS</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-right-side-view"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>BFS level order</strong>: the last node recorded at each level is visible from the right side. Or: DFS visiting right child first, record when level = result.length.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [1,2,3,null,5,null,4], what is the right side view?</div>
         <div class="quiz-options">
@@ -2042,6 +2396,8 @@
     <p class="prob-section-desc">A node is "good" if no value on the path from root to that node is greater than its own value. DFS: pass the maximum value seen so far down the path. Count each node where <code>val ≥ maxSoFar</code>.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-count-good-nodes"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS with a <strong>running maximum</strong> from root to current node. A node is "good" if its value ≥ that maximum — count these nodes.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">The root is always a good node. Why?</div>
         <div class="quiz-options">
@@ -2069,6 +2425,8 @@
     <p class="prob-section-desc">Inorder traversal of a BST produces a sorted sequence. Brute: collect all inorder values, return index k−1. Optimal: count during traversal — stop at count = k without visiting remaining nodes.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n)</span><span class="prob-compl-chip">Optimal O(k) average · O(h) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-kth-smallest"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>In-order traversal</strong> of a BST yields values in sorted order. Decrement a counter k at each visit; return the node's value when k reaches 0.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does inorder traversal of a BST give sorted order?</div>
         <div class="quiz-options">
@@ -2096,6 +2454,8 @@
     <p class="prob-section-desc">Find the deepest node that is an ancestor of both p and q. For a BST: if both p,q &lt; node → go left; if both &gt; node → go right; else node is the LCA (the paths to p and q diverge here).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(h) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-lca-bst"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Both values smaller → go left; both larger → go right; otherwise the <strong>current node is the LCA</strong> (one target in each subtree, or current = one of them).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the "split point" in the optimal BST approach the LCA?</div>
         <div class="quiz-options">
@@ -2123,6 +2483,8 @@
     <p class="prob-section-desc">Given a 2D grid of characters, find if a word exists as a path of horizontally/vertically adjacent cells. DFS backtracking: mark cell as visited (#), recurse in 4 directions, unmark on backtrack. Each cell can be used only once per path.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m·n·4^L) time · O(L) space — L = word length</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-search"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS backtracking: <strong>temporarily mark a cell visited</strong> (e.g., set to '#'), recurse in 4 directions, restore the cell after — no extra visited array.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we "unmark" visited cells when backtracking?</div>
         <div class="quiz-options">
@@ -2150,6 +2512,8 @@
     <p class="prob-section-desc">Reorder L0→L1→…→Ln to L0→Ln→L1→Ln-1→… in-place. Brute: collect to array, rebuild. Optimal three steps: find middle (slow/fast), reverse second half, merge alternating. All O(n) time, O(1) space.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n) · O(n) space</span><span class="prob-compl-chip">Optimal O(n) · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-reorder-list"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Three steps: <strong>find the middle</strong> (slow/fast), <strong>reverse the second half</strong>, then <strong>interleave</strong> one node from each half alternately.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [1,2,3,4], what is the reordered list?</div>
         <div class="quiz-options">
@@ -2177,6 +2541,8 @@
     <p class="prob-section-desc">Merge k sorted linked lists into one sorted list. Brute: collect all values, sort, rebuild — O(n log n). Optimal: min-heap — always extract the smallest head across all k lists in O(log k), total O(n log k).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Brute O(n log n)</span><span class="prob-compl-chip">Optimal O(n log k) — k = number of lists, n = total nodes</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-merge-k-lists"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Min-heap</strong> of size k: always extract the global minimum across k lists. O(n log k) — far better than k-1 merge passes.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the heap approach O(n log k) instead of O(n log n)?</div>
         <div class="quiz-options">
@@ -2204,6 +2570,8 @@
     <p class="prob-section-desc">Deep copy a connected graph. BFS from the start node: maintain a hashmap <code>old→clone</code>. Each time a new neighbor is found, create its clone and enqueue it. When a neighbor is already cloned, just add the edge.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n + e) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-clone-graph"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>BFS/DFS with a <strong>HashMap&lt;original → clone&gt;</strong>. When a neighbor already exists in the map, reuse the clone instead of creating a duplicate.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we need a hashmap (visited/clone map) when cloning?</div>
         <div class="quiz-options">
@@ -2231,6 +2599,8 @@
     <p class="prob-section-desc">Find cells from which water can flow to both the Pacific (top/left) and Atlantic (bottom/right) oceans. Key insight: reverse the flow — BFS <em>uphill</em> from each ocean's border. Cells reachable from both borders are the answer.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-pacific-atlantic"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Reverse BFS from both oceans simultaneously</strong>. Cells reachable from Pacific AND from Atlantic are the answer — avoids checking each cell's full path.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we BFS from the ocean borders INWARD (uphill) rather than from each cell outward?</div>
         <div class="quiz-options">
@@ -2258,6 +2628,8 @@
     <p class="prob-section-desc">Each minute, every rotten orange (2) rots adjacent fresh oranges (1). Return the minimum minutes to rot all oranges, or -1 if impossible. Multi-source BFS: initialize the queue with ALL initially rotten oranges, then expand by one level per minute.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotting-oranges"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Multi-source BFS</strong> from all rotten oranges at time 0. Each BFS level = 1 minute. Answer = total levels − 1, or −1 if any fresh orange is unreachable.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must ALL initially rotten oranges be added to the BFS queue at the start?</div>
         <div class="quiz-options">
@@ -2285,6 +2657,8 @@
     <p class="prob-section-desc">Count connected components in an undirected graph. Union-Find: each edge merges two components. After processing all edges, count unique roots. Alternative: BFS/DFS from unvisited nodes, count how many DFS starts are needed.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Union-Find O((n+e)·α(n)) · DFS O(n+e)</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-connected-components"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS/BFS from each unvisited node marks one component. Count starts = component count. Union-Find is equally valid and sometimes faster for dynamic graphs.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For n=5 and edges [[0,1],[1,2],[3,4]], how many components are there?</div>
         <div class="quiz-options">
@@ -2312,6 +2686,8 @@
     <p class="prob-section-desc">Find the length of the longest strictly increasing subsequence. DP O(n²): <code>dp[i]</code> = LIS length ending at index i. Optimal O(n log n): maintain a <code>tails</code> array — for each element, binary search where it fits; place it there. Length = tails.length.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">DP O(n²)</span><span class="prob-compl-chip">Patience Sort O(n log n)</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-lis"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Patience sorting</strong>: maintain a list of active subsequences. Binary search to find where to extend or replace — the list length is the LIS length at O(n log n).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For [10,9,2,5,3,7,101,18], what is the LIS length?</div>
         <div class="quiz-options">
@@ -2339,6 +2715,8 @@
     <p class="prob-section-desc">Count paths from top-left to bottom-right in an m×n grid, moving only right or down. <code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code>. Base: entire top row and left column = 1 (only one way to reach each). Also solvable as a combinatorics problem: C(m+n-2, m-1).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">DP O(m·n)</span><span class="prob-compl-chip">Math O(min(m,n)) with combinatorics</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-unique-paths"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>dp[i][j] = dp[i−1][j] + dp[i][j−1]</strong> — paths from above plus paths from the left. Reduce to O(n) space using a single row.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For a 3×3 grid (3 rows, 3 cols), how many unique paths are there?</div>
         <div class="quiz-options">
@@ -2366,6 +2744,8 @@
     <p class="prob-section-desc">Minimum operations (insert, delete, replace) to convert word1 to word2. <code>dp[i][j]</code> = edit distance between word1[0..i-1] and word2[0..j-1]. Match: <code>dp[i-1][j-1]</code>. Mismatch: <code>1 + min(replace, delete, insert)</code>.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-edit-distance"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i][j] = <strong>0 + dp[i−1][j−1]</strong> if chars match, else <strong>1 + min(insert dp[i][j−1], delete dp[i−1][j], replace dp[i−1][j−1])</strong>.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What do dp[i-1][j], dp[i][j-1], and dp[i-1][j-1] represent for a mismatch?</div>
         <div class="quiz-options">
@@ -2393,6 +2773,8 @@
     <p class="prob-section-desc">Count the number of distinct combinations of coins that sum to a target amount. Key: iterate COINS in the outer loop and AMOUNTS in the inner loop — this ensures each combination is counted once (not permutations). <code>dp[a] += dp[a - coin]</code>.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(amount · k) time · O(amount) space — k = number of coins</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-coin-change-ii"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Count ways (not minimum): <strong>loop coins as outer, amounts as inner</strong> — this counts each combination exactly once (no permutations), like 0/1 unbounded knapsack.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For coins=[1,2,5], amount=5, how many combinations exist?</div>
         <div class="quiz-options">
@@ -2420,6 +2802,8 @@
     <p class="prob-section-desc">Can the array be partitioned into two subsets with equal sum? Total sum must be even; target = sum/2. 0/1 knapsack: <code>dp[s]</code> = true if some subset sums to s. Update right-to-left (each number used at most once). Return <code>dp[target]</code>.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n · sum) time · O(sum) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-partition-subset"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Reduce to <strong>0/1 knapsack to target = sum/2</strong>. If sum is odd, immediately return false. dp[j] = dp[j] OR dp[j−num] for each num.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we iterate the DP array right-to-left when adding each number?</div>
         <div class="quiz-options">
@@ -2447,6 +2831,8 @@
     <p class="prob-section-desc">Houses arranged in a circle — can't rob first AND last (they're adjacent). Trick: run House Robber I twice: once on <code>nums[0..n-2]</code> (skip last), once on <code>nums[1..n-1]</code> (skip first). Take the maximum.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-house-robber-ii"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Circular trick</strong>: max(rob houses 0..n−2, rob houses 1..n−1). Two independent House Robber I runs, avoiding the case where both first and last are robbed.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't we simply run House Robber I on the full circular array?</div>
         <div class="quiz-options">
@@ -2474,6 +2860,8 @@
     <p class="prob-section-desc">A Trie stores strings as paths of characters in a tree. Each node holds a map of children and an <code>isEnd</code> flag. Insert and search both run in O(m) where m is the word length — far faster than scanning an array of strings.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m) insert / search · O(n·m) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-trie"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Each TrieNode holds <strong>26 children (or a map) + isEnd flag</strong>. insert/search/startsWith all traverse char-by-char — O(m) per operation where m = word length.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does the <code>isEnd</code> flag on a Trie node signify?</div>
         <div class="quiz-options">
@@ -2501,6 +2889,8 @@
     <p class="prob-section-desc">Maintain the running median as numbers stream in. Use two heaps: a max-heap <code>lo</code> (lower half) and a min-heap <code>hi</code> (upper half). Keep them balanced so <code>|lo| - |hi| ≤ 1</code>. Median = <code>lo.top</code> (odd count) or average of both tops (even).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(log n) addNum · O(1) findMedian</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-median"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Two heaps</strong>: maxHeap for the lower half, minHeap for the upper half. Keep sizes balanced (differ by ≤ 1). Median = top of the larger heap, or average of both tops.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does lo use a max-heap and hi use a min-heap?</div>
         <div class="quiz-options">
@@ -2528,6 +2918,8 @@
     <p class="prob-section-desc">Count ways to decode a digit string where 'A'=1 … 'Z'=26. <code>dp[i]</code> = ways to decode <code>s[0..i-1]</code>. At each position: add <code>dp[i-1]</code> if single digit is valid (1–9); add <code>dp[i-2]</code> if two digits form 10–26.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space (O(1) with two variables)</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-decode-ways"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i] = dp[i−1] if s[i] is a valid single digit PLUS dp[i−2] if s[i−1..i] is a <strong>valid two-digit number (10–26)</strong>. Leading zeros invalidate paths.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does a '0' digit make dp[i] = 0 (from the single-digit path)?</div>
         <div class="quiz-options">
@@ -2555,6 +2947,8 @@
     <p class="prob-section-desc">Find the minimum number of jumps to reach the last index. Greedy: maintain a current window <code>[0..curEnd]</code> and track the <code>farthest</code> reachable index. When you exhaust the current window, increment jumps and extend to <code>farthest</code>.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-jump-game-ii"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Greedy BFS layers</strong>: within the current reachable range, find the farthest you can reach — that's the next layer. Count layers = minimum jumps.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we stop the loop at index n-2 instead of n-1?</div>
         <div class="quiz-options">
@@ -2582,6 +2976,8 @@
     <p class="prob-section-desc">Find the kth largest element without full sorting. Max-heap approach: build a max-heap then extract k times — the kth extraction is the answer. Optimal: QuickSelect runs O(n) average by partitioning around a pivot, discarding half the array each time.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">Heap O(n + k log n)</span><span class="prob-compl-chip">QuickSelect O(n) avg</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-kth-largest"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>QuickSelect</strong>: partition like QuickSort, but only recurse on the side containing the k-th element. Average O(n) — no full sort needed.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is a min-heap of size k more space-efficient than a max-heap for this problem?</div>
         <div class="quiz-options">
@@ -2609,6 +3005,8 @@
     <p class="prob-section-desc">Given tasks and cooldown n, find the minimum CPU intervals needed. Math formula: <code>(maxFreq-1)×(n+1) + maxCount</code> where maxCount = number of tasks tied for max frequency. Answer is <code>max(formula, tasks.length)</code>.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space (26 task types)</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-task-scheduler"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Dominant frequency determines the answer: <strong>max((maxFreq−1)×(n+1) + countOfMaxFreq, totalTasks)</strong>. Idle slots fill gaps after the most-frequent task.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For tasks=["A","A","A","B","B","B"] and n=2, what is the minimum intervals?</div>
         <div class="quiz-options">
@@ -2636,6 +3034,8 @@
     <p class="prob-section-desc">Find the starting station to complete a circular route. Key insight: if total gas ≥ total cost, a solution always exists and is unique. Greedy: track running tank; when it goes negative, the start must be after the current position — reset.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-gas-station"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>If total gas ≥ total cost, a solution exists. Greedy: whenever the running tank goes negative, <strong>reset the start to i+1</strong> — current stretch can't be part of the solution.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the candidate starting station always the position AFTER where the tank goes negative?</div>
         <div class="quiz-options">
@@ -2663,6 +3063,8 @@
     <p class="prob-section-desc">Find the minimum number of intervals to remove so no two overlap. Sort by end time, then greedily keep intervals with the earliest end — this maximizes space for future intervals. Count kept intervals; answer = total − kept.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n log n) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-non-overlapping"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort by <strong>end time</strong>. Greedily keep intervals with the earliest end — maximizes room for future intervals and minimizes removals.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we sort by END time rather than start time?</div>
         <div class="quiz-options">
@@ -2690,6 +3092,8 @@
     <p class="prob-section-desc">Count all palindromic substrings. Expand-around-center: for each of the 2n-1 centers (each character + each gap), expand outward while characters match. Each successful expansion is one palindrome. Total O(n²) but simpler than DP.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-palindromic-substrings"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Expand around each of the <strong>2n−1 centers</strong> (single chars + adjacent pairs). Each expansion that stays palindromic = one more count.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we check both odd-length and even-length centers?</div>
         <div class="quiz-options">
@@ -2717,6 +3121,8 @@
     <p class="prob-section-desc">Find the smallest window in <code>s</code> containing all characters of <code>t</code>. Expand the right pointer until the window is valid (contains all of <code>t</code>), then shrink the left pointer to minimize — tracking the best valid window throughout.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(|s| + |t|) time · O(|t|) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-window"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Expand right</strong> until the window contains all required chars; <strong>shrink left</strong> as far as possible while still valid. Track char counts with a frequency map.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When do we move the left pointer?</div>
         <div class="quiz-options">
@@ -2744,6 +3150,8 @@
     <p class="prob-section-desc">Find the maximum sum path between any two nodes. Post-order DFS: for each node, compute the maximum <em>gain</em> from each child — <code>max(0, child_return)</code>. Path through a node = <code>node.val + leftGain + rightGain</code>. Track the global max across all nodes.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space — h = tree height</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-path-sum"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS returns the <strong>max gain downward from a node</strong> (capped at 0 to ignore negative branches). Track global max = left_gain + node.val + right_gain at every node.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we use <code>max(0, child_return)</code> when computing a child's gain?</div>
         <div class="quiz-options">
@@ -2771,6 +3179,8 @@
     <p class="prob-section-desc"><code>preorder[0]</code> is always the root. Find that value in <code>inorder</code> — everything to its left is the left subtree, everything to its right is the right subtree. The left subtree size tells you how many of the next preorder elements belong to the left.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n²) naive · O(n) with inorder hashmap</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-construct-bt"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>preorder[0] is always the root</strong>. Find it in inorder to determine left/right subtree sizes, then recurse — use a HashMap for O(1) inorder lookup.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the inorder traversal let us split left and right subtrees?</div>
         <div class="quiz-options">
@@ -2798,6 +3208,8 @@
     <p class="prob-section-desc">Map each digit to its phone letters (2→abc, 3→def, …). Backtrack: for each digit position, try each mapped letter, build the path recursively. A complete path (length = digits.length) is one combination. No pruning needed — every path is valid.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(4^n · n) time — 4 letters max per digit, n digits</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-letter-combinations"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Backtrack: for each digit, <strong>append each of its mapped letters</strong> and recurse to the next digit. Base case: path length = digits length → add to results.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How many combinations does digits="23" produce?</div>
         <div class="quiz-options">
@@ -2825,6 +3237,8 @@
     <p class="prob-section-desc">Rotate an n×n matrix 90° clockwise in-place. Two-step trick: <strong>Transpose</strong> (swap <code>matrix[i][j]</code> with <code>matrix[j][i]</code> for j &gt; i), then <strong>reverse each row</strong>. No extra matrix needed.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotate-image"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Two in-place steps: <strong>transpose</strong> (swap [i][j] ↔ [j][i]), then <strong>reverse each row</strong>. Together they rotate the matrix 90° clockwise.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does transposing a matrix do?</div>
         <div class="quiz-options">
@@ -2852,6 +3266,8 @@
     <p class="prob-section-desc">If a cell is 0, set its entire row and column to 0 in-place. Naive: collect zero positions in a set, then zero those rows/cols — O(m+n) extra space. Optimal: use the first row and first column themselves as marker arrays — O(1) space.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(1) space (first row/col as markers)</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-set-matrix-zeroes"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Use the <strong>first row and column as markers</strong> — scan the matrix, mark zero positions there, then zero out all marked rows and columns. O(1) extra space.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't we zero out rows/columns immediately when we find a zero?</div>
         <div class="quiz-options">
@@ -2879,6 +3295,8 @@
     <p class="prob-section-desc"><code>dp[i][j]</code> = length of longest palindromic subsequence in <code>s[i..j]</code>. Match: <code>dp[i][j] = dp[i+1][j-1] + 2</code>. No match: <code>max(dp[i+1][j], dp[i][j-1])</code>. Fill by increasing substring length (diagonally).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(n²) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-palin-subseq"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i][j] = <strong>dp[i+1][j−1]+2</strong> if s[i]==s[j], else max(dp[i+1][j], dp[i][j−1]). Fill diagonally by increasing substring length.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we fill the DP table by increasing substring length rather than row by row?</div>
         <div class="quiz-options">
@@ -2906,6 +3324,8 @@
     <p class="prob-section-desc">Every element appears twice except one. XOR all elements: <code>a ^ a = 0</code> (pairs cancel), <code>0 ^ b = b</code> (single survives). Since XOR is commutative and associative, order doesn't matter — the result is always the unique element.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-single-number"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>XOR all elements</strong>: a^a=0 and a^0=a, so every pair cancels. One XOR pass returns only the element that appears once.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does <code>a ^ a = 0</code> make XOR perfect for this problem?</div>
         <div class="quiz-options">
@@ -2933,6 +3353,8 @@
     <p class="prob-section-desc">For each number 0 to n, count the number of 1-bits. DP recurrence: <code>dp[i] = dp[i &gt;&gt; 1] + (i &amp; 1)</code>. Shifting right by 1 removes the last bit — the count of 1s in the remaining bits is already known. Add 1 if the last bit is set.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-counting-bits"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>dp[i] = dp[i>>1] + (i&amp;1)</strong> — right-shifting i gives a number already computed; just add the last bit. O(n) time O(n) space, no bit-counting per number.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is dp[i] = dp[i >> 1] + (i & 1) correct?</div>
         <div class="quiz-options">
@@ -2960,6 +3382,8 @@
     <p class="prob-section-desc">Add two integers without using <code>+</code> or <code>-</code>. <code>a XOR b</code> gives the sum bits without carries. <code>(a AND b) &lt;&lt; 1</code> gives the carry bits. Repeat with <code>sum = XOR result</code> and <code>carry = AND&lt;&lt;1</code> until carry is zero.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(1) — at most 32 iterations for 32-bit integers</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-sum-two-integers"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>XOR</strong> gives the sum without carries; <strong>(AND)&lt;&lt;1</strong> gives the carries. Repeat until carry is zero — simulates binary addition entirely with bit ops.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does <code>a XOR b</code> compute in binary addition?</div>
         <div class="quiz-options">
@@ -2987,6 +3411,8 @@
     <p class="prob-section-desc">Repeatedly replace a number with the sum of squares of its digits. A <em>happy number</em> reaches 1 and stays there. An unhappy number falls into a cycle that never includes 1. Detect the cycle with a HashSet or Floyd's slow/fast pointer.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(log n) per step · O(log n) steps until cycle</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-happy-number"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Use a <strong>HashSet to detect cycles</strong>, or Floyd's slow/fast pointer on the digit-square-sum sequence. Reaching 1 = happy; any repeated value = not happy.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">All unhappy numbers eventually reach the number 89 before cycling. Why does this guarantee we only need to check for 1?</div>
         <div class="quiz-options">
@@ -3013,6 +3439,8 @@
     <p class="prob-section-desc">Given string <em>s</em>, partition it so every substring is a palindrome. Return all possible partitions. Backtrack by trying every prefix — if it is a palindrome, recurse on the remainder. Optimal: precompute a 2D palindrome table to eliminate redundant checks.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n·2ⁿ) time · O(n) stack space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-palin-partition"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Backtrack but <strong>only recurse on palindromic prefixes</strong> — prune all non-palindrome branches immediately. Precomputing a 2D palindrome table makes each check O(1).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">In the backtracking solution, when do we add the current path to results?</div>
         <div class="quiz-options">
@@ -3038,6 +3466,8 @@
     <p class="prob-section-desc">Like Subsets but the input may contain duplicates. Sort the array first, then during backtracking skip a number if it equals the previous number at the same recursion depth. This prevents duplicate subsets without using a set.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n·2ⁿ) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-subsets-ii"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Sort first</strong>, then skip nums[i]==nums[i−1] at the same recursion level. Identical adjacent elements at the same depth would produce duplicate subsets.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we sort the array before applying the duplicate-skip logic?</div>
         <div class="quiz-options">
@@ -3063,6 +3493,8 @@
     <p class="prob-section-desc">Insert a new interval into a sorted list of non-overlapping intervals, merging as necessary. Three phases: (1) add all intervals ending before the new one starts, (2) merge all overlapping intervals into the new one, (3) add the rest.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-insert-interval"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Three phases in one pass: add intervals ending before the new one, <strong>merge all overlapping ones</strong> (expand new interval bounds), then add remaining intervals.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How do you determine that an existing interval overlaps with the new interval [a,b]?</div>
         <div class="quiz-options">
@@ -3088,6 +3520,8 @@
     <p class="prob-section-desc">Reverse the bits of a given 32-bit unsigned integer. Shift bits out one by one and build the result in reverse. Optimized: divide-and-conquer by swapping groups of bits (16, 8, 4, 2, 1) halving the number of operations.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(1) time — exactly 32 iterations · O(1) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-reverse-bits"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Shift bits out</strong> of input one by one and shift them <strong>into the mirror position</strong> of the output: result = (result &lt;&lt; 1) | (n &amp; 1); n &gt;&gt;&gt;= 1.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">After reversing 32 bits of 00000010100101000001111010011100 (43261596), what is the decimal result?</div>
         <div class="quiz-options">
@@ -3113,6 +3547,8 @@
     <p class="prob-section-desc">Find the minimum cost to connect all points where cost = Manhattan distance between them. This is a Minimum Spanning Tree problem. Prim's is optimal here: maintain a min-cost array for each unvisited point and greedily pick the cheapest edge.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(n) space (Prim's without priority queue)</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-cost-points"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Prim's MST: <strong>minCost[v]</strong> = cheapest Manhattan distance from v to any visited node. Greedily add the minimum-cost unvisited point — O(n²), no edge list needed.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is Prim's algorithm preferred over Kruskal's for this problem?</div>
         <div class="quiz-options">
@@ -3138,6 +3574,8 @@
     <p class="prob-section-desc">Given a directed weighted graph, a source node <em>k</em>, and edge travel times, find the minimum time for a signal to reach all nodes. This is single-source shortest path. Use Dijkstra for non-negative weights, or Bellman-Ford if negative weights are possible.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O((V+E) log V) time · O(V+E) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-network-delay"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Dijkstra</strong> from source k gives shortest time to every node. Answer = max(dist values) if all nodes reachable, else −1.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we return the maximum of all shortest distances, not the sum?</div>
         <div class="quiz-options">
@@ -3163,6 +3601,8 @@
     <p class="prob-section-desc">Find the edge that, when removed, leaves a valid tree (connected, no cycles). Process edges one by one with Union-Find. When both endpoints already share a root, adding the edge creates a cycle — that is the redundant edge. Return the last such edge found.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n α(n)) time · O(n) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-redundant-connection"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Union-Find</strong>: process edges one by one. The first edge where both endpoints already share a root creates a cycle — that is the redundant edge.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does α(n) represent in the Union-Find complexity O(n α(n))?</div>
         <div class="quiz-options">
@@ -3188,6 +3628,8 @@
     <p class="prob-section-desc">Burst balloons to maximize coins — bursting index <em>i</em> gives <code>nums[i-1]*nums[i]*nums[i+1]</code>. Think in reverse: instead of deciding which balloon to burst first, decide which balloon to burst <strong>last</strong> in a range. This gives the interval DP recurrence dp[l][r] = max over k (nums[l-1]*nums[k]*nums[r+1] + dp[l][k-1] + dp[k+1][r]).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n³) time · O(n²) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-burst-balloons"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Think <strong>"which balloon is burst last"</strong> in range [l,r]: its neighbors are fixed boundary values, making subproblems dp[l][k−1] and dp[k+1][r] independent.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is it easier to think about which balloon to burst LAST rather than first?</div>
         <div class="quiz-options">
@@ -3213,6 +3655,8 @@
     <p class="prob-section-desc">Implement pattern matching with <code>.</code> (any single char) and <code>*</code> (zero or more of the preceding char). 2D DP: dp[i][j] = true if s[0..i-1] matches p[0..j-1]. For <code>*</code>: either use zero occurrences (dp[i][j-2]) or one more (dp[i-1][j] when chars match).</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(mn) time · O(mn) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-regex-match"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>'*' has two choices</strong>: match zero occurrences (dp[i][j] = dp[i][j−2]) OR one-more occurrence (dp[i][j] = dp[i−1][j] when p[j−2] matches s[i−1]).</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When pattern char is '*', what are the two DP choices?</div>
         <div class="quiz-options">
@@ -3239,6 +3683,8 @@
     <p class="prob-section-desc">Design a data structure supporting <code>addWord(word)</code> and <code>search(word)</code> where <code>.</code> matches any letter. Use a Trie for O(m) word insertion. For search, DFS through the trie — at a <code>.</code> node, branch into all children.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(m) insert · O(26^m) worst search (wildcards) · O(total chars) space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-dict"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Trie</strong> for O(m) word insertion; <strong>DFS with branching at '.' wildcards</strong> for search. Each '.' branches into up to 26 children at that node.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can search take O(26^m) in the worst case?</div>
         <div class="quiz-options">
@@ -3264,6 +3710,8 @@
     <p class="prob-section-desc">Find the shortest transformation sequence from <em>beginWord</em> to <em>endWord</em>, changing exactly one letter at a time, using only words in the word list. BFS explores all words reachable at each "distance" level — guaranteeing the first time we reach endWord is via the shortest path.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n·m·26) time · O(n·m) space where n = word list size, m = word length</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-ladder"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>BFS guarantees the shortest path</strong> — explore all words reachable in 1 transformation, then 2, etc. The first time endWord is reached = fewest steps.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does BFS guarantee the shortest path here, not DFS?</div>
         <div class="quiz-options">
@@ -3289,6 +3737,8 @@
     <p class="prob-section-desc">Find the area of the largest rectangle that fits inside a histogram. Use a monotonic (non-decreasing) stack of bar indices. When a shorter bar is encountered, pop taller bars and compute their maximum rectangle — the width extends to the current bar on the right and the last remaining stack entry on the left.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) stack space</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-largest-rect-hist"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Monotonic stack</strong>: when a shorter bar is encountered, pop taller bars and compute their max rectangle (width = distance to last stack entry). Sentinel 0 flushes remaining bars.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we append a height-0 sentinel bar at the end of the array?</div>
         <div class="quiz-options">
@@ -3314,6 +3764,8 @@
     <p class="prob-section-desc">Find the longest strictly increasing path in a matrix, moving in 4 directions (no diagonals). DFS from every cell with memoization — if memo[r][c] is computed, return it immediately. Because the path is strictly increasing, there are no cycles, so no visited array is needed.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(mn) time — each cell computed once · O(mn) space for memo</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-path-matrix"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>DFS + memo</strong> from every cell: no visited array is needed because the path is strictly increasing — you can never revisit a cell without violating the constraint.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is no "visited" array needed in the DFS for this problem?</div>
         <div class="quiz-options">
@@ -3339,6 +3791,8 @@
     <p class="prob-section-desc">Given an array of n+1 integers where each is in [1,n], find the duplicate without modifying the array and using O(1) extra space. Treat the array as a linked list: index <em>i</em> points to <em>nums[i]</em>. The duplicate creates a cycle. Floyd's algorithm finds the cycle entrance, which is the duplicate.</p>
     <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space — Floyd's cycle detection</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-duplicate"></div></div>
+    
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Treat the array as a <strong>linked list</strong> (i → nums[i]). The duplicate creates a cycle. Floyd's cycle detection finds the cycle entrance = the duplicate value.</span></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does a duplicate value create a cycle in the "linked list" interpretation?</div>
         <div class="quiz-options">
