@@ -7078,6 +7078,263 @@ function initWordDictionary(id){
   });
 }
 
+/* ── P97 Word Ladder ───────────────────────────────────────── */
+function initWordLadder(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defBegin='hit',defEnd='cog',defList=['hot','dot','dog','lot','log','cog'];
+  function buildSteps(begin,end,wordList){
+    var steps=[],wordSet={};
+    wordList.forEach(function(w){wordSet[w]=true;});
+    if(!wordSet[end]){
+      steps.push({queue:[[begin]],visited:{},level:0,found:false,done:true,msg:'End word "'+end+'" not in word list.'});
+      return steps;
+    }
+    var queue=[[begin]],visited={};visited[begin]=true;
+    steps.push({queue:[[begin]],visited:Object.assign({},visited),level:1,found:false,
+      msg:'BFS from "'+begin+'". Visit neighbors differing by 1 char.'});
+    while(queue.length>0){
+      var path=queue.shift(),word=path[path.length-1];
+      for(var i=0;i<word.length;i++){
+        for(var c=97;c<=122;c++){
+          var next=word.slice(0,i)+String.fromCharCode(c)+word.slice(i+1);
+          if(wordSet[next]&&!visited[next]){
+            visited[next]=true;
+            var newPath=path.concat(next);
+            steps.push({queue:queue.slice(),visited:Object.assign({},visited),path:newPath,cur:word,next:next,level:path.length+1,
+              msg:'"'+word+'" → "'+next+'" (change char '+i+') path len='+(path.length+1)});
+            if(next===end){
+              steps.push({queue:[],visited:visited,path:newPath,found:true,done:true,
+                msg:'Found! Shortest path: '+newPath.join(' → ')+' (length='+newPath.length+')'});
+              return steps;
+            }
+            queue.push(newPath);
+          }
+        }
+      }
+    }
+    steps.push({queue:[],visited:visited,found:false,done:true,msg:'No transformation sequence found.'});
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s)return;
+    var path=s.path||[s.cur||defBegin];
+    var cw=Math.min(44,(W-20)/Math.max(path.length,1)),gap=6,ox=(W-(path.length*(cw+gap)))/2;
+    path.forEach(function(w,i){
+      var isLast=i===path.length-1;
+      var st=isLast?(s.found?'found':(s.next===w?'active':'sorted')):(i===0?'selected':'sorted');
+      cell(ctx,ox+i*(cw+gap),H/2-20,cw,28,w,st);
+      if(!isLast)lbl(ctx,'→',ox+i*(cw+gap)+cw+1,H/2-6,'rgba(255,255,255,0.4)',10,'left');
+    });
+    if(s.level!=null)lbl(ctx,'Level: '+s.level,W/2,H/2+24,'rgba(196,181,253,0.8)',10,'center');
+    if(s.done)lbl(ctx,s.found?'Length: '+path.length:'No path',W/2,H-10,s.found?'#34d399':'#ef4444',13,'center');
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[
+      {key:'a1',label:'BFS: find shortest transformation O(n·m·26)'},
+      {key:'a2',label:'Bidirectional BFS: meet in the middle'}
+    ],
+    inputs:[
+      {id:'b',lbl:'Begin:',elem:inp(defBegin,'word',80)},
+      {id:'e',lbl:'End:',elem:inp(defEnd,'word',80)},
+      {id:'l',lbl:'List:',elem:inp(defList.join(','),'comma sep',200)}
+    ],
+    onInputs:function(v){
+      if(v.b&&/^[a-z]+$/.test(v.b))defBegin=v.b;
+      if(v.e&&/^[a-z]+$/.test(v.e))defEnd=v.e;
+      var ws=v.l.split(',').map(function(w){return w.trim();}).filter(function(w){return/^[a-z]+$/.test(w);});
+      if(ws.length>0)defList=ws;
+    },
+    buildSteps:function(){return buildSteps(defBegin,defEnd,defList);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({path:[defBegin],cur:defBegin,level:1},ctx,W,H);}
+  });
+}
+
+/* ── P98 Largest Rectangle in Histogram ─────────────────────── */
+function initLargestRectHistogram(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defHeights=[2,1,5,6,2,3];
+  function buildSteps(heights){
+    var steps=[],stack=[],maxArea=0,n=heights.length;
+    steps.push({heights:heights,stack:[],i:0,maxArea:0,rect:null,
+      msg:'Monotonic stack: keep indices of increasing heights. When height drops, pop and compute area.'});
+    for(var i=0;i<=n;i++){
+      var h=i===n?0:heights[i];
+      steps.push({heights:heights,stack:stack.slice(),i:i,maxArea:maxArea,rect:null,
+        msg:'i='+i+(i<n?' h='+h:' (sentinel 0) — flush remaining stack')});
+      while(stack.length>0&&h<heights[stack[stack.length-1]]){
+        var top=stack.pop();
+        var width=stack.length===0?i:i-stack[stack.length-1]-1;
+        var area=heights[top]*width;
+        if(area>maxArea)maxArea=area;
+        steps.push({heights:heights,stack:stack.slice(),i:i,maxArea:maxArea,
+          rect:{left:stack.length===0?0:stack[stack.length-1]+1,right:i-1,h:heights[top],area:area},
+          msg:'Pop idx='+top+' h='+heights[top]+' width='+width+' area='+area+' maxArea='+maxArea});
+      }
+      if(i<n)stack.push(i);
+    }
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].msg='Max area = '+maxArea;
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.heights)return;
+    var h=s.heights,n=h.length,bw=40,gap=4;
+    var maxH=Math.max.apply(null,h)||1;
+    var ox=(W-n*(bw+gap))/2,base=H-36;
+    for(var i=0;i<n;i++){
+      var barH=(h[i]/maxH)*(H-70);
+      var inStack=s.stack&&s.stack.indexOf(i)>=0;
+      var st=s.i===i?'active':(inStack?'selected':'default');
+      if(s.rect&&i>=s.rect.left&&i<=s.rect.right)st='found';
+      ctx.fillStyle=CS[st]||CS.default;
+      ctx.fillRect(ox+i*(bw+gap),base-barH,bw,barH);
+      lbl(ctx,h[i],ox+i*(bw+gap)+bw/2,base-barH-8,'rgba(255,255,255,0.7)',9,'center');
+    }
+    if(s.rect){
+      var rh=(s.rect.h/maxH)*(H-70);
+      var rx=ox+s.rect.left*(bw+gap),rw=(s.rect.right-s.rect.left+1)*(bw+gap)-gap;
+      ctx.strokeStyle='#34d399';ctx.lineWidth=2;ctx.strokeRect(rx,base-rh,rw,rh);
+      lbl(ctx,'area='+s.rect.area,rx+rw/2,base-rh-12,'#34d399',10,'center');
+    }
+    lbl(ctx,'Max: '+s.maxArea,W/2,H-10,s.done?'#34d399':'#c4b5fd',13,'center');
+  }
+  makeProbUI(container,{canvasW:540,canvasH:260,
+    approaches:[
+      {key:'a1',label:'Brute: try all pairs O(n²)'},
+      {key:'a2',label:'Monotonic stack O(n) time O(n) space'}
+    ],
+    inputs:[{id:'h',lbl:'Heights:',elem:inp(defHeights.join(','),'nums',140)}],
+    onInputs:function(v){var a=v.h.split(',').map(function(x){return parseInt(x.trim(),10);}).filter(function(x){return!isNaN(x)&&x>=0;});if(a.length>=1&&a.length<=8)defHeights=a;},
+    buildSteps:function(){return buildSteps(defHeights);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({heights:defHeights,stack:[],i:0,maxArea:0},ctx,W,H);}
+  });
+}
+
+/* ── P99 Longest Increasing Path in Matrix ───────────────────── */
+function initLongestPathMatrix(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defMatrix=[[9,9,4],[6,6,8],[2,1,1]];
+  function buildSteps(matrix){
+    var rows=matrix.length,cols=matrix[0].length,steps=[];
+    var memo=[];for(var i=0;i<rows;i++){memo[i]=[];for(var j=0;j<cols;j++)memo[i][j]=0;}
+    var dirs=[[-1,0],[1,0],[0,-1],[0,1]];
+    var ans=0;
+    steps.push({matrix:matrix,memo:memo.map(function(r){return r.slice();}),cur:null,
+      msg:'DFS + memo: from each cell, explore 4 dirs where value is strictly greater.'});
+    function dfs(r,c){
+      if(memo[r][c])return memo[r][c];
+      var best=1;
+      dirs.forEach(function(d){
+        var nr=r+d[0],nc=c+d[1];
+        if(nr>=0&&nr<rows&&nc>=0&&nc<cols&&matrix[nr][nc]>matrix[r][c]){
+          best=Math.max(best,1+dfs(nr,nc));
+        }
+      });
+      memo[r][c]=best;
+      steps.push({matrix:matrix,memo:memo.map(function(r){return r.slice();}),cur:[r,c],ans:ans,
+        msg:'dfs('+r+','+c+') val='+matrix[r][c]+' → path='+best});
+      if(best>ans)ans=best;
+      return best;
+    }
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)dfs(r,c);
+    steps[steps.length-1].done=true;
+    steps[steps.length-1].ans=ans;
+    steps[steps.length-1].msg='Longest increasing path = '+ans;
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.matrix)return;
+    var m=s.matrix,memo=s.memo||[],rows=m.length,cols=m[0].length;
+    var cw=Math.min(52,(W-40)/cols),gap=4,ox=(W-(cols*(cw+gap)))/2,oy=24;
+    for(var r=0;r<rows;r++){
+      for(var c=0;c<cols;c++){
+        var isCur=s.cur&&s.cur[0]===r&&s.cur[1]===c;
+        var st=isCur?'active':(memo[r]&&memo[r][c]>0?'sorted':'default');
+        cell(ctx,ox+c*(cw+gap),oy+r*(cw+gap),cw,cw,m[r][c],st);
+        if(memo[r]&&memo[r][c]>0)lbl(ctx,memo[r][c],ox+c*(cw+gap)+cw-6,oy+r*(cw+gap)+10,'#34d399',8,'right');
+      }
+    }
+    if(s.ans!=null)lbl(ctx,'Longest path: '+(s.ans||0),W/2,H-10,s.done?'#34d399':'#c4b5fd',13,'center');
+  }
+  makeProbUI(container,{canvasW:440,canvasH:260,
+    approaches:[
+      {key:'a1',label:'Brute DFS from every cell O(2^(mn))'},
+      {key:'a2',label:'DFS + memoization O(mn) time/space'}
+    ],
+    inputs:[],
+    onInputs:function(){},
+    buildSteps:function(){return buildSteps(defMatrix);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){var r=defMatrix.length,c=defMatrix[0].length;var m=[];for(var i=0;i<r;i++){m[i]=[];for(var j=0;j<c;j++)m[i][j]=0;}draw({matrix:defMatrix,memo:m,cur:null,ans:0},ctx,W,H);}
+  });
+}
+
+/* ── P100 Find the Duplicate Number ─────────────────────────── */
+function initFindDuplicate(id){
+  var container=document.getElementById(id);
+  if(!container)return;
+  var defArr=[1,3,4,2,2];
+  function buildSteps(nums){
+    var steps=[],n=nums.length;
+    // Floyd's cycle detection: treat array as linked list where i → nums[i]
+    var slow=nums[0],fast=nums[nums.length-1];
+    // reset for clean demo
+    slow=nums[0];fast=nums[0];
+    steps.push({nums:nums,slow:slow,fast:fast,phase:'init',ans:null,
+      msg:"Floyd's cycle: treat array as linked list i→nums[i]. Duplicate creates a cycle."});
+    // phase 1: detect cycle
+    do{
+      slow=nums[slow];fast=nums[nums[fast]];
+      steps.push({nums:nums,slow:slow,fast:fast,phase:'detect',
+        msg:'slow='+slow+' fast='+fast});
+    }while(slow!==fast);
+    steps.push({nums:nums,slow:slow,fast:fast,phase:'meeting',
+      msg:'Slow and fast meet at '+slow+'. Start second pointer from index 0.'});
+    // phase 2: find entrance
+    var slow2=0;
+    while(slow!==slow2){
+      slow=nums[slow];slow2=nums[slow2];
+      steps.push({nums:nums,slow:slow,fast:slow2,phase:'find',
+        msg:'slow='+slow+' slow2='+slow2});
+    }
+    steps.push({nums:nums,slow:slow,fast:slow2,phase:'done',ans:slow,done:true,
+      msg:'Duplicate found: '+slow});
+    return steps;
+  }
+  function draw(s,ctx,W,H){
+    bg(ctx,W,H);if(!s||!s.nums)return;
+    var nums=s.nums,n=nums.length,cw=38,gap=4,ox=(W-(n*(cw+gap)))/2;
+    for(var i=0;i<n;i++){
+      lbl(ctx,i,ox+i*(cw+gap)+cw/2,H/2-56,'rgba(255,255,255,0.35)',8,'center');
+      var isSlow=s.slow!=null&&nums.indexOf(s.slow)>=0&&nums[i]===s.slow&&i===nums.indexOf(s.slow);
+      var isFast=s.phase!=='find'&&s.fast!=null&&nums[i]===s.fast;
+      var st=s.ans===nums[i]?'found':(i===s.slow?'active':(i===s.fast?'comparing':'default'));
+      cell(ctx,ox+i*(cw+gap),H/2-44,cw,26,nums[i],st);
+    }
+    if(s.phase==='detect'||s.phase==='find'){
+      lbl(ctx,'slow: '+s.slow,W/2-40,H/2+14,'rgba(52,211,153,0.8)',11,'center');
+      lbl(ctx,(s.phase==='find'?'slow2':'fast')+': '+s.fast,W/2+40,H/2+14,'rgba(251,146,60,0.8)',11,'center');
+    }
+    if(s.ans!=null)lbl(ctx,'Duplicate: '+s.ans,W/2,H-10,'#34d399',14,'center');
+  }
+  makeProbUI(container,{canvasW:520,canvasH:210,
+    approaches:[
+      {key:'a1',label:'HashSet O(n) time O(n) space'},
+      {key:'a2',label:"Floyd's cycle detection O(n) time O(1) space"}
+    ],
+    inputs:[{id:'arr',lbl:'Array:',elem:inp(defArr.join(','),'1..n with one dup',160)}],
+    onInputs:function(v){var a=v.arr.split(',').map(function(x){return parseInt(x.trim(),10);}).filter(function(x){return!isNaN(x)&&x>0;});if(a.length>=3&&a.length<=8)defArr=a;},
+    buildSteps:function(){return buildSteps(defArr);},
+    onStep:function(s,ctx,W,H){draw(s,ctx,W,H);},
+    onReset:function(ctx,W,H){draw({nums:defArr,slow:defArr[0],fast:defArr[0],phase:'init'},ctx,W,H);}
+  });
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -7176,6 +7433,10 @@ window.DSAProbs={
   burstBalloons:initBurstBalloons,
   regexMatch:initRegexMatch,
   wordDictionary:initWordDictionary,
+  wordLadder:initWordLadder,
+  largestRectHistogram:initLargestRectHistogram,
+  longestPathMatrix:initLongestPathMatrix,
+  findDuplicate:initFindDuplicate,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -7277,6 +7538,10 @@ window.DSAProbs={
     if(document.getElementById('prob-burst-balloons'))initBurstBalloons('prob-burst-balloons');
     if(document.getElementById('prob-regex-match'))initRegexMatch('prob-regex-match');
     if(document.getElementById('prob-word-dict'))initWordDictionary('prob-word-dict');
+    if(document.getElementById('prob-word-ladder'))initWordLadder('prob-word-ladder');
+    if(document.getElementById('prob-largest-rect-hist'))initLargestRectHistogram('prob-largest-rect-hist');
+    if(document.getElementById('prob-longest-path-matrix'))initLongestPathMatrix('prob-longest-path-matrix');
+    if(document.getElementById('prob-find-duplicate'))initFindDuplicate('prob-find-duplicate');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();

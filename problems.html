@@ -487,6 +487,22 @@
     <div class="tc-num">P96</div><div class="tc-title">Design Add and Search Words</div>
     <div class="tc-diff diff-med">Medium</div>
   </a>
+  <a href="#p-word-ladder" class="prob-toc-card">
+    <div class="tc-num">P97</div><div class="tc-title">Word Ladder</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-largest-rect-hist" class="prob-toc-card">
+    <div class="tc-num">P98</div><div class="tc-title">Largest Rectangle in Histogram</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-longest-path-matrix" class="prob-toc-card">
+    <div class="tc-num">P99</div><div class="tc-title">Longest Increasing Path in Matrix</div>
+    <div class="tc-diff diff-hard">Hard</div>
+  </a>
+  <a href="#p-find-duplicate" class="prob-toc-card">
+    <div class="tc-num">P100</div><div class="tc-title">Find the Duplicate Number</div>
+    <div class="tc-diff diff-med">Medium</div>
+  </a>
 </div>
 
 <div class="prob-sections">
@@ -3216,6 +3232,7 @@
   </div>
 
   <!-- P96 Design Add and Search Words -->
+
   <div class="prob-section" id="p-word-dict">
     <div class="prob-section-header"><span class="prob-section-num">P96 — Medium</span><span class="prob-section-title">Design Add and Search Words</span></div>
     <div class="prob-section-meta"><span class="prob-tag">Trie</span><span class="prob-tag">DFS</span><span class="prob-tag">Design</span><span class="prob-tag">Wildcard</span></div>
@@ -3240,11 +3257,111 @@
     </div>
   </div>
 
+  <!-- P97 Word Ladder -->
+  <div class="prob-section" id="p-word-ladder">
+    <div class="prob-section-header"><span class="prob-section-num">P97 — Hard</span><span class="prob-section-title">Word Ladder</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">BFS</span><span class="prob-tag">Graphs</span><span class="prob-tag">String</span><span class="prob-tag">Hash Set</span></div>
+    <p class="prob-section-desc">Find the shortest transformation sequence from <em>beginWord</em> to <em>endWord</em>, changing exactly one letter at a time, using only words in the word list. BFS explores all words reachable at each "distance" level — guaranteeing the first time we reach endWord is via the shortest path.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n·m·26) time · O(n·m) space where n = word list size, m = word length</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-ladder"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does BFS guarantee the shortest path here, not DFS?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>DFS cannot handle string transformations</div>
+          <div class="quiz-option" data-correct="true" data-explanation="BFS explores nodes level by level — all words at distance 1, then 2, etc. The first time endWord is reached is via the fewest transformations. DFS can find a path, but not necessarily the shortest without exploring the entire graph."><span class="opt-letter">B</span>BFS explores level by level — the first time endWord is reached is provably the shortest path</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>DFS always finds longer paths in word graphs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS uses less memory making it faster</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the transformation length from "hit" to "cog" via ["hot","dot","dog","lot","log","cog"]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>4</div>
+          <div class="quiz-option" data-correct="true" data-explanation="hit→hot→dot→dog→cog = 5 words = 4 transformations. Return value is the sequence length = 5."><span class="opt-letter">B</span>5 (hit→hot→dot→dog→cog)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>6</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>3</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P98 Largest Rectangle in Histogram -->
+  <div class="prob-section" id="p-largest-rect-hist">
+    <div class="prob-section-header"><span class="prob-section-num">P98 — Hard</span><span class="prob-section-title">Largest Rectangle in Histogram</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Stack</span><span class="prob-tag">Monotonic Stack</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Find the area of the largest rectangle that fits inside a histogram. Use a monotonic (non-decreasing) stack of bar indices. When a shorter bar is encountered, pop taller bars and compute their maximum rectangle — the width extends to the current bar on the right and the last remaining stack entry on the left.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) stack space</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-largest-rect-hist"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we append a height-0 sentinel bar at the end of the array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To handle the case where all bars have the same height</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A height-0 sentinel is guaranteed to be shorter than every bar, which forces all remaining bars still in the stack to be popped and their rectangles computed. Without it we'd need extra post-loop cleanup code."><span class="opt-letter">B</span>It forces all remaining bars in the stack to be popped and processed — otherwise bars at the right end would be missed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It prevents the stack from becoming empty during iteration</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To pad the array to an even length for efficiency</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For heights [2,1,5,6,2,3], what is the largest rectangle area?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>6 (single bar of height 6)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Bars at index 2,3 have heights 5 and 6. A rectangle of height 5 spanning both = 5×2 = 10."><span class="opt-letter">B</span>10 (height=5 across bars at index 2 and 3)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>12</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>8</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P99 Longest Increasing Path in Matrix -->
+  <div class="prob-section" id="p-longest-path-matrix">
+    <div class="prob-section-header"><span class="prob-section-num">P99 — Hard</span><span class="prob-section-title">Longest Increasing Path in Matrix</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DFS</span><span class="prob-tag">Memoization</span><span class="prob-tag">Graph</span><span class="prob-tag">Topological Sort</span></div>
+    <p class="prob-section-desc">Find the longest strictly increasing path in a matrix, moving in 4 directions (no diagonals). DFS from every cell with memoization — if memo[r][c] is computed, return it immediately. Because the path is strictly increasing, there are no cycles, so no visited array is needed.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(mn) time — each cell computed once · O(mn) space for memo</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-path-matrix"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is no "visited" array needed in the DFS for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the matrix values are all unique</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We can only move to strictly greater values. Since a path must be strictly increasing, we can never revisit a cell — doing so would require moving to an equal or smaller value, which is forbidden. So cycles are impossible."><span class="opt-letter">B</span>The strictly increasing constraint prevents cycles — you can never return to a previously visited cell</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The memoization table implicitly tracks visited cells</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS is used instead of DFS for this problem</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For matrix [[9,9,4],[6,6,8],[2,1,1]], what is the longest increasing path length?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>3</div>
+          <div class="quiz-option" data-correct="true" data-explanation="1→2→6→9 = length 4. The path goes: (2,1)=1 → (2,0)=2 → (1,0)=6 → (0,0)=9."><span class="opt-letter">B</span>4 — path: 1→2→6→9</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>6</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P100 Find the Duplicate Number -->
+  <div class="prob-section" id="p-find-duplicate">
+    <div class="prob-section-header"><span class="prob-section-num">P100 — Medium</span><span class="prob-section-title">Find the Duplicate Number</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Floyd's Cycle</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Array</span><span class="prob-tag">Bit Manipulation</span></div>
+    <p class="prob-section-desc">Given an array of n+1 integers where each is in [1,n], find the duplicate without modifying the array and using O(1) extra space. Treat the array as a linked list: index <em>i</em> points to <em>nums[i]</em>. The duplicate creates a cycle. Floyd's algorithm finds the cycle entrance, which is the duplicate.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space — Floyd's cycle detection</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-duplicate"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does a duplicate value create a cycle in the "linked list" interpretation?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the array indices wrap around at the end</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Two different indices i and j point to the same value v (the duplicate), so they both 'link to' the same next node v. This means two paths converge at v and then follow the same route — creating a cycle."><span class="opt-letter">B</span>Two indices point to the same duplicate value, so two paths converge at that node, forming a cycle</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>All arrays with duplicates have cycles regardless of the values</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The fast pointer moves twice as fast, inevitably lapping the slow pointer</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After slow and fast meet inside the cycle, how do we find the exact duplicate?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The meeting point is always the duplicate value</div>
+          <div class="quiz-option" data-correct="true" data-explanation="After slow==fast, reset one pointer to the start (index 0) and advance both one step at a time. Where they meet again is the cycle entrance — which is the duplicate value. This is the same reasoning as Floyd's for linked list cycle entry."><span class="opt-letter">B</span>Reset one pointer to index 0, advance both one step at a time — they meet at the cycle entrance = the duplicate</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Count the cycle length then rerun from the start</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>XOR slow and fast together to extract the duplicate</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">96 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">100 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -3340,6 +3457,10 @@
       if(window.DSAProbs.burstBalloons&&document.getElementById('prob-burst-balloons'))window.DSAProbs.burstBalloons('prob-burst-balloons');
       if(window.DSAProbs.regexMatch&&document.getElementById('prob-regex-match'))window.DSAProbs.regexMatch('prob-regex-match');
       if(window.DSAProbs.wordDictionary&&document.getElementById('prob-word-dict'))window.DSAProbs.wordDictionary('prob-word-dict');
+      if(window.DSAProbs.wordLadder&&document.getElementById('prob-word-ladder'))window.DSAProbs.wordLadder('prob-word-ladder');
+      if(window.DSAProbs.largestRectHistogram&&document.getElementById('prob-largest-rect-hist'))window.DSAProbs.largestRectHistogram('prob-largest-rect-hist');
+      if(window.DSAProbs.longestPathMatrix&&document.getElementById('prob-longest-path-matrix'))window.DSAProbs.longestPathMatrix('prob-longest-path-matrix');
+      if(window.DSAProbs.findDuplicate&&document.getElementById('prob-find-duplicate'))window.DSAProbs.findDuplicate('prob-find-duplicate');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
