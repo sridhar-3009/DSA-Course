@@ -526,12 +526,12 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Hash Map</span>
     </div>
-    <p class="prob-section-desc">Given an array <code>nums</code> and a <code>target</code>, return the indices of the two numbers that add up to target. Exactly one valid answer always exists. Brute force tries every pair in O(n²). The HashMap approach stores each number's complement — if the complement is already in the map, the pair is found in one pass.</p>
+    <p class="prob-section-desc">Find two numbers that add up to the target and return their indices. Store each number's complement in a map — if you've already seen it, you've found your pair.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²) · O(1) space</span>
-      <span class="prob-compl-chip">HashMap: O(n) · O(n) space</span>
+      <span class="prob-compl-chip">Brute: O(n²)</span>
+      <span class="prob-compl-chip">HashMap: O(n)</span>
     </div>
-    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>For each number, store its <strong>complement (target − num)</strong> in a HashMap. When you see a number already in the map as a complement, you've found the pair — one pass, O(n).</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>As you scan, ask: <strong>"have I seen target − num before?"</strong> Store each num in a map. One pass is all you need.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-two-sum"></div></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does using a HashMap reduce time complexity from O(n²) to O(n)?</div>
@@ -561,12 +561,12 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Greedy</span>
     </div>
-    <p class="prob-section-desc">Given daily stock prices, find the maximum profit from one buy and one sell (buy before sell). Brute force checks all pairs in O(n²). The optimal solution tracks the minimum price seen so far — at each day, profit = price − minSoFar. Update the global max profit as you go.</p>
+    <p class="prob-section-desc">Find the best profit from one buy and one sell — you must buy before you sell. Track the lowest price you've seen so far; today's profit is always price minus that minimum.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²) · O(1) space</span>
+      <span class="prob-compl-chip">Brute: O(n²)</span>
       <span class="prob-compl-chip">Optimal: O(n) · O(1) space</span>
     </div>
-    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Track a <strong>running minimum</strong> (cheapest buy so far). At each price, profit = price − minSoFar. Update the global max profit. You never need to look backwards.</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Keep a <strong>running minimum</strong>. At each price, profit = price − minSoFar. Update the best profit. No need to look back.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-best-stock"></div></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why doesn't finding the global minimum price and global maximum price always give the right answer?</div>
@@ -596,11 +596,11 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Stack</span><span class="prob-tag">String</span>
     </div>
-    <p class="prob-section-desc">Given a string of brackets <code>()[]&#123;&#125;</code>, determine if it is valid — every open bracket must close in the correct order and every close bracket must match the most recent open one. A stack is the natural tool: push opens, pop on closes and verify the match.</p>
+    <p class="prob-section-desc">Check if a string of brackets closes in the right order. Push opens onto a stack — on each close, pop and check it matches. Empty stack at the end means valid.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">O(n) time · O(n) space (stack)</span>
+      <span class="prob-compl-chip">O(n) time · O(n) space</span>
     </div>
-    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>A <strong>stack enforces LIFO order</strong>: push open brackets, pop and verify match on close brackets. If the stack is empty at the end, the string is valid.</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Brackets nest — the most recent open must close first. A <strong>stack</strong> enforces this naturally: push open, pop and verify on close.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-parens"></div></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is a stack the right data structure for this problem?</div>
@@ -630,12 +630,12 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Sliding Window</span><span class="prob-tag">Hash Map</span>
     </div>
-    <p class="prob-section-desc">Find the length of the longest substring with all unique characters. Sliding window: expand the right pointer adding characters; when a duplicate is found, advance the left pointer past the previous occurrence. A HashMap stores each character's most recent index for O(1) jump-ahead.</p>
+    <p class="prob-section-desc">Find the longest run of unique characters in a string. Slide a window right — when a repeat appears, jump the left pointer past its previous position. The window always stays duplicate-free.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute: O(n²) · O(n) space</span>
-      <span class="prob-compl-chip">Sliding Window: O(n) · O(min(n,k)) space</span>
+      <span class="prob-compl-chip">Brute: O(n²)</span>
+      <span class="prob-compl-chip">Sliding Window: O(n)</span>
     </div>
-    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Expand right; when a <strong>duplicate appears, jump left pointer</strong> past the previous occurrence of that character. Store each char's last-seen index in a map for O(1) jump.</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Store each character's <strong>last-seen index</strong>. When a repeat appears, jump left directly to index + 1 — no slow scanning needed.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-substr"></div></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">For s="abcabcbb", when the window hits the second 'a' at index 3, where does the left pointer move?</div>
@@ -665,13 +665,12 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Fibonacci</span>
     </div>
-    <p class="prob-section-desc">Count distinct ways to reach the top of <em>n</em> stairs, taking 1 or 2 steps at a time. The number of ways to reach step n equals ways(n−1) + ways(n−2) — exactly the Fibonacci recurrence. Brute recursion is O(2ⁿ). A DP table is O(n) time/space. Rolling two variables reduces space to O(1).</p>
+    <p class="prob-section-desc">How many ways can you climb n stairs taking 1 or 2 steps at a time? To reach step n you came from n−1 or n−2 — it's just Fibonacci. Two variables are all the space you need.</p>
     <div class="prob-complexity">
-      <span class="prob-compl-chip">Brute recursive: O(2ⁿ)</span>
-      <span class="prob-compl-chip">DP table: O(n) time · O(n) space</span>
-      <span class="prob-compl-chip">Optimized: O(n) time · O(1) space</span>
+      <span class="prob-compl-chip">Brute: O(2ⁿ)</span>
+      <span class="prob-compl-chip">DP: O(n) · O(1) space</span>
     </div>
-    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>ways(n) = ways(n−1) + ways(n−2)</strong> — the last step was either a 1-step or 2-step. This is the Fibonacci recurrence. Two rolling variables are all the state you need.</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>ways(n) = ways(n−1) + ways(n−2)</strong>. Your last step was 1 or 2 — add those two cases. It's Fibonacci in disguise.</span></div>
     <div class="prob-demo"><div class="prob-demo-inner" id="prob-climbing-stairs"></div></div>
     <div class="quiz-section" style="margin-top:1.5rem;">
       <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does ways(n) = ways(n−1) + ways(n−2)?</div>
@@ -701,7 +700,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">BFS</span>
     </div>
-    <p class="prob-section-desc">Given coin denominations and a target amount, find the fewest coins needed. Greedy (always pick the largest coin) fails when denominations are non-standard — e.g., coins [1,3,4], amount 6: greedy gives 4+1+1=3 coins, DP finds 3+3=2. Bottom-up DP: dp[a] = 1 + min(dp[a−coin]) for each coin.</p>
+    <p class="prob-section-desc">Find the fewest coins that add up to a target amount. Greedy (biggest coin first) can fail — DP tries every coin at every amount to guarantee the best answer.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Greedy: fast but incorrect for non-standard coins</span>
       <span class="prob-compl-chip">DP: O(amount × k) time · O(amount) space</span>
@@ -736,7 +735,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Sorting</span><span class="prob-tag">Intervals</span>
     </div>
-    <p class="prob-section-desc">Given a list of intervals, merge all overlapping ones. After sorting by start time, two consecutive intervals overlap when <code>current.start ≤ last.end</code>. In that case, extend the end to <code>max(last.end, current.end)</code>. Otherwise start a new merged interval.</p>
+    <p class="prob-section-desc">Merge a list of overlapping intervals into the smallest set of non-overlapping ones. Sort by start time, then walk through — if the next interval starts before the current one ends, extend the end.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Brute: O(n²) · O(1) space</span>
       <span class="prob-compl-chip">Optimal: O(n log n) sort + O(n) scan</span>
@@ -771,7 +770,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Graphs</span><span class="prob-tag">DFS / BFS</span><span class="prob-tag">Matrix</span>
     </div>
-    <p class="prob-section-desc">Given a 2D binary grid of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and formed by connecting adjacent land cells (4-directional). For each unvisited '1', launch a DFS/BFS that marks all reachable connected '1's as visited — that entire flood is one island.</p>
+    <p class="prob-section-desc">Count connected groups of land cells ('1') in a grid. Every time you find an unvisited '1', flood-fill it (DFS/BFS) to mark the whole island, then count +1.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">O(m × n) time — each cell visited once</span>
       <span class="prob-compl-chip">O(m × n) space — recursion/queue depth</span>
@@ -807,7 +806,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Recursion</span><span class="prob-tag">Memoization</span><span class="prob-tag">Dynamic Programming</span>
     </div>
-    <p class="prob-section-desc">Compute the nth Fibonacci number. Naive recursion calls fib(n−1) AND fib(n−2), each of which does the same — the call tree grows exponentially with many repeated sub-computations. Memoization stores each result the first time it's computed; every subsequent call is an O(1) cache hit that collapses the entire subtree.</p>
+    <p class="prob-section-desc">Compute the nth Fibonacci number. Naive recursion recalculates the same values over and over — memoization stores each result once and turns those repeated calls into instant lookups.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Naive recursion: O(2ⁿ) time · O(n) stack</span>
       <span class="prob-compl-chip">Memoization: O(n) time · O(n) space</span>
@@ -844,7 +843,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Arrays</span>
     </div>
-    <p class="prob-section-desc">Rob houses in a row — you cannot rob two adjacent houses. Find the maximum money you can steal. At each house, your decision is binary: rob it (add nums[i] to what you had two steps ago) or skip it (keep the best from one step ago). <strong>dp[i] = max(dp[i−1], dp[i−2] + nums[i])</strong>. Only two rolling variables are needed.</p>
+    <p class="prob-section-desc">Rob the most money from a row of houses without hitting two in a row. At each house: take it (plus best from two back) or skip it (keep best from one back). Two variables rolling forward is all you need.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">DP Table: O(n) time · O(n) space</span>
       <span class="prob-compl-chip">Optimized: O(n) time · O(1) space</span>
@@ -880,7 +879,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span><span class="prob-tag">Bit Mask</span>
     </div>
-    <p class="prob-section-desc">Return all possible subsets (the power set) of a distinct integer array. At each element, the algorithm makes exactly two choices — <em>include</em> or <em>exclude</em> — forming a binary decision tree of depth n with 2ⁿ leaves. The animation shows the live call stack and backtracking as it builds every subset.</p>
+    <p class="prob-section-desc">Return every possible subset of a list of numbers. For each element you make one of two choices — include it or skip it — and backtracking explores both paths to build all 2ⁿ subsets.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">O(2ⁿ × n) time — 2ⁿ subsets, each takes O(n) to copy</span>
       <span class="prob-compl-chip">O(n) stack depth</span>
@@ -916,7 +915,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Backtracking</span><span class="prob-tag">Recursion Tree</span>
     </div>
-    <p class="prob-section-desc">Generate all permutations of an array with distinct integers. At each recursion depth, pick one of the remaining unused elements and place it at the current position. After all n elements are placed, one complete permutation is added to the results. Backtrack by undoing the choice (swap back) and trying the next element.</p>
+    <p class="prob-section-desc">Generate every ordering of a list of distinct numbers. At each position, try each unused element, recurse to fill the rest, then backtrack and try the next — until all n! arrangements are found.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">O(n! × n) time — n! permutations, each O(n) to copy</span>
       <span class="prob-compl-chip">O(n) stack depth</span>
@@ -952,7 +951,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Divide &amp; Conquer</span>
     </div>
-    <p class="prob-section-desc">Search for a target in a sorted array. Maintain left (L) and right (R) pointers. At each step, compute mid = (L+R)//2 and compare. If target &lt; mid, search left half; if target &gt; mid, search right half; else found. Each step eliminates half the search space — log₂(n) steps maximum.</p>
+    <p class="prob-section-desc">Find a target in a sorted array in O(log n) time. Each step checks the middle element and cuts the search space in half — left half or right half — until found.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Linear search: O(n) · O(1)</span>
       <span class="prob-compl-chip">Binary search: O(log n) · O(1)</span>
@@ -988,7 +987,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Greedy</span>
     </div>
-    <p class="prob-section-desc">Find the contiguous subarray with the largest sum. Kadane's algorithm scans once: at each index, decide whether to extend the current subarray or start fresh. If the running sum drops below 0, it's always better to restart — a negative prefix only hurts future sums.</p>
+    <p class="prob-section-desc">Find the contiguous subarray with the largest sum. At each step: extend the current subarray or start fresh — if the running sum goes negative, drop it and restart from here.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Brute: O(n²) · O(1)</span>
       <span class="prob-compl-chip">Kadane's: O(n) · O(1)</span>
@@ -1024,7 +1023,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Arrays</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Sorting</span>
     </div>
-    <p class="prob-section-desc">Find all unique triplets that sum to zero. Sort the array, then fix one element at each outer loop iteration and use two pointers (L, R) on the remaining subarray. Move L right when sum &lt; 0, move R left when sum &gt; 0. Skip duplicate values at both the outer and pointer levels to avoid repeated triplets.</p>
+    <p class="prob-section-desc">Find all unique triplets that sum to zero. Fix one number, then use two pointers on the rest to find pairs that complete each triplet — skip duplicates as you go.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">Brute: O(n³) · O(1)</span>
       <span class="prob-compl-chip">Two Pointers: O(n²) · O(1)</span>
@@ -1060,7 +1059,7 @@
     <div class="prob-section-meta">
       <span class="prob-tag">Dynamic Programming</span><span class="prob-tag">2D Grid</span><span class="prob-tag">Strings</span>
     </div>
-    <p class="prob-section-desc">Find the length of the longest subsequence present in both strings (characters don't need to be contiguous). 2D DP: <strong>dp[i][j]</strong> = LCS length for text1[0..i−1] and text2[0..j−1]. If chars match: dp[i][j] = dp[i−1][j−1]+1. Otherwise: dp[i][j] = max(dp[i−1][j], dp[i][j−1]). The answer is at dp[m][n].</p>
+    <p class="prob-section-desc">Find the longest sequence of characters that appears in both strings (not necessarily contiguous). A 2D DP grid fills in the answer one character pair at a time — match adds one, mismatch takes the best neighbor.</p>
     <div class="prob-complexity">
       <span class="prob-compl-chip">O(m × n) time</span>
       <span class="prob-compl-chip">O(m × n) space — reducible to O(min(m,n)) with rolling row</span>
