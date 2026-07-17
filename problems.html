@@ -3810,11 +3810,271 @@
     </div>
   </div>
 
+  <!-- P101 Contains Duplicate -->
+  <div class="prob-section" id="p-contains-dup">
+    <div class="prob-section-header"><span class="prob-section-num">P101 — Easy</span><span class="prob-section-title">Contains Duplicate</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">HashSet</span></div>
+    <p class="prob-section-desc">Does any number appear more than once in an array? A HashSet keeps track of what you've seen — if a new number is already in the set, you've found your duplicate.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute: O(n²)</span><span class="prob-compl-chip">HashSet: O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Add each element to a set. If it's <strong>already there, return true immediately</strong> — no need to finish the array.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-contains-dup"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What is the space complexity of the HashSet approach?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>O(1)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The HashSet can hold up to n elements in the worst case (no duplicates), so space is O(n)."><span class="opt-letter">B</span>O(n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>O(n²)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>O(log n)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Sorting the array first and then scanning for adjacent equals gives which complexity?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>O(n) time, O(n) space</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sorting is O(n log n) and the adjacent scan is O(n). Space is O(1) if sorted in-place."><span class="opt-letter">B</span>O(n log n) time, O(1) space</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>O(n²) time, O(1) space</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>O(log n) time, O(1) space</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P102 Valid Anagram -->
+  <div class="prob-section" id="p-valid-anagram">
+    <div class="prob-section-header"><span class="prob-section-num">P102 — Easy</span><span class="prob-section-title">Valid Anagram</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Hash Map</span></div>
+    <p class="prob-section-desc">Do two strings use exactly the same letters in the same quantities? Count each character's frequency in both strings — if the counts match for every letter, they're anagrams.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Sort: O(n log n)</span><span class="prob-compl-chip">Count: O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Count chars in s, then <strong>subtract</strong> each char in t. Any count going negative → not an anagram. All zeros → anagram.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-anagram"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the length check a useful early exit?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Anagrams must have the same number of characters. Different lengths → automatically not an anagram, no need to check frequencies."><span class="opt-letter">A</span>If len(s) ≠ len(t), they can't be anagrams — return false immediately</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It ensures the sort runs in O(1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It guarantees both strings are lowercase</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It prevents negative counts</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For Unicode strings with millions of distinct characters, which approach is preferable?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Fixed 26-element array (only works for lowercase a–z)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A HashMap scales to any character set. The fixed 26-array only works for ASCII lowercase."><span class="opt-letter">B</span>HashMap (scales to any character set)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sort both strings</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Bit manipulation</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P103 Group Anagrams -->
+  <div class="prob-section" id="p-group-anagrams">
+    <div class="prob-section-header"><span class="prob-section-num">P103 — Medium</span><span class="prob-section-title">Group Anagrams</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Hash Map</span><span class="prob-tag">String</span></div>
+    <p class="prob-section-desc">Group a list of strings so that anagrams end up together. Sort each word alphabetically — anagrams produce the same sorted key, making them easy to bucket.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · k log k)</span><span class="prob-compl-chip">k = max word length</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sorted word = canonical key. "eat", "tea", "ate" all sort to <strong>"aet"</strong>. Store groups in a HashMap keyed by the sorted form.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-group-anagrams"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What is the canonical key used in the optimal approach?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The original word</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sorting each word's characters gives a canonical form — all anagrams of the same word produce the same sorted string."><span class="opt-letter">B</span>The word's characters sorted alphabetically</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The word's length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>A hash of each character's ASCII value</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">An alternative O(n·k) key avoids sorting. What is it?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The word reversed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The word's length as a string</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A 26-element count array like [1,0,0,...,1,...] encodes exactly which letters appear and how many times — same key for all anagrams, built in O(k) time."><span class="opt-letter">C</span>A 26-element character count array serialized as a string</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The product of each character's ASCII value</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P104 Two Sum II -->
+  <div class="prob-section" id="p-two-sum-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P104 — Medium</span><span class="prob-section-title">Two Sum II — Sorted Array</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Two Pointers</span><span class="prob-tag">Binary Search</span></div>
+    <p class="prob-section-desc">Find two numbers in a sorted array that add up to a target. The sorted order lets you use two pointers — if the sum is too small move left pointer right, if too large move right pointer left.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Brute: O(n²)</span><span class="prob-compl-chip">Two Pointers: O(n) · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Start pointers at both ends. <strong>Sorted order</strong> guarantees: sum too small → only moving L right can help; sum too large → only moving R left can help.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-two-sum-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can we use two pointers here but not in the original Two Sum?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The sorted order gives direction: a too-small sum means we need a bigger number (move L right), a too-large sum means we need a smaller number (move R left). Without sorted order we'd have no such direction."><span class="opt-letter">A</span>The array is sorted — we always know which pointer to move</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Two Sum II always has exactly one solution</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Two Sum II uses 1-indexed answers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Two Sum II numbers are always positive</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Could we binary-search for the complement instead of using two pointers?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>No — binary search doesn't work on sorted arrays</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Yes: for each element fix it and binary-search for target−element. O(n log n). But two pointers is O(n) — simpler and faster."><span class="opt-letter">B</span>Yes — fix one element and binary-search for its complement. O(n log n) but two pointers is better at O(n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>No — binary search would skip valid pairs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Yes, and binary search is faster than two pointers here</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P105 Longest Repeating Char Replacement -->
+  <div class="prob-section" id="p-longest-repeat-replace">
+    <div class="prob-section-header"><span class="prob-section-num">P105 — Medium</span><span class="prob-section-title">Longest Repeating Char Replacement</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Sliding Window</span><span class="prob-tag">String</span></div>
+    <p class="prob-section-desc">Find the longest substring where you can replace at most k characters to make all letters the same. A sliding window stays valid as long as (window length − most frequent char count) ≤ k.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(26) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Replacements needed = window length − max frequency. When this <strong>exceeds k</strong>, shrink the left edge. The window always holds the best candidate.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-repeat-replace"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does "replacements needed" equal for a window?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>k</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Max frequency in the window</div>
+          <div class="quiz-option" data-correct="true" data-explanation="You keep the most-frequent character and replace everything else. So replacements = window_size − max_frequency."><span class="opt-letter">C</span>Window size − max frequency in the window</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Window size − k</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why is it safe to never decrease maxFreq even after shrinking the window?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because shrinking resets all counts to zero</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>maxFreq can only decrease after shrinking</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We only care about windows larger than the best found so far. A smaller maxFreq would mean a smaller valid window — we can safely skip those. We want maxFreq to grow, not shrink."><span class="opt-letter">C</span>We only want windows bigger than the current best — a lower maxFreq would make the window smaller, not bigger</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It has no effect on correctness</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P106 Permutation in String -->
+  <div class="prob-section" id="p-perm-in-string">
+    <div class="prob-section-header"><span class="prob-section-num">P106 — Medium</span><span class="prob-section-title">Permutation in String</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Sliding Window</span><span class="prob-tag">String</span></div>
+    <p class="prob-section-desc">Check if any substring of s2 is a permutation of s1. Slide a fixed window of length s1 across s2 — if the character counts match at any position, a permutation exists there.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(26) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Fixed window = len(s1). Slide one step: <strong>add the new right char, remove the old left char</strong>. Compare counts with s1's counts at each position.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-perm-in-string"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the window size fixed at len(s1)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A permutation of s1 must have exactly len(s1) characters. Any matching substring must therefore be exactly that length."><span class="opt-letter">A</span>A permutation of s1 uses exactly len(s1) characters — the window must match that size</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Larger windows are always invalid</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It's a convention, not a requirement</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Smaller windows could miss characters</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Checking if two 26-element arrays are equal takes how long?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>O(n)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Comparing two fixed-size 26-element arrays is always 26 comparisons — O(26) = O(1) since 26 is a constant."><span class="opt-letter">B</span>O(1) — 26 comparisons is a constant</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>O(log n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>O(n²)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P107 Daily Temperatures -->
+  <div class="prob-section" id="p-daily-temps">
+    <div class="prob-section-header"><span class="prob-section-num">P107 — Medium</span><span class="prob-section-title">Daily Temperatures</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Stack</span><span class="prob-tag">Monotonic</span></div>
+    <p class="prob-section-desc">For each day, find how many days you have to wait until a warmer temperature. A monotonic decreasing stack of indices tracks the "waiting" days — when a warmer day arrives, pop and record the wait.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Push indices whose answer hasn't been found yet. When <strong>temps[i] > temps[stack.top]</strong>, pop the top — the answer is i − popped_index.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-daily-temps"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does the stack stay in decreasing order of temperatures?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We only push a new index when it's NOT warmer than the stack top. Any index that IS warmer causes pops first. So the stack always holds a non-increasing sequence of temperatures."><span class="opt-letter">A</span>We pop whenever the current temp is warmer — so only cooler-or-equal temps remain on the stack</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We sort temperatures before pushing</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We clear the stack when it gets too large</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We push in reverse order</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Indices left in the stack at the end have what answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>-1</div>
+          <div class="quiz-option" data-correct="true" data-explanation="No warmer day came after them. The answer array is initialized to 0 and these indices were never popped, so they remain 0."><span class="opt-letter">B</span>0 — no warmer day ever came</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The last index</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The length of the array</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P108 Car Fleet -->
+  <div class="prob-section" id="p-car-fleet">
+    <div class="prob-section-header"><span class="prob-section-num">P108 — Medium</span><span class="prob-section-title">Car Fleet</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Stack</span><span class="prob-tag">Sorting</span></div>
+    <p class="prob-section-desc">Cars drive toward a destination at different positions and speeds. Faster cars catch up with slower ones ahead — count how many fleets (groups) arrive. Sort by position and compare arrival times to spot merges.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort desc by position. Compute each car's time to target. If a car arrives <strong>before the one ahead</strong>, it merges into the same fleet.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-car-fleet"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we sort cars by position in descending order?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Processing from closest to destination to farthest means we always know the fleet ahead before deciding if the current car merges."><span class="opt-letter">A</span>Process closest-to-destination first so we know the fleet ahead before checking the current car</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Ascending order is required for the stack</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Descending position order makes all speeds positive</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It ensures no two cars have the same arrival time</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How do you calculate a car's time to reach the target?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>speed × position</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Time = distance ÷ speed = (target − position) ÷ speed."><span class="opt-letter">B</span>(target − position) ÷ speed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>position ÷ speed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>(target + position) × speed</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P109 Koko Eating Bananas -->
+  <div class="prob-section" id="p-koko-eating">
+    <div class="prob-section-header"><span class="prob-section-num">P109 — Medium</span><span class="prob-section-title">Koko Eating Bananas</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Binary Search</span></div>
+    <p class="prob-section-desc">Koko must eat all banana piles within h hours — find the slowest safe eating speed. Binary search over speed: if she can finish at speed k, try slower; if not, go faster.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log m)</span><span class="prob-compl-chip">m = max pile size</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Binary search on the <strong>answer</strong>, not the input. Speed range is [1, max(piles)]. Use ceil(pile/k) to count hours per pile.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-koko-eating"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What are the search boundaries for Koko's eating speed?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>[0, total bananas]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Minimum meaningful speed is 1 (eat at least 1 per hour). Maximum useful speed is max(piles) — eating faster than the largest pile wastes no time."><span class="opt-letter">B</span>[1, max(piles)]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[1, h]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[0, n] where n is number of piles</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why use ceil(pile / k) instead of floor?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Koko eats one pile per hour maximum. If pile = 7 and k = 3, she needs ⌈7/3⌉ = 3 hours, not 2. Each pile takes a full extra hour even for a partial portion."><span class="opt-letter">A</span>Each pile takes a full extra hour for any remainder — she can't share hours across piles</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Floor gives a faster answer</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Ceil avoids integer overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's the same as floor for large k</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P110 Search a 2D Matrix -->
+  <div class="prob-section" id="p-search-matrix">
+    <div class="prob-section-header"><span class="prob-section-num">P110 — Medium</span><span class="prob-section-title">Search a 2D Matrix</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Binary Search</span><span class="prob-tag">Matrix</span></div>
+    <p class="prob-section-desc">Search for a target in a sorted matrix where each row is sorted and the first element of each row is greater than the last of the previous. Map a 1D binary search index to 2D coordinates: row = mid ÷ cols, col = mid % cols.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log mn)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>The whole matrix is one sorted list. Convert index mid to <strong>[mid÷n][mid%n]</strong> and run standard binary search — no 2D logic needed.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-search-matrix"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How do you convert a 1D index mid to a 2D matrix position?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>row = mid % cols, col = mid ÷ cols</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Integer division mid÷cols gives the row; mid%cols gives the column within that row."><span class="opt-letter">B</span>row = mid ÷ cols, col = mid % cols</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>row = mid ÷ rows, col = mid % rows</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>row = mid × cols, col = mid + cols</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What if the matrix is sorted within each row but the first element of a row is NOT greater than the last of the previous row?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The same binary search still works</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If rows don't connect into one globally sorted array, the 1D binary search is invalid. You'd need a different approach: binary search each row independently, or start at the top-right corner and step."><span class="opt-letter">B</span>The 1D binary search breaks — rows aren't globally sorted, so you need a different strategy</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>You must sort all rows first</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The answer is always false</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
 </div>
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">100 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">110 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -3914,6 +4174,16 @@
       if(window.DSAProbs.largestRectHistogram&&document.getElementById('prob-largest-rect-hist'))window.DSAProbs.largestRectHistogram('prob-largest-rect-hist');
       if(window.DSAProbs.longestPathMatrix&&document.getElementById('prob-longest-path-matrix'))window.DSAProbs.longestPathMatrix('prob-longest-path-matrix');
       if(window.DSAProbs.findDuplicate&&document.getElementById('prob-find-duplicate'))window.DSAProbs.findDuplicate('prob-find-duplicate');
+      if(window.DSAProbs.containsDuplicate&&document.getElementById('prob-contains-dup'))window.DSAProbs.containsDuplicate('prob-contains-dup');
+      if(window.DSAProbs.validAnagram&&document.getElementById('prob-valid-anagram'))window.DSAProbs.validAnagram('prob-valid-anagram');
+      if(window.DSAProbs.groupAnagrams&&document.getElementById('prob-group-anagrams'))window.DSAProbs.groupAnagrams('prob-group-anagrams');
+      if(window.DSAProbs.twoSumII&&document.getElementById('prob-two-sum-ii'))window.DSAProbs.twoSumII('prob-two-sum-ii');
+      if(window.DSAProbs.longestRepeatingReplace&&document.getElementById('prob-longest-repeat-replace'))window.DSAProbs.longestRepeatingReplace('prob-longest-repeat-replace');
+      if(window.DSAProbs.permutationInString&&document.getElementById('prob-perm-in-string'))window.DSAProbs.permutationInString('prob-perm-in-string');
+      if(window.DSAProbs.dailyTemperatures&&document.getElementById('prob-daily-temps'))window.DSAProbs.dailyTemperatures('prob-daily-temps');
+      if(window.DSAProbs.carFleet&&document.getElementById('prob-car-fleet'))window.DSAProbs.carFleet('prob-car-fleet');
+      if(window.DSAProbs.kokoEating&&document.getElementById('prob-koko-eating'))window.DSAProbs.kokoEating('prob-koko-eating');
+      if(window.DSAProbs.searchMatrix&&document.getElementById('prob-search-matrix'))window.DSAProbs.searchMatrix('prob-search-matrix');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();

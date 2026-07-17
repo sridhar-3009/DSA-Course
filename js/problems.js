@@ -7335,6 +7335,429 @@ function initFindDuplicate(id){
   });
 }
 
+/* ── P101 Contains Duplicate ─────────────────────────────── */
+function initContainsDuplicate(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[1,2,3,1];
+  function buildSteps(nums,approach){
+    var steps=[];
+    if(approach==='brute'){
+      steps.push({arr:nums.slice(),hl:{},msg:'Brute: compare every pair — O(n²)'});
+      for(var i=0;i<nums.length;i++){
+        for(var j=i+1;j<nums.length;j++){
+          var h={};h[i]='comparing';h[j]='comparing';
+          steps.push({arr:nums.slice(),hl:h,msg:'nums['+i+']='+nums[i]+' vs nums['+j+']='+nums[j]});
+          if(nums[i]===nums[j]){var h2={};h2[i]='found';h2[j]='found';steps.push({arr:nums.slice(),hl:h2,msg:'Duplicate '+nums[i]+' at indices '+i+' & '+j+' → true'});return steps;}
+        }
+      }
+      steps.push({arr:nums.slice(),hl:{},msg:'No duplicates → false'});
+    } else {
+      var seen={};
+      steps.push({arr:nums.slice(),hl:{},set:[],msg:'HashSet: insert each element; duplicate if already present'});
+      for(var i=0;i<nums.length;i++){
+        var h={};h[i]='comparing';
+        steps.push({arr:nums.slice(),hl:h,set:Object.keys(seen).map(Number),msg:'Check '+nums[i]+' — in set? '+(seen[nums[i]]?'YES → true':'No, insert')});
+        if(seen[nums[i]]){var h2={};h2[i]='found';steps.push({arr:nums.slice(),hl:h2,set:Object.keys(seen).map(Number),msg:'Duplicate '+nums[i]+' found → return true'});return steps;}
+        seen[nums[i]]=1;
+        steps.push({arr:nums.slice(),hl:{[i]:'sorted'},set:Object.keys(seen).map(Number),msg:'Inserted '+nums[i]+'. Set: {'+Object.keys(seen).join(',')+'}'});
+      }
+      steps.push({arr:nums.slice(),hl:{},set:Object.keys(seen).map(Number),msg:'All unique → return false'});
+    }
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'brute',label:'Brute O(n²)'},{key:'optimal',label:'HashSet O(n)'}],
+    inputs:[{id:'arr',lbl:'Array',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='160px';return i;})()}],
+    onInputs:function(vals,ap){var n=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(n.length?n:defArr.slice(),ap);},
+    buildSteps:function(ap){return buildSteps(defArr.slice(),ap);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr,n=a.length,cw=Math.min(60,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      for(var i=0;i<n;i++){cell(ctx,sx+i*cw,sy,cw-2,ch,a[i],s.hl&&s.hl[i]?s.hl[i]:'default');lbl(ctx,i,sx+i*cw+cw/2-1,sy+ch+13,'#6B7280',10,'center');}
+      if(s.set&&s.set.length)lbl(ctx,'Set: {'+s.set.join(', ')+'}',W/2,sy+ch+28,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P102 Valid Anagram ──────────────────────────────────── */
+function initValidAnagram(id){
+  var container=document.getElementById(id);if(!container)return;
+  function buildSteps(s,t,approach){
+    var steps=[];
+    if(approach==='brute'){
+      var ss=s.split('').sort().join(''),ts=t.split('').sort().join('');
+      steps.push({sa:ss,ta:ts,msg:'Sort both strings: "'+ss+'" vs "'+ts+'"'});
+      steps.push({sa:ss,ta:ts,msg:ss===ts?'Strings match → valid anagram ✓':'Differ → not anagram ✗'});
+    } else {
+      var freq={};
+      for(var c of s)freq[c]=(freq[c]||0)+1;
+      steps.push({freq:JSON.parse(JSON.stringify(freq)),msg:'Count chars in s="'+s+'"',sidx:-1,tidx:-1});
+      for(var j=0;j<t.length;j++){
+        var c=t[j];
+        steps.push({freq:JSON.parse(JSON.stringify(freq)),msg:'Subtract t['+j+']="'+c+'"',tidx:j,str:t});
+        freq[c]=(freq[c]||0)-1;
+        if(freq[c]<0){steps.push({freq:JSON.parse(JSON.stringify(freq)),msg:'"'+c+'" went negative → not anagram ✗',fail:true});return steps;}
+      }
+      var ok=Object.values(freq).every(function(v){return v===0;});
+      steps.push({freq:JSON.parse(JSON.stringify(freq)),msg:ok?'All counts zero → valid anagram ✓':'Leftover chars → not anagram ✗'});
+    }
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:130,
+    approaches:[{key:'brute',label:'Sort O(n log n)'},{key:'optimal',label:'Count O(n)'}],
+    inputs:[
+      {id:'s',lbl:'s',elem:(function(){var i=document.createElement('input');i.type='text';i.value='anagram';i.style.width='90px';return i;})()},
+      {id:'t',lbl:'t',elem:(function(){var i=document.createElement('input');i.type='text';i.value='nagaram';i.style.width='90px';return i;})()}
+    ],
+    onInputs:function(vals,ap){return buildSteps(vals.s||'anagram',vals.t||'nagaram',ap);},
+    buildSteps:function(ap){return buildSteps('anagram','nagaram',ap);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      if(s.freq){
+        var keys=Object.keys(s.freq).sort(),kw=Math.min(30,Math.floor((W-40)/Math.max(keys.length,1))),sx=(W-keys.length*kw)/2,sy=22;
+        lbl(ctx,'Freq:',sx-28,sy+16,'#6B7280',10,'left');
+        keys.forEach(function(k,i){var v=s.freq[k];cell(ctx,sx+i*kw,sy,kw-1,30,v,v>0?'sorted':v<0?'comparing':'default');lbl(ctx,k,sx+i*kw+kw/2-0.5,sy+42,'#9CA3AF',10,'center');});
+        if(s.str&&s.tidx>=0)lbl(ctx,'Subtracting "'+s.str[s.tidx]+'" at t['+s.tidx+']',W/2,sy+56,'#F59E0B',11,'center');
+      } else if(s.sa){
+        lbl(ctx,'"'+s.sa+'"',W/2,46,'#E5E7EB',14,'center');
+        lbl(ctx,'"'+s.ta+'"',W/2,74,'#A78BFA',14,'center');
+      }
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P103 Group Anagrams ─────────────────────────────────── */
+function initGroupAnagrams(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defWords=['eat','tea','tan','ate','nat','bat'];
+  function buildSteps(words){
+    var steps=[],groups={};
+    steps.push({groups:{},msg:'Sort each word → anagram key → group by key'});
+    words.forEach(function(w){
+      var key=w.split('').sort().join('');
+      if(!groups[key])groups[key]=[];
+      groups[key].push(w);
+      steps.push({groups:JSON.parse(JSON.stringify(groups)),cur:w,key:key,msg:'"'+w+'" → key "'+key+'" → group ['+groups[key].join(',')+']'});
+    });
+    steps.push({groups:JSON.parse(JSON.stringify(groups)),msg:'Result: '+Object.values(groups).map(function(g){return '['+g.join(',')+']';}).join('  ')});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:150,
+    approaches:[{key:'optimal',label:'Sort Key O(n·k·log k)'}],
+    inputs:[{id:'words',lbl:'Words',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defWords.join(',');i.style.width='200px';return i;})()}],
+    onInputs:function(vals){var w=(vals.words||'').split(',').map(function(x){return x.trim();}).filter(Boolean);return buildSteps(w.length?w:defWords.slice());},
+    buildSteps:function(){return buildSteps(defWords.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var entries=Object.entries(s.groups||{}),colors=['#A78BFA','#34D399','#F59E0B','#60A5FA'];
+      lbl(ctx,'Groups:',10,16,'#6B7280',10,'left');
+      entries.forEach(function(e,i){lbl(ctx,'['+e[0]+'] → ['+e[1].join(', ')+']',16,32+i*24,colors[i%colors.length],12,'left');});
+      if(s.cur)lbl(ctx,'Current: "'+s.cur+'" → "'+s.key+'"',W/2,H-10,'#F59E0B',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P104 Two Sum II ─────────────────────────────────────── */
+function initTwoSumII(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[2,7,11,15],defTarget=9;
+  function buildSteps(nums,target,approach){
+    var steps=[];
+    if(approach==='brute'){
+      steps.push({arr:nums,L:-1,R:-1,msg:'Brute: try every pair O(n²)'});
+      for(var i=0;i<nums.length;i++)for(var j=i+1;j<nums.length;j++){
+        var sum=nums[i]+nums[j];
+        steps.push({arr:nums,L:i,R:j,sum:sum,msg:'['+i+']+['+j+']='+nums[i]+'+'+nums[j]+'='+sum+' vs '+target});
+        if(sum===target){steps.push({arr:nums,L:i,R:j,found:true,msg:'Found! Return ['+(i+1)+','+(j+1)+'] (1-indexed)'});return steps;}
+      }
+    } else {
+      var L=0,R=nums.length-1;
+      steps.push({arr:nums,L:L,R:R,msg:'Two pointers on sorted array — O(n), O(1) space'});
+      while(L<R){
+        var sum=nums[L]+nums[R];
+        steps.push({arr:nums,L:L,R:R,sum:sum,msg:'L='+L+' R='+R+': '+nums[L]+'+'+nums[R]+'='+sum});
+        if(sum===target){steps.push({arr:nums,L:L,R:R,found:true,msg:'Found! Return ['+(L+1)+','+(R+1)+']'});return steps;}
+        else if(sum<target){steps.push({arr:nums,L:L,R:R,msg:'Too small → move L right'});L++;}
+        else{steps.push({arr:nums,L:L,R:R,msg:'Too large → move R left'});R--;}
+      }
+    }
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'brute',label:'Brute O(n²)'},{key:'optimal',label:'Two Pointers O(n)'}],
+    inputs:[
+      {id:'arr',lbl:'Sorted array',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='140px';return i;})()},
+      {id:'target',lbl:'Target',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defTarget;i.style.width='60px';return i;})()}
+    ],
+    onInputs:function(vals,ap){var n=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);});var t=parseInt(vals.target)||defTarget;return buildSteps(n.length?n:defArr.slice(),t,ap);},
+    buildSteps:function(ap){return buildSteps(defArr.slice(),defTarget,ap);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr,n=a.length,cw=Math.min(64,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      for(var i=0;i<n;i++){
+        var st=s.found&&(i===s.L||i===s.R)?'found':i===s.L||i===s.R?'comparing':'default';
+        cell(ctx,sx+i*cw,sy,cw-2,ch,a[i],st);
+        if(i===s.L)lbl(ctx,'L',sx+i*cw+cw/2-1,sy+ch+13,'#F59E0B',11,'center');
+        if(i===s.R)lbl(ctx,'R',sx+i*cw+cw/2-1,sy+ch+13,'#F59E0B',11,'center');
+      }
+      if(s.sum!==undefined)lbl(ctx,'Sum='+s.sum+'  target='+defTarget,W/2,sy+ch+28,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P105 Longest Repeating Char Replacement ─────────────── */
+function initLongestRepeatingReplace(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defS='AABABBA',defK=1;
+  function buildSteps(s,k){
+    var steps=[],count={},maxF=0,L=0,best=0;
+    steps.push({s:s,L:0,R:0,maxF:0,best:0,msg:'Window valid when (len − maxFreq) ≤ k'});
+    for(var R=0;R<s.length;R++){
+      count[s[R]]=(count[s[R]]||0)+1;
+      maxF=Math.max(maxF,count[s[R]]);
+      while((R-L+1)-maxF>k){count[s[L]]--;L++;}
+      best=Math.max(best,R-L+1);
+      steps.push({s:s,L:L,R:R,maxF:maxF,best:best,msg:'Window "'+s.slice(L,R+1)+'" len='+(R-L+1)+' maxFreq='+maxF+' need='+(R-L+1-maxF)+' ≤ k='+k+'? '+(R-L+1-maxF<=k?'yes':'shrink L')});
+    }
+    steps.push({s:s,L:L,R:s.length-1,maxF:maxF,best:best,msg:'Longest: '+best});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'optimal',label:'Sliding Window O(n)'}],
+    inputs:[
+      {id:'s',lbl:'String',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defS;i.style.width='120px';return i;})()},
+      {id:'k',lbl:'k',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defK;i.style.width='50px';return i;})()}
+    ],
+    onInputs:function(vals){return buildSteps(vals.s||defS,parseInt(vals.k)||defK);},
+    buildSteps:function(){return buildSteps(defS,defK);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var str=s.s,n=str.length,cw=Math.min(52,Math.floor((W-40)/n)),ch=40,sx=(W-n*cw)/2,sy=16;
+      for(var i=0;i<n;i++)cell(ctx,sx+i*cw,sy,cw-2,ch,str[i],s.L!==undefined&&i>=s.L&&i<=s.R?'active':'default');
+      lbl(ctx,'Best: '+s.best+'  maxFreq: '+s.maxF,W/2,sy+ch+18,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P106 Permutation in String ──────────────────────────── */
+function initPermutationInString(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defS1='ab',defS2='eidbaooo';
+  function buildSteps(s1,s2){
+    var steps=[],k=s1.length,n=s2.length;
+    if(k>n){steps.push({s1:s1,s2:s2,msg:'s1 longer than s2 → false'});return steps;}
+    var need={},have={};
+    for(var c of s1)need[c]=(need[c]||0)+1;
+    for(var i=0;i<k;i++)have[s2[i]]=(have[s2[i]]||0)+1;
+    function eq(a,b){for(var x in a)if(a[x]!==(b[x]||0))return false;for(var x in b)if((a[x]||0)!==b[x])return false;return true;}
+    steps.push({s1:s1,s2:s2,L:0,R:k-1,msg:'Fixed window size '+k+' (=len(s1)), slide across s2'});
+    for(var R=k-1;R<n;R++){
+      var L=R-k+1,m=eq(need,have);
+      steps.push({s1:s1,s2:s2,L:L,R:R,match:m,msg:'Window "'+s2.slice(L,R+1)+'"  match s1 anagram: '+m});
+      if(m){steps.push({s1:s1,s2:s2,L:L,R:R,found:true,msg:'Permutation found at ['+L+','+R+'] → return true'});return steps;}
+      if(R+1<n){have[s2[L]]--;if(!have[s2[L]])delete have[s2[L]];have[s2[R+1]]=(have[s2[R+1]]||0)+1;}
+    }
+    steps.push({s1:s1,s2:s2,msg:'No permutation found → false'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'optimal',label:'Sliding Window O(n)'}],
+    inputs:[
+      {id:'s1',lbl:'s1',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defS1;i.style.width='70px';return i;})()},
+      {id:'s2',lbl:'s2',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defS2;i.style.width='120px';return i;})()}
+    ],
+    onInputs:function(vals){return buildSteps(vals.s1||defS1,vals.s2||defS2);},
+    buildSteps:function(){return buildSteps(defS1,defS2);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var str=s.s2,n=str.length,cw=Math.min(46,Math.floor((W-40)/n)),ch=40,sx=(W-n*cw)/2,sy=16;
+      for(var i=0;i<n;i++){
+        var st=s.found&&i>=s.L&&i<=s.R?'found':s.L!==undefined&&i>=s.L&&i<=s.R?(s.match?'sorted':'active'):'default';
+        cell(ctx,sx+i*cw,sy,cw-2,ch,str[i],st);
+      }
+      lbl(ctx,'s1="'+s.s1+'"',W/2,sy+ch+18,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P107 Daily Temperatures ─────────────────────────────── */
+function initDailyTemperatures(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defTemps=[73,74,75,71,69,72,76,73];
+  function buildSteps(temps){
+    var steps=[],n=temps.length,ans=new Array(n).fill(0),stack=[];
+    steps.push({temps:temps,ans:ans.slice(),stack:[],msg:'Monotonic stack: push index; pop when warmer temp found'});
+    for(var i=0;i<n;i++){
+      while(stack.length&&temps[i]>temps[stack[stack.length-1]]){
+        var idx=stack.pop();ans[idx]=i-idx;
+        steps.push({temps:temps,ans:ans.slice(),stack:stack.slice(),cur:i,msg:'temps['+i+']='+temps[i]+' > temps['+idx+']='+temps[idx]+' → ans['+idx+']='+ans[idx]});
+      }
+      stack.push(i);
+      steps.push({temps:temps,ans:ans.slice(),stack:stack.slice(),cur:i,msg:'Push idx '+i+' ('+temps[i]+'). Stack: ['+stack.join(',')+']'});
+    }
+    steps.push({temps:temps,ans:ans.slice(),stack:[],msg:'Answer: ['+ans.join(',')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:150,
+    approaches:[{key:'optimal',label:'Monotonic Stack O(n)'}],
+    inputs:[{id:'temps',lbl:'Temps',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defTemps.join(',');i.style.width='180px';return i;})()}],
+    onInputs:function(vals){var t=(vals.temps||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(t.length?t:defTemps.slice());},
+    buildSteps:function(){return buildSteps(defTemps.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.temps,n=a.length,cw=Math.min(52,Math.floor((W-40)/n)),sy=10,ch=34,sx=(W-n*cw)/2;
+      for(var i=0;i<n;i++)cell(ctx,sx+i*cw,sy,cw-2,ch,a[i],i===s.cur?'active':s.stack&&s.stack.indexOf(i)>=0?'comparing':'default');
+      var ans=s.ans||[];
+      for(var i=0;i<n;i++)cell(ctx,sx+i*cw,sy+ch+8,cw-2,26,ans[i]||'·',ans[i]?'sorted':'default');
+      lbl(ctx,'temps',sx-28,sy+ch/2,'#6B7280',9,'left');
+      lbl(ctx,'ans',sx-28,sy+ch+22,'#6B7280',9,'left');
+      lbl(ctx,'stack: ['+((s.stack||[]).join(','))+']',W/2,sy+ch+44,'#A78BFA',10,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P108 Car Fleet ──────────────────────────────────────── */
+function initCarFleet(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defTarget=12,defPos=[10,8,0,5,3],defSpeed=[2,4,1,1,3];
+  function buildSteps(target,pos,speed){
+    var steps=[],cars=pos.map(function(p,i){return{pos:p,spd:speed[i],time:(target-p)/speed[i]};});
+    cars.sort(function(a,b){return b.pos-a.pos;});
+    var stack=[];
+    steps.push({cars:cars.slice(),stack:[],target:target,msg:'Sort desc by position. Fleet = monotonic stack of arrival times.'});
+    cars.forEach(function(car,i){
+      steps.push({cars:cars.slice(),stack:stack.slice(),cur:i,target:target,msg:'Car @pos='+car.pos+' spd='+car.spd+' time='+car.time.toFixed(2)+'h'});
+      if(!stack.length||car.time>stack[stack.length-1]){
+        stack.push(car.time);
+        steps.push({cars:cars.slice(),stack:stack.slice(),cur:i,target:target,msg:'New fleet (slower). Fleets so far: '+stack.length});
+      } else {
+        steps.push({cars:cars.slice(),stack:stack.slice(),cur:i,target:target,msg:'Merges into fleet ahead. Fleet count: '+stack.length});
+      }
+    });
+    steps.push({cars:cars.slice(),stack:stack.slice(),target:target,msg:'Total fleets: '+stack.length});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:150,
+    approaches:[{key:'optimal',label:'Sort + Stack O(n log n)'}],
+    inputs:[
+      {id:'target',lbl:'Target',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defTarget;i.style.width='50px';return i;})()},
+      {id:'pos',lbl:'Positions',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defPos.join(',');i.style.width='100px';return i;})()},
+      {id:'speed',lbl:'Speeds',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defSpeed.join(',');i.style.width='100px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var t=parseInt(vals.target)||defTarget;
+      var p=(vals.pos||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      var sp=(vals.speed||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      return buildSteps(t,p.length?p:defPos.slice(),sp.length?sp:defSpeed.slice());
+    },
+    buildSteps:function(){return buildSteps(defTarget,defPos.slice(),defSpeed.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var cars=s.cars||[],tgt=s.target||12,colors=['#A78BFA','#34D399','#F59E0B','#60A5FA','#F472B6'];
+      cars.forEach(function(car,i){
+        var barW=Math.max(4,Math.round(car.pos/tgt*(W-120)));
+        var y=12+i*24,h=18;
+        ctx.fillStyle=i===s.cur?CS.active:colors[i%colors.length]+'44';
+        ctx.fillRect(40,y,barW,h);
+        ctx.strokeStyle=colors[i%colors.length];ctx.strokeRect(40,y,barW,h);
+        lbl(ctx,'p='+car.pos+' v='+car.spd+' t='+car.time.toFixed(1),44+barW,y+12,'#9CA3AF',9,'left');
+      });
+      lbl(ctx,'Fleets: '+(s.stack?s.stack.length:0),W-40,H-10,'#A78BFA',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P109 Koko Eating Bananas ────────────────────────────── */
+function initKokoEating(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defPiles=[3,6,7,11],defH=8;
+  function hoursFor(piles,k){return piles.reduce(function(s,p){return s+Math.ceil(p/k);},0);}
+  function buildSteps(piles,h){
+    var steps=[],L=1,R=Math.max.apply(null,piles),ans=R;
+    steps.push({piles:piles,h:h,L:L,R:R,ans:ans,msg:'Binary search on speed k in [1, max='+R+']'});
+    while(L<=R){
+      var mid=Math.floor((L+R)/2),hrs=hoursFor(piles,mid);
+      steps.push({piles:piles,h:h,L:L,R:R,mid:mid,hrs:hrs,ans:ans,msg:'k='+mid+': need '+hrs+'h, have '+h+'h → '+(hrs<=h?'feasible, try slower':'too slow, go faster')});
+      if(hrs<=h){ans=mid;R=mid-1;}else{L=mid+1;}
+    }
+    steps.push({piles:piles,h:h,L:ans,R:ans,ans:ans,mid:ans,msg:'Minimum speed: '+ans});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:150,
+    approaches:[{key:'optimal',label:'Binary Search O(n log m)'}],
+    inputs:[
+      {id:'piles',lbl:'Piles',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defPiles.join(',');i.style.width='110px';return i;})()},
+      {id:'h',lbl:'H hours',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defH;i.style.width='55px';return i;})()}
+    ],
+    onInputs:function(vals){var p=(vals.piles||'').split(',').map(Number).filter(function(x){return!isNaN(x);});var h=parseInt(vals.h)||defH;return buildSteps(p.length?p:defPiles.slice(),h);},
+    buildSteps:function(){return buildSteps(defPiles.slice(),defH);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var piles=s.piles||[],n=piles.length,maxP=Math.max.apply(null,piles);
+      var bw=40,gap=14,total=n*(bw+gap),sx=(W-total)/2;
+      piles.forEach(function(p,i){
+        var bh=Math.round(p/maxP*(H-55)),y=H-40-bh;
+        ctx.fillStyle='#374151';ctx.fillRect(sx+i*(bw+gap),y,bw,bh);
+        if(s.mid){var eh=Math.round(Math.min(p,s.mid)/maxP*(H-55));ctx.fillStyle=CS.active;ctx.fillRect(sx+i*(bw+gap),H-40-eh,bw,eh);}
+        lbl(ctx,p,sx+i*(bw+gap)+bw/2,y-6,'#9CA3AF',11,'center');
+      });
+      lbl(ctx,s.mid?'k='+s.mid+'  hrs='+s.hrs+'  ans='+s.ans:'ans='+s.ans,W/2,H-12,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P110 Search a 2D Matrix ─────────────────────────────── */
+function initSearchMatrix(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defMatrix=[[1,3,5,7],[10,11,16,20],[23,30,34,60]],defTarget=3;
+  function buildSteps(matrix,target){
+    var steps=[],m=matrix.length,n=matrix[0].length,total=m*n,L=0,R=total-1;
+    steps.push({matrix:matrix,target:target,L:L,R:R,r:-1,c:-1,msg:'Treat '+m+'×'+n+' matrix as 1D sorted array, binary search'});
+    while(L<=R){
+      var mid=Math.floor((L+R)/2),r=Math.floor(mid/n),c=mid%n,val=matrix[r][c];
+      steps.push({matrix:matrix,target:target,L:L,R:R,r:r,c:c,val:val,msg:'mid='+mid+' → ['+r+']['+c+']='+val+' vs target='+target});
+      if(val===target){steps.push({matrix:matrix,target:target,r:r,c:c,found:true,msg:'Found '+target+' at ['+r+']['+c+'] → true'});return steps;}
+      else if(val<target){L=mid+1;steps.push({matrix:matrix,target:target,L:L,R:R,r:-1,c:-1,msg:'Too small → right half'});}
+      else{R=mid-1;steps.push({matrix:matrix,target:target,L:L,R:R,r:-1,c:-1,msg:'Too large → left half'});}
+    }
+    steps.push({matrix:matrix,target:target,r:-1,c:-1,msg:'Target '+target+' not found → false'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:160,
+    approaches:[{key:'optimal',label:'Binary Search O(log mn)'}],
+    inputs:[
+      {id:'matrix',lbl:'Matrix (rows with ;)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='1,3,5,7;10,11,16,20;23,30,34,60';i.style.width='210px';return i;})()},
+      {id:'target',lbl:'Target',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defTarget;i.style.width='60px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var rows=(vals.matrix||'').split(';').map(function(r){return r.split(',').map(Number);}).filter(function(r){return r.length>0&&!isNaN(r[0]);});
+      var t=parseInt(vals.target)||defTarget;
+      return buildSteps(rows.length?rows:defMatrix,t);
+    },
+    buildSteps:function(){return buildSteps(defMatrix,defTarget);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var mat=s.matrix,m=mat.length,n=mat[0].length;
+      var cw=Math.min(58,Math.floor((W-40)/n)),ch=Math.min(38,Math.floor((H-28)/m)),sx=(W-n*cw)/2,sy=10;
+      for(var r=0;r<m;r++)for(var c=0;c<n;c++){
+        var st=s.found&&r===s.r&&c===s.c?'found':r===s.r&&c===s.c?'comparing':'default';
+        cell(ctx,sx+c*cw,sy+r*ch,cw-2,ch-2,mat[r][c],st);
+      }
+      lbl(ctx,'Target: '+s.target,W/2,sy+m*ch+16,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -7437,6 +7860,16 @@ window.DSAProbs={
   largestRectHistogram:initLargestRectHistogram,
   longestPathMatrix:initLongestPathMatrix,
   findDuplicate:initFindDuplicate,
+  containsDuplicate:initContainsDuplicate,
+  validAnagram:initValidAnagram,
+  groupAnagrams:initGroupAnagrams,
+  twoSumII:initTwoSumII,
+  longestRepeatingReplace:initLongestRepeatingReplace,
+  permutationInString:initPermutationInString,
+  dailyTemperatures:initDailyTemperatures,
+  carFleet:initCarFleet,
+  kokoEating:initKokoEating,
+  searchMatrix:initSearchMatrix,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -7542,6 +7975,16 @@ window.DSAProbs={
     if(document.getElementById('prob-largest-rect-hist'))initLargestRectHistogram('prob-largest-rect-hist');
     if(document.getElementById('prob-longest-path-matrix'))initLongestPathMatrix('prob-longest-path-matrix');
     if(document.getElementById('prob-find-duplicate'))initFindDuplicate('prob-find-duplicate');
+    if(document.getElementById('prob-contains-dup'))initContainsDuplicate('prob-contains-dup');
+    if(document.getElementById('prob-valid-anagram'))initValidAnagram('prob-valid-anagram');
+    if(document.getElementById('prob-group-anagrams'))initGroupAnagrams('prob-group-anagrams');
+    if(document.getElementById('prob-two-sum-ii'))initTwoSumII('prob-two-sum-ii');
+    if(document.getElementById('prob-longest-repeat-replace'))initLongestRepeatingReplace('prob-longest-repeat-replace');
+    if(document.getElementById('prob-perm-in-string'))initPermutationInString('prob-perm-in-string');
+    if(document.getElementById('prob-daily-temps'))initDailyTemperatures('prob-daily-temps');
+    if(document.getElementById('prob-car-fleet'))initCarFleet('prob-car-fleet');
+    if(document.getElementById('prob-koko-eating'))initKokoEating('prob-koko-eating');
+    if(document.getElementById('prob-search-matrix'))initSearchMatrix('prob-search-matrix');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
