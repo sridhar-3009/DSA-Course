@@ -3810,6 +3810,268 @@
     </div>
   </div>
 
+  <!-- P131 Word Search II -->
+  <div class="prob-section" id="p-word-search-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P131 — Hard</span><span class="prob-section-title">Word Search II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Trie</span><span class="prob-tag">Backtracking</span><span class="prob-tag">Grid</span></div>
+    <p class="prob-section-desc">Find all words from a list that exist in a letter grid. Build a Trie of all words, then DFS from every cell — the Trie prunes dead-end paths early so you don't search for words that can't exist.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(M · 4 · 3^(L−1)) L=max word length</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>The Trie is the key optimization — without it you'd DFS for every word separately. <strong>One shared DFS</strong> for all words simultaneously, pruning when no prefix matches.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-search-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why use a Trie instead of a HashSet of words?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A HashSet can tell you if a complete word was found, but can't prune a DFS path early. A Trie lets you check whether the current prefix matches any word — if no prefix exists, stop exploring that direction immediately."><span class="opt-letter">A</span>A Trie enables prefix pruning — if no word starts with the current path prefix, stop immediately</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>A HashSet doesn't support string keys</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>A Trie uses less memory than a HashSet</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>HashSet lookup is O(n), Trie is O(1)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How do we avoid revisiting a cell in the same DFS path?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Temporarily overwrite board[r][c] with a sentinel like '#' before recursing, then restore it after. This prevents revisiting the same cell in the same path without a separate visited array."><span class="opt-letter">B</span>Mark the cell with a sentinel '#' before recursing, restore it after (backtrack)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Keep a global visited matrix</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Temporarily overwrite board[r][c] with '#' before recursing, restore after."><span class="opt-letter">B</span>Temporarily overwrite board[r][c] with '#' before recursing — restore it on backtrack</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sort the grid before searching</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only search left-to-right, top-to-bottom</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P132 Reconstruct Itinerary -->
+  <div class="prob-section" id="p-reconstruct-itinerary">
+    <div class="prob-section-header"><span class="prob-section-num">P132 — Hard</span><span class="prob-section-title">Reconstruct Itinerary</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Eulerian Path</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Given flight tickets, reconstruct the itinerary starting from JFK in lexicographic order. Use Hierholzer's algorithm — DFS greedily choosing the smallest destination, prepending airports to the result on backtrack.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(E log E)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort destinations in reverse lex so popping gives lex order. Push an airport to the <strong>front</strong> of the result when all its outgoing edges are exhausted (dead end = correct position in Eulerian path).</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-reconstruct-itinerary"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why prepend to the result rather than append?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Hierholzer's builds the path backwards. We reach a dead end (no outgoing edges) before exploring all other paths — prepending reverses this so the final array reads start→end."><span class="opt-letter">A</span>We discover dead ends first — prepending reverses the DFS order into the correct forward path</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Appending would skip the first airport</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It makes the algorithm O(1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's a convention with no algorithmic reason</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">This problem finds an Eulerian path. What guarantees one exists?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>All airports have equal in/out degree</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The problem guarantees a valid itinerary exists — equivalent to saying the graph has an Eulerian path. This means at most one node has (out − in = 1) and at most one has (in − out = 1), with all others balanced."><span class="opt-letter">B</span>The problem guarantees a valid itinerary — the graph's degree conditions for Eulerian path are met</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>JFK always has the highest out-degree</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The graph is always a tree</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P133 Sort Colors -->
+  <div class="prob-section" id="p-sort-colors">
+    <div class="prob-section-header"><span class="prob-section-num">P133 — Medium</span><span class="prob-section-title">Sort Colors</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Two Pointers</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Sort an array containing only 0s, 1s, and 2s in place. The Dutch National Flag algorithm uses three pointers to partition the array in a single pass — 0s to the left, 2s to the right, 1s in the middle.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(1) space · 1 pass</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>lo</strong> = next 0 position, <strong>hi</strong> = next 2 position, <strong>mid</strong> = scanner. Swap 0s left, 2s right; skip 1s. One pass completes the sort.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-sort-colors"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">After swapping a 2 (at mid) with hi, why don't we advance mid?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="What came from hi is unknown — it could be 0, 1, or 2. We must inspect mid again after the swap before moving on."><span class="opt-letter">A</span>The element swapped in from hi is unknown — we must re-examine mid before advancing</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We always advance mid on every step</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>hi might equal mid</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's a performance optimization</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The counting approach also sorts in O(n). What is its drawback?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>It uses O(n) extra space</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Counting requires two passes — one to count, one to write. Dutch National Flag needs only one pass and is strictly in-place."><span class="opt-letter">B</span>It requires two passes; Dutch National Flag does it in one</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It doesn't work for three distinct values</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's O(n²)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P134 Largest Number -->
+  <div class="prob-section" id="p-largest-number">
+    <div class="prob-section-header"><span class="prob-section-num">P134 — Medium</span><span class="prob-section-title">Largest Number</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Sorting</span><span class="prob-tag">Greedy</span></div>
+    <p class="prob-section-desc">Arrange numbers to form the largest possible integer. The key is the comparison rule: put number A before B if "AB" &gt; "BA" as a string — this custom sort produces the optimal ordering.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Compare by concatenation: is <strong>"ab" &gt; "ba"</strong>? Standard numeric comparison fails here — "3" &gt; "30" numerically is wrong, but "330" &gt; "303" so 3 should come first.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-largest-number"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does numeric comparison fail for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Numerically 30 > 3, suggesting 30 comes first, giving '303'. But '330' > '303', so 3 should come first. String concatenation comparison captures this correctly."><span class="opt-letter">A</span>"30" > "3" numerically but "330" > "303" — so 3 must come first, which numeric comparison gets wrong</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Numbers might be negative</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Numeric comparison is O(n²)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The input can contain floats</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What's the edge case when all numbers are 0?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="[0, 0, 0] would naively produce '000', but the correct answer is '0'. Check if the result starts with '0' and return '0' in that case."><span class="opt-letter">B</span>The result would be '000…' — return '0' instead</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Return an empty string</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Joining [0,0,0] after sort gives '000', not '0'. Return '0' when the first character of the result is '0'."><span class="opt-letter">B</span>The joined string starts with '0' — return just '0'</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Return -1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>No edge case — it works automatically</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P135 Median of Two Sorted Arrays -->
+  <div class="prob-section" id="p-median-two-arrays">
+    <div class="prob-section-header"><span class="prob-section-num">P135 — Hard</span><span class="prob-section-title">Median of Two Sorted Arrays</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Binary Search</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Find the median of two sorted arrays in O(log min(m,n)). Binary search a partition point on the smaller array — the valid partition is where all left elements ≤ all right elements across both arrays.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log min(m,n))</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Find partition pA in A and pB=(m+n+1)/2−pA in B such that <strong>A[pA−1]≤B[pB] and B[pB−1]≤A[pA]</strong>. The median is then max(left) or avg(max_left, min_right).</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-median-two-arrays"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we always binary search on the smaller array?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Binary searching the smaller array gives O(log min(m,n)). It also guarantees pB stays in valid range [0, n] since pA ∈ [0, m] and m ≤ n."><span class="opt-letter">A</span>It minimizes runtime to O(log min(m,n)) and keeps pB in valid range</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The smaller array is always sorted</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It avoids edge cases with even-length arrays</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The larger array's partition is always 0</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When (m+n) is odd, what is the median?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="For odd total length, the left half has one extra element — the median is the largest element on the left side: max(A[pA−1], B[pB−1])."><span class="opt-letter">A</span>max(A[pA−1], B[pB−1]) — the largest left-side element</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>min(A[pA], B[pB])</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>(A[pA] + B[pB]) / 2</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>A[pA] always</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P136 Minimum Arrows to Burst Balloons -->
+  <div class="prob-section" id="p-min-arrows">
+    <div class="prob-section-header"><span class="prob-section-num">P136 — Medium</span><span class="prob-section-title">Minimum Number of Arrows to Burst Balloons</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Intervals</span></div>
+    <p class="prob-section-desc">Find the minimum arrows needed to burst all balloons (intervals on an x-axis). Sort by end position, then greedily shoot at each balloon's end — one arrow bursts all overlapping balloons at that point.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort by end. Shoot at <strong>current balloon's end</strong> — it's the last valid position that still hits this balloon and maximizes overlap with future balloons. Move arrow only when a balloon starts after the current arrow.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-arrows"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why sort by end position rather than start position?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Shooting at the end of the earliest-ending balloon maximizes the chance of also hitting future balloons. If sorted by start, we'd miss this greedy property."><span class="opt-letter">A</span>Shooting at the earliest end point maximizes how many following balloons the same arrow can hit</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Start sorting doesn't preserve interval integrity</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>End sorting is always faster</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Both orderings give the same result</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When do we need a new arrow?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>When the current balloon ends before the previous one started</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If a balloon's start > current arrow position, the arrow misses it entirely — fire a new arrow at this balloon's end."><span class="opt-letter">B</span>When the next balloon's start > current arrow position — the current arrow misses it</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Every three balloons</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When balloons have equal end positions</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P137 Rotate List -->
+  <div class="prob-section" id="p-rotate-list">
+    <div class="prob-section-header"><span class="prob-section-num">P137 — Medium</span><span class="prob-section-title">Rotate List</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Linked List</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Rotate a linked list right by k places. Find the new tail at position (n − k%n − 1), break the link there, and connect the old tail back to the old head to complete the rotation.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Rotating by k is the same as rotating by <strong>k mod n</strong>. Connect tail to head (make circular), then find the new tail and break there.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotate-list"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">If k > n, why do we use k mod n?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Rotating a list of n elements by n brings it back to the original. Any k > n has the same effect as k mod n. Using mod avoids redundant full rotations."><span class="opt-letter">A</span>Rotating by n returns to original — k mod n removes redundant full rotations</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>k mod n is always 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It prevents pointer overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>k > n is not a valid input</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Where is the new tail after rotating right by k?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Position k from the head</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The last k nodes become the new head. So the new tail is at position (n − k − 1) from the original head (0-indexed)."><span class="opt-letter">B</span>Position (n − k − 1) from the original head (0-indexed)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The middle of the list</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The original tail</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P138 Find K Pairs with Smallest Sums -->
+  <div class="prob-section" id="p-k-smallest-pairs">
+    <div class="prob-section-header"><span class="prob-section-num">P138 — Medium</span><span class="prob-section-title">Find K Pairs with Smallest Sums</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heap</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Given two sorted arrays, find the k pairs (one from each) with the smallest sums. Seed a min-heap with (nums1[i], nums2[0]) for all i, then expand by pushing the next nums2 element whenever a pair is popped.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(k log k)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Both arrays are sorted — the minimum-sum pairs form a "staircase" pattern. A min-heap explores this lazily: <strong>pop best, push its neighbor</strong> in nums2.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-k-smallest-pairs"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why seed the heap with (nums1[i], nums2[0]) for all i, rather than all pairs?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Since nums2 is sorted, nums2[0] gives the smallest possible contribution from nums2 for each nums1[i]. We lazily expand: when (i, j) is popped, push (i, j+1). This avoids enumerating all m×n pairs."><span class="opt-letter">A</span>nums2[0] is the smallest in nums2 — seed with the minimum possible pairs, expand lazily with j+1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We only need pairs from nums2's first row</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It avoids duplicates in the output</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>nums1[0] is always the smallest</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is pushed onto the heap when pair (i, j) is popped?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>(i+1, j)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="After using nums2[j] with nums1[i], the next candidate from the same nums1[i] is nums2[j+1]. Push (i, j+1) if j+1 is in bounds."><span class="opt-letter">B</span>(i, j+1) — the next nums2 element for the same nums1[i]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>(i+1, j+1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Nothing — each pair is used once</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P139 Path Sum II -->
+  <div class="prob-section" id="p-path-sum-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P139 — Medium</span><span class="prob-section-title">Path Sum II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">DFS</span><span class="prob-tag">Backtracking</span></div>
+    <p class="prob-section-desc">Find all root-to-leaf paths in a binary tree where the node values sum to a target. DFS carries the current path — add a node when entering, remove it when backtracking, record the path when a matching leaf is reached.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) worst case (copying paths)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Classic DFS backtracking: <strong>append → recurse → pop</strong>. The path list is modified in place — no copies until a solution is found, keeping space O(h).</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-path-sum-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we check both node.left and node.right being null to identify a leaf?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A leaf has no children at all. Checking only one side could mistake a node with one child for a leaf, adding it to results prematurely."><span class="opt-letter">A</span>A node with only one child is not a leaf — both must be null to confirm there are no further paths</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Checking only left.null is sufficient</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The problem only has complete binary trees</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Both checks improve performance</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we push a copy of the path when a solution is found, but not at every step?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The path list is mutated in place. If we stored a reference, it would change as backtracking continues. We only copy at the moment a valid path is complete."><span class="opt-letter">A</span>The path list is reused and mutated — we must snapshot it at solution time before backtracking changes it</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Copying at every step is O(n) but correct</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The path never changes once built</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We append to results, not copy</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P140 Count Good Triplets -->
+  <div class="prob-section" id="p-count-good-triplets">
+    <div class="prob-section-header"><span class="prob-section-num">P140 — Easy</span><span class="prob-section-title">Count Good Triplets</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Brute Force</span></div>
+    <p class="prob-section-desc">Count triplets (i,j,k) where i&lt;j&lt;k and all three pairwise absolute differences are within given bounds a, b, c. A straightforward O(n³) brute force checks all combinations with early pruning on the first condition.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n³) brute · O(n²) with pruning</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Early pruning: check <strong>|arr[i]−arr[j]| ≤ a</strong> before entering the inner loop. If the first condition fails, skip the entire k-loop for that (i,j) pair.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-count-good-triplets"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What pruning reduces the average case from O(n³)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If |arr[i]−arr[j]| > a, no value of k can fix the first condition — skip the inner k-loop entirely. This eliminates many (i,j) pairs before the innermost loop."><span class="opt-letter">A</span>Skip the k-loop when |arr[i]−arr[j]| > a — the first condition already fails for all k</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Sort the array first</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Use binary search for k</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Precompute prefix sums</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The constraint n ≤ 100 makes O(n³) acceptable. What would you use for n = 10^5?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Still O(n³) — modern CPUs are fast</div>
+          <div class="quiz-option" data-correct="true" data-explanation="For large n, count prefix elements within bounds using a Fenwick Tree (BIT) or sorted list to answer range queries in O(log n), giving O(n² log n) or better."><span class="opt-letter">B</span>Binary Indexed Tree / sorted structure for O(n² log n) or O(n log² n) with offline processing</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sorting reduces it to O(n²)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Dynamic programming in O(n²) space</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P121 K Closest Points to Origin -->
   <div class="prob-section" id="p-k-closest">
     <div class="prob-section-header"><span class="prob-section-num">P121 — Medium</span><span class="prob-section-title">K Closest Points to Origin</span></div>
@@ -4595,7 +4857,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">130 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">140 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -4725,6 +4987,16 @@
       if(window.DSAProbs.mergeTriplets&&document.getElementById('prob-merge-triplets'))window.DSAProbs.mergeTriplets('prob-merge-triplets');
       if(window.DSAProbs.meetingRoomsII&&document.getElementById('prob-meeting-rooms-ii'))window.DSAProbs.meetingRoomsII('prob-meeting-rooms-ii');
       if(window.DSAProbs.powXN&&document.getElementById('prob-pow-x-n'))window.DSAProbs.powXN('prob-pow-x-n');
+      if(window.DSAProbs.wordSearchII&&document.getElementById('prob-word-search-ii'))window.DSAProbs.wordSearchII('prob-word-search-ii');
+      if(window.DSAProbs.reconstructItinerary&&document.getElementById('prob-reconstruct-itinerary'))window.DSAProbs.reconstructItinerary('prob-reconstruct-itinerary');
+      if(window.DSAProbs.sortColors&&document.getElementById('prob-sort-colors'))window.DSAProbs.sortColors('prob-sort-colors');
+      if(window.DSAProbs.largestNumber&&document.getElementById('prob-largest-number'))window.DSAProbs.largestNumber('prob-largest-number');
+      if(window.DSAProbs.medianTwoArrays&&document.getElementById('prob-median-two-arrays'))window.DSAProbs.medianTwoArrays('prob-median-two-arrays');
+      if(window.DSAProbs.minArrows&&document.getElementById('prob-min-arrows'))window.DSAProbs.minArrows('prob-min-arrows');
+      if(window.DSAProbs.rotateList&&document.getElementById('prob-rotate-list'))window.DSAProbs.rotateList('prob-rotate-list');
+      if(window.DSAProbs.kSmallestPairs&&document.getElementById('prob-k-smallest-pairs'))window.DSAProbs.kSmallestPairs('prob-k-smallest-pairs');
+      if(window.DSAProbs.pathSumII&&document.getElementById('prob-path-sum-ii'))window.DSAProbs.pathSumII('prob-path-sum-ii');
+      if(window.DSAProbs.countGoodTriplets&&document.getElementById('prob-count-good-triplets'))window.DSAProbs.countGoodTriplets('prob-count-good-triplets');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();

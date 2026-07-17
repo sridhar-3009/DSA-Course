@@ -8595,6 +8595,412 @@ function initPowXN(id){
   });
 }
 
+/* ── P131 Word Search II ─────────────────────────────────── */
+function initWordSearchII(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defBoard=[['o','a','a','n'],['e','t','a','e'],['i','h','k','r'],['i','f','l','v']],defWords=['oath','pea','eat','rain'];
+  function buildSteps(board,words){
+    var steps=[],found=new Set(),rows=board.length,cols=board[0].length;
+    // build trie
+    var trie={};
+    words.forEach(function(w){var n=trie;for(var c of w){if(!n[c])n[c]={};n=n[c];}n['#']=w;});
+    steps.push({board:board.map(function(r){return r.slice();}),hl:{},found:[],msg:'Build trie of all words. DFS from each cell.'});
+    function dfs(r,c,node,path){
+      if(r<0||r>=rows||c<0||c>=cols||board[r][c]==='#')return;
+      var ch=board[r][c];
+      if(!node[ch])return;
+      var next=node[ch];
+      if(next['#']&&!found.has(next['#'])){found.add(next['#']);steps.push({board:board.map(function(r){return r.slice();}),hl:{[r+','+c]:'found'},found:Array.from(found),msg:'Found word: "'+next['#']+'" at ('+r+','+c+')'});}
+      board[r][c]='#';
+      steps.push({board:board.map(function(r){return r.slice();}),hl:{[r+','+c]:'active'},found:Array.from(found),msg:'Visit ('+r+','+c+') "'+ch+'" path='+path+ch});
+      [[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){dfs(r+d[0],c+d[1],next,path+ch);});
+      board[r][c]=ch;
+    }
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)dfs(r,c,trie,'');
+    steps.push({board:board.map(function(r){return r.slice();}),hl:{},found:Array.from(found),msg:'Done. Found: ['+Array.from(found).join(', ')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:190,
+    approaches:[{key:'optimal',label:'Trie + DFS O(M·4·3^(L-1))'}],
+    inputs:[{id:'words',lbl:'Words',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defWords.join(',');i.style.width='180px';return i;})()}],
+    onInputs:function(vals){var w=(vals.words||'').split(',').map(function(x){return x.trim();}).filter(Boolean);return buildSteps(defBoard.map(function(r){return r.slice();}),w.length?w:defWords.slice());},
+    buildSteps:function(){return buildSteps(defBoard.map(function(r){return r.slice();}),defWords.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var board=s.board||defBoard,rows=board.length,cols=board[0].length;
+      var cw=Math.min(44,Math.floor((W-40)/cols)),ch=Math.min(34,Math.floor((H-50)/rows)),sx=(W-cols*cw)/2,sy=8;
+      for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+        var k=r+','+c,st=s.hl&&s.hl[k]?s.hl[k]:(board[r][c]==='#'?'comparing':'default');
+        cell(ctx,sx+c*cw,sy+r*ch,cw-2,ch-2,board[r][c]==='#'?'·':board[r][c],st);
+      }
+      lbl(ctx,'Found: '+(s.found||[]).join(', '),W/2,sy+rows*ch+16,'#34D399',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P132 Reconstruct Itinerary ──────────────────────────── */
+function initReconstructItinerary(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defTickets=[['MUC','LHR'],['JFK','MUC'],['SFO','SJC'],['LHR','SFO']];
+  function buildSteps(tickets){
+    var steps=[],graph={};
+    tickets.forEach(function(t){if(!graph[t[0]])graph[t[0]]=[];graph[t[0]].push(t[1]);});
+    Object.keys(graph).forEach(function(k){graph[k].sort().reverse();});
+    steps.push({path:[],graph:JSON.parse(JSON.stringify(graph)),msg:'Sort destinations reverse-lex so popping gives lex order. Hierholzer DFS.'});
+    var path=[];
+    function dfs(airport){
+      steps.push({path:path.slice(),graph:JSON.parse(JSON.stringify(graph)),cur:airport,msg:'Visit '+airport+(graph[airport]&&graph[airport].length?' → next: '+graph[airport][graph[airport].length-1]:'(dead end, add to result)')});
+      while(graph[airport]&&graph[airport].length){var next=graph[airport].pop();dfs(next);}
+      path.unshift(airport);
+      steps.push({path:path.slice(),graph:JSON.parse(JSON.stringify(graph)),cur:airport,msg:'Backtrack: prepend '+airport+' → path: ['+path.join('→')+']'});
+    }
+    dfs('JFK');
+    steps.push({path:path.slice(),graph:{},msg:'Itinerary: '+path.join(' → ')});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'optimal',label:'Hierholzer DFS O(E log E)'}],
+    inputs:[{id:'tickets',lbl:'Tickets [[from,to],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[JFK,MUC],[MUC,LHR],[LHR,SFO],[SFO,SJC]';i.style.width='230px';return i;})()}],
+    onInputs:function(vals){
+      try{var t=(vals.tickets||'').split('],[').map(function(p){return p.replace(/[\[\]]/g,'').split(',');});return buildSteps(t);}catch(e){return buildSteps(defTickets);}
+    },
+    buildSteps:function(){return buildSteps(defTickets);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var path=s.path||[],n=path.length,cw=Math.min(68,Math.floor((W-40)/Math.max(n,1))),ch=40,sx=(W-n*cw)/2,sy=22;
+      path.forEach(function(ap,i){cell(ctx,sx+i*cw,sy,cw-2,ch,ap,i===0?'found':'sorted');if(i<n-1)lbl(ctx,'→',sx+(i+0.5)*cw+cw/2-4,sy+ch/2+4,'#6B7280',12,'left');});
+      if(s.cur&&!path.includes(s.cur))lbl(ctx,'visiting: '+s.cur,W/2,sy+ch+16,'#F59E0B',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P133 Sort Colors ────────────────────────────────────── */
+function initSortColors(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defNums=[2,0,2,1,1,0];
+  function buildSteps(nums,approach){
+    var steps=[],a=nums.slice();
+    if(approach==='brute'){
+      steps.push({arr:a.slice(),lo:-1,mid:-1,hi:-1,msg:'Count 0s, 1s, 2s then overwrite — O(n) two-pass'});
+      var c=[0,0,0];a.forEach(function(v){c[v]++;});
+      steps.push({arr:a.slice(),lo:-1,mid:-1,hi:-1,msg:'Counts: 0→'+c[0]+' 1→'+c[1]+' 2→'+c[2]});
+      var idx=0;
+      for(var v=0;v<3;v++)for(var j=0;j<c[v];j++){a[idx++]=v;steps.push({arr:a.slice(),lo:-1,mid:-1,hi:-1,msg:'Fill '+v+'s'});}
+      steps.push({arr:a.slice(),lo:-1,mid:-1,hi:-1,msg:'Sorted: ['+a.join(',')+']'});
+    } else {
+      var lo=0,mid=0,hi=a.length-1;
+      steps.push({arr:a.slice(),lo:lo,mid:mid,hi:hi,msg:'Dutch National Flag: lo=0 mid=0 hi='+(a.length-1)});
+      while(mid<=hi){
+        if(a[mid]===0){var t=a[lo];a[lo]=a[mid];a[mid]=t;lo++;mid++;steps.push({arr:a.slice(),lo:lo,mid:mid,hi:hi,msg:'0 at mid → swap with lo, advance lo+mid'});}
+        else if(a[mid]===1){mid++;steps.push({arr:a.slice(),lo:lo,mid:mid,hi:hi,msg:'1 at mid → skip, advance mid'});}
+        else{var t=a[hi];a[hi]=a[mid];a[mid]=t;hi--;steps.push({arr:a.slice(),lo:lo,mid:mid,hi:hi,msg:'2 at mid → swap with hi, shrink hi'});}
+      }
+      steps.push({arr:a.slice(),lo:lo,mid:mid,hi:hi,msg:'Sorted in one pass: ['+a.join(',')+']'});
+    }
+    return steps;
+  }
+  var colors=['#EF4444','#E5E7EB','#3B82F6'];// red=0, white=1, blue=2
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'brute',label:'Count O(n) 2-pass'},{key:'optimal',label:'Dutch Flag O(n) 1-pass'}],
+    inputs:[{id:'nums',lbl:'Array (0,1,2)',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defNums.join(',');i.style.width='140px';return i;})()}],
+    onInputs:function(vals,ap){var n=(vals.nums||'').split(',').map(Number).filter(function(x){return x>=0&&x<=2;});return buildSteps(n.length?n:defNums.slice(),ap);},
+    buildSteps:function(ap){return buildSteps(defNums.slice(),ap);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr,n=a.length,cw=Math.min(58,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      a.forEach(function(v,i){
+        var st=i===s.lo?'active':i===s.mid?'comparing':i===s.hi?'found':'default';
+        cell(ctx,sx+i*cw,sy,cw-2,ch,v,st);
+      });
+      if(s.lo>=0)lbl(ctx,'lo',sx+s.lo*cw+cw/2-1,sy+ch+13,'#34D399',10,'center');
+      if(s.mid>=0)lbl(ctx,'mid',sx+s.mid*cw+cw/2-1,sy+ch+13,'#F59E0B',10,'center');
+      if(s.hi>=0&&s.hi<n)lbl(ctx,'hi',sx+s.hi*cw+cw/2-1,sy+ch+13,'#A78BFA',10,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P134 Largest Number ─────────────────────────────────── */
+function initLargestNumber(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defNums=[3,30,34,5,9];
+  function buildSteps(nums){
+    var steps=[],strs=nums.map(String);
+    steps.push({arr:strs.slice(),msg:'Custom sort: compare "ab" vs "ba" — pick whichever concatenation is larger'});
+    var sorted=strs.slice().sort(function(a,b){return (b+a)>(a+b)?1:-1;});
+    strs.forEach(function(s,i){
+      steps.push({arr:strs.slice(),hi:i,msg:'Comparing "'+s+'" with neighbors: prefer order where concatenation is lexically larger'});
+    });
+    steps.push({arr:sorted.slice(),msg:'Sorted: ['+sorted.join(',')+'] → "'+sorted.join('')+'"'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'optimal',label:'Custom Sort O(n log n)'}],
+    inputs:[{id:'nums',lbl:'Numbers',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defNums.join(',');i.style.width='140px';return i;})()}],
+    onInputs:function(vals){var n=(vals.nums||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(n.length?n:defNums.slice());},
+    buildSteps:function(){return buildSteps(defNums.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr,n=a.length,cw=Math.min(66,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      a.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v,i===s.hi?'active':'sorted');});
+      lbl(ctx,'Result: "'+a.join('')+'"',W/2,sy+ch+18,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P135 Median of Two Sorted Arrays ────────────────────── */
+function initMedianTwoArrays(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defA=[1,3],defB=[2];
+  function buildSteps(A,B){
+    var steps=[],m=A.length,n=B.length;
+    if(m>n){var t=A;A=B;B=t;var tt=m;m=n;n=tt;}
+    var lo=0,hi=m;
+    steps.push({A:A,B:B,lo:lo,hi:hi,pA:-1,pB:-1,msg:'Binary search partition point on smaller array A'});
+    while(lo<=hi){
+      var pA=Math.floor((lo+hi)/2),pB=Math.floor((m+n+1)/2)-pA;
+      var aL=pA>0?A[pA-1]:-Infinity,aR=pA<m?A[pA]:Infinity;
+      var bL=pB>0?B[pB-1]:-Infinity,bR=pB<n?B[pB]:Infinity;
+      steps.push({A:A,B:B,lo:lo,hi:hi,pA:pA,pB:pB,aL:aL,aR:aR,bL:bL,bR:bR,msg:'pA='+pA+' pB='+pB+': aL='+aL+' aR='+aR+' bL='+bL+' bR='+bR});
+      if(aL<=bR&&bL<=aR){
+        var med=(m+n)%2===1?Math.max(aL,bL):(Math.max(aL,bL)+Math.min(aR,bR))/2;
+        steps.push({A:A,B:B,pA:pA,pB:pB,msg:'Valid partition! Median = '+med});return steps;
+      } else if(aL>bR){hi=pA-1;steps.push({A:A,B:B,lo:lo,hi:hi,pA:pA,pB:pB,msg:'aL>bR → move pA left'});}
+      else{lo=pA+1;steps.push({A:A,B:B,lo:lo,hi:hi,pA:pA,pB:pB,msg:'bL>aR → move pA right'});}
+    }
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:140,
+    approaches:[{key:'optimal',label:'Binary Search O(log min(m,n))'}],
+    inputs:[
+      {id:'a',lbl:'Array A',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defA.join(',');i.style.width='100px';return i;})()},
+      {id:'b',lbl:'Array B',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defB.join(',');i.style.width='100px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var a=(vals.a||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      var b=(vals.b||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      return buildSteps(a.length?a:defA.slice(),b.length?b:defB.slice());
+    },
+    buildSteps:function(){return buildSteps(defA.slice(),defB.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var A=s.A||[],B=s.B||[],pA=s.pA||0,pB=s.pB||0;
+      var cwA=Math.min(50,Math.floor((W-60)/(A.length||1))),cwB=Math.min(50,Math.floor((W-60)/(B.length||1))),ch=34;
+      var sxA=(W-A.length*cwA)/2,sxB=(W-B.length*cwB)/2,syA=14,syB=syA+ch+20;
+      lbl(ctx,'A:',sxA-20,syA+ch/2+4,'#6B7280',10,'left');
+      A.forEach(function(v,i){cell(ctx,sxA+i*cwA,syA,cwA-2,ch,v,i<pA?'sorted':i===pA?'active':'default');});
+      lbl(ctx,'B:',sxB-20,syB+ch/2+4,'#6B7280',10,'left');
+      B.forEach(function(v,i){cell(ctx,sxB+i*cwB,syB,cwB-2,ch,v,i<pB?'sorted':i===pB?'active':'default');});
+      if(s.pA>=0)lbl(ctx,'pA='+pA+' pB='+pB,W/2,syB+ch+16,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P136 Min Arrows to Burst Balloons ───────────────────── */
+function initMinArrows(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defPoints=[[10,16],[2,8],[1,6],[7,12]];
+  function buildSteps(points){
+    var steps=[],sorted=points.slice().sort(function(a,b){return a[1]-b[1];}),arrows=1,end=sorted[0][1];
+    steps.push({points:sorted,arrow:end,arrows:1,cur:0,msg:'Sort by end. First arrow at end of first balloon: '+end});
+    for(var i=1;i<sorted.length;i++){
+      var p=sorted[i];
+      steps.push({points:sorted,arrow:end,arrows:arrows,cur:i,msg:'Balloon ['+p+']: start='+p[0]+' vs arrow='+end});
+      if(p[0]>end){arrows++;end=p[1];steps.push({points:sorted,arrow:end,arrows:arrows,cur:i,msg:'Miss! New arrow at '+end+'. Total: '+arrows});}
+      else{steps.push({points:sorted,arrow:end,arrows:arrows,cur:i,msg:'Hit! Arrow '+end+' bursts this balloon too'});}
+    }
+    steps.push({points:sorted,arrow:end,arrows:arrows,msg:'Minimum arrows: '+arrows});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:150,
+    approaches:[{key:'optimal',label:'Greedy Sort by End O(n log n)'}],
+    inputs:[{id:'pts',lbl:'Balloons [[s,e],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[10,16],[2,8],[1,6],[7,12]';i.style.width='200px';return i;})()}],
+    onInputs:function(vals){try{var p=JSON.parse('['+vals.pts+']');return buildSteps(p);}catch(e){return buildSteps(defPoints);}},
+    buildSteps:function(){return buildSteps(defPoints);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var pts=s.points||[],n=pts.length,maxV=Math.max.apply(null,pts.map(function(p){return p[1];})),minV=Math.min.apply(null,pts.map(function(p){return p[0];}));
+      var scale=(W-80)/(maxV-minV||1),sy=12,rowH=Math.min(24,(H-40)/n);
+      pts.forEach(function(p,i){
+        var x=40+(p[0]-minV)*scale,w=(p[1]-p[0])*scale,y=sy+i*rowH;
+        ctx.fillStyle=i===s.cur?CS.active:CS.sorted;ctx.fillRect(x,y,Math.max(w,2),rowH-3);
+        lbl(ctx,p[0]+'→'+p[1],x,y+rowH-4,'#6B7280',8,'left');
+      });
+      if(s.arrow!==undefined){var ax=40+(s.arrow-minV)*scale;ctx.strokeStyle='#EF4444';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ax,10);ctx.lineTo(ax,H-20);ctx.stroke();}
+      lbl(ctx,'Arrows: '+s.arrows,W-50,H-10,'#A78BFA',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P137 Rotate List ────────────────────────────────────── */
+function initRotateList(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[1,2,3,4,5],defK=2;
+  function buildSteps(arr,k){
+    var steps=[],n=arr.length;
+    if(!n){steps.push({arr:[],msg:'Empty list'});return steps;}
+    k=k%n;
+    steps.push({arr:arr.slice(),cut:-1,msg:'Rotating by k='+k+' (effective after mod '+n+'='+k+'). Cut point at index '+(n-k-1)+'.'});
+    if(k===0){steps.push({arr:arr.slice(),cut:-1,msg:'k=0 after mod — no rotation needed'});return steps;}
+    var cut=n-k;
+    steps.push({arr:arr.slice(),cut:cut-1,msg:'Connect tail to head, break link before index '+cut});
+    var res=arr.slice(cut).concat(arr.slice(0,cut));
+    steps.push({arr:res.slice(),cut:-1,msg:'After rotation: ['+res.join('→')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'optimal',label:'Find Tail O(n)'}],
+    inputs:[
+      {id:'arr',lbl:'List',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='130px';return i;})()},
+      {id:'k',lbl:'k',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defK;i.style.width='50px';return i;})()}
+    ],
+    onInputs:function(vals){var a=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(a.length?a:defArr.slice(),parseInt(vals.k)||defK);},
+    buildSteps:function(){return buildSteps(defArr.slice(),defK);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr,n=a.length,cw=Math.min(62,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=22;
+      a.forEach(function(v,i){
+        var st=s.cut>=0&&i>s.cut?'active':s.cut>=0&&i===s.cut?'found':'sorted';
+        cell(ctx,sx+i*cw,sy,cw-2,ch,v,st);
+        if(i<n-1)lbl(ctx,'→',sx+(i+0.5)*cw+cw/2-4,sy+ch/2+4,'#4B5563',12,'left');
+      });
+      if(s.cut>=0)lbl(ctx,'↑ cut',sx+s.cut*cw+cw/2-1,sy-10,'#EF4444',10,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P138 Find K Pairs with Smallest Sums ────────────────── */
+function initKSmallestPairs(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defNums1=[1,7,11],defNums2=[2,4,6],defK=3;
+  function buildSteps(n1,n2,k){
+    var steps=[],result=[],heap=[];
+    // seed with (n1[i], n2[0]) for all i
+    for(var i=0;i<Math.min(n1.length,k);i++)heap.push([n1[i]+n2[0],i,0]);
+    heap.sort(function(a,b){return a[0]-b[0];});
+    steps.push({result:[],heap:heap.map(function(h){return '['+n1[h[1]]+','+n2[h[2]]+']';}),msg:'Seed heap with (nums1[i], nums2[0]) for all i'});
+    while(heap.length&&result.length<k){
+      heap.sort(function(a,b){return a[0]-b[0];});
+      var top=heap.shift(),i=top[1],j=top[2];
+      result.push([n1[i],n2[j]]);
+      steps.push({result:result.slice(),heap:heap.map(function(h){return '['+n1[h[1]]+','+n2[h[2]]+']';}),msg:'Pop ['+n1[i]+','+n2[j]+'] sum='+(n1[i]+n2[j])+(j+1<n2.length?' → push ['+n1[i]+','+n2[j+1]+']':'')});
+      if(j+1<n2.length)heap.push([n1[i]+n2[j+1],i,j+1]);
+    }
+    steps.push({result:result.slice(),heap:[],msg:'K='+k+' smallest pairs: '+result.map(function(p){return '['+p+']';}).join(' ')});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'optimal',label:'Min-Heap O(k log k)'}],
+    inputs:[
+      {id:'n1',lbl:'nums1',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defNums1.join(',');i.style.width='90px';return i;})()},
+      {id:'n2',lbl:'nums2',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defNums2.join(',');i.style.width='90px';return i;})()},
+      {id:'k',lbl:'k',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defK;i.style.width='45px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var n1=(vals.n1||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      var n2=(vals.n2||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      return buildSteps(n1.length?n1:defNums1,n2.length?n2:defNums2,parseInt(vals.k)||defK);
+    },
+    buildSteps:function(){return buildSteps(defNums1,defNums2,defK);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var res=s.result||[],n=res.length,cw=Math.min(72,Math.floor((W-40)/Math.max(n,1))),ch=40,sx=(W-n*cw)/2,sy=20;
+      res.forEach(function(p,i){cell(ctx,sx+i*cw,sy,cw-2,ch,'['+p[0]+','+p[1]+']','sorted');});
+      lbl(ctx,'heap: ['+((s.heap||[]).join(', '))+']',W/2,sy+ch+18,'#A78BFA',10,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P139 Path Sum II ────────────────────────────────────── */
+function initPathSumII(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[5,4,8,11,null,13,4,7,2,null,null,null,null,5,1],defTarget=22;
+  function buildSteps(arr,target){
+    var root=_mkTree(arr),steps=[],results=[];
+    steps.push({hl:{},paths:[],msg:'DFS: track path from root. At each leaf check if sum equals target.'});
+    function dfs(node,path,sum){
+      if(!node)return;
+      path.push(node.val);sum+=node.val;
+      steps.push({hl:{[node.val]:'active'},paths:results.slice(),msg:'Visit '+node.val+' sum='+sum+' path=['+path.join('→')+']'});
+      if(!node.left&&!node.right){
+        if(sum===target){results.push(path.slice());steps.push({hl:{[node.val]:'found'},paths:results.slice(),msg:'Leaf! sum='+sum+'=target → path found: ['+path.join('→')+']'});}
+        else{steps.push({hl:{[node.val]:'comparing'},paths:results.slice(),msg:'Leaf! sum='+sum+'≠'+target+' — backtrack'});}
+      }
+      dfs(node.left,path,sum);dfs(node.right,path,sum);
+      path.pop();
+    }
+    dfs(root,[],0);
+    steps.push({hl:{},paths:results.slice(),msg:results.length+' path(s) found: '+results.map(function(p){return '['+p.join('→')+']';}).join(' ')});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:220,
+    approaches:[{key:'optimal',label:'DFS Backtracking O(n)'}],
+    inputs:[{id:'target',lbl:'Target sum',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defTarget;i.style.width='60px';return i;})()}],
+    onInputs:function(vals){return buildSteps(defArr.slice(),parseInt(vals.target)||defTarget);},
+    buildSteps:function(){return buildSteps(defArr.slice(),defTarget);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      _drawTree(ctx,_mkTree(defArr),W,H-30,s.hl||{});
+      if(s.paths&&s.paths.length)lbl(ctx,'Found: '+s.paths.map(function(p){return '['+p.join('→')+']';}).join(' '),W/2,H-8,'#34D399',10,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P140 Count Good Triplets ────────────────────────────── */
+function initCountGoodTriplets(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[3,0,1,1,9,7],defA=7,defB=2,defC=3;
+  function buildSteps(arr,a,b,c){
+    var steps=[],n=arr.length,count=0;
+    steps.push({arr:arr,i:-1,j:-1,k:-1,count:0,msg:'Brute O(n³): try every triplet (i,j,k) i<j<k, check all 3 conditions'});
+    for(var i=0;i<n-2;i++){
+      for(var j=i+1;j<n-1;j++){
+        if(Math.abs(arr[i]-arr[j])>a)continue;
+        for(var k=j+1;k<n;k++){
+          var ok=Math.abs(arr[i]-arr[j])<=a&&Math.abs(arr[j]-arr[k])<=b&&Math.abs(arr[i]-arr[k])<=c;
+          steps.push({arr:arr,i:i,j:j,k:k,count:count,msg:'('+arr[i]+','+arr[j]+','+arr[k]+'): |'+arr[i]+'-'+arr[j]+'|≤'+a+' |'+arr[j]+'-'+arr[k]+'|≤'+b+' |'+arr[i]+'-'+arr[k]+'|≤'+c+' → '+(ok?'GOOD ✓':'skip')});
+          if(ok)count++;
+        }
+      }
+    }
+    steps.push({arr:arr,i:-1,j:-1,k:-1,count:count,msg:'Total good triplets: '+count});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'optimal',label:'Brute O(n³)'}],
+    inputs:[
+      {id:'arr',lbl:'Array',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='130px';return i;})()},
+      {id:'a',lbl:'a',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defA;i.style.width='40px';return i;})()},
+      {id:'b',lbl:'b',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defB;i.style.width='40px';return i;})()},
+      {id:'c',lbl:'c',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defC;i.style.width='40px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var arr=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      return buildSteps(arr.length?arr:defArr,parseInt(vals.a)||defA,parseInt(vals.b)||defB,parseInt(vals.c)||defC);
+    },
+    buildSteps:function(){return buildSteps(defArr,defA,defB,defC);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr,n=a.length,cw=Math.min(56,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      a.forEach(function(v,i){
+        var st=i===s.i||i===s.j||i===s.k?'active':'default';
+        cell(ctx,sx+i*cw,sy,cw-2,ch,v,st);
+        lbl(ctx,i===s.i?'i':i===s.j?'j':i===s.k?'k':'',sx+i*cw+cw/2-1,sy+ch+13,'#F59E0B',10,'center');
+      });
+      lbl(ctx,'Good triplets: '+s.count,W/2,sy+ch+28,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -8727,6 +9133,16 @@ window.DSAProbs={
   mergeTriplets:initMergeTriplets,
   meetingRoomsII:initMeetingRoomsII,
   powXN:initPowXN,
+  wordSearchII:initWordSearchII,
+  reconstructItinerary:initReconstructItinerary,
+  sortColors:initSortColors,
+  largestNumber:initLargestNumber,
+  medianTwoArrays:initMedianTwoArrays,
+  minArrows:initMinArrows,
+  rotateList:initRotateList,
+  kSmallestPairs:initKSmallestPairs,
+  pathSumII:initPathSumII,
+  countGoodTriplets:initCountGoodTriplets,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -8862,6 +9278,16 @@ window.DSAProbs={
     if(document.getElementById('prob-merge-triplets'))initMergeTriplets('prob-merge-triplets');
     if(document.getElementById('prob-meeting-rooms-ii'))initMeetingRoomsII('prob-meeting-rooms-ii');
     if(document.getElementById('prob-pow-x-n'))initPowXN('prob-pow-x-n');
+    if(document.getElementById('prob-word-search-ii'))initWordSearchII('prob-word-search-ii');
+    if(document.getElementById('prob-reconstruct-itinerary'))initReconstructItinerary('prob-reconstruct-itinerary');
+    if(document.getElementById('prob-sort-colors'))initSortColors('prob-sort-colors');
+    if(document.getElementById('prob-largest-number'))initLargestNumber('prob-largest-number');
+    if(document.getElementById('prob-median-two-arrays'))initMedianTwoArrays('prob-median-two-arrays');
+    if(document.getElementById('prob-min-arrows'))initMinArrows('prob-min-arrows');
+    if(document.getElementById('prob-rotate-list'))initRotateList('prob-rotate-list');
+    if(document.getElementById('prob-k-smallest-pairs'))initKSmallestPairs('prob-k-smallest-pairs');
+    if(document.getElementById('prob-path-sum-ii'))initPathSumII('prob-path-sum-ii');
+    if(document.getElementById('prob-count-good-triplets'))initCountGoodTriplets('prob-count-good-triplets');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
