@@ -3810,6 +3810,266 @@
     </div>
   </div>
 
+  <!-- P111 Validate BST -->
+  <div class="prob-section" id="p-validate-bst">
+    <div class="prob-section-header"><span class="prob-section-num">P111 — Medium</span><span class="prob-section-title">Validate Binary Search Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Check that every node in a binary tree satisfies BST order — left subtree strictly smaller, right subtree strictly larger. Pass each node a valid range [min, max] as you recurse.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(h) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Each node must satisfy <strong>min &lt; node.val &lt; max</strong>. Going left tightens the upper bound; going right tightens the lower bound.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-validate-bst"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why isn't it enough to check that each node is greater than its left child and less than its right child?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A node can be locally correct but violate the BST property globally — e.g., a node in the right subtree that is less than the root. You need to carry bounds from ancestors."><span class="opt-letter">A</span>A node in the right subtree could still be less than a distant ancestor — local checks miss global violations</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Because BSTs can have duplicate values</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because left/right children might not exist</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It actually is enough</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the initial valid range passed to the root?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>(0, 100)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The root has no ancestors imposing bounds, so it starts with (−∞, +∞). Every valid integer is in range until a constraint arrives."><span class="opt-letter">B</span>(−∞, +∞)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>(root.left.val, root.right.val)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>(null, null)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P112 LCA of Binary Tree -->
+  <div class="prob-section" id="p-lca-bt">
+    <div class="prob-section-header"><span class="prob-section-num">P112 — Medium</span><span class="prob-section-title">Lowest Common Ancestor of a Binary Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Find the deepest node that has both p and q as descendants. DFS returns a node when it finds p or q — the first ancestor where both sides return something is the LCA.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(h) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Recurse left and right. If <strong>both return non-null</strong>, the current node is the LCA. If only one side returns, bubble it up.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lca-bt"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does the DFS return when it hits a null node?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A null node has no descendants and can't be p or q, so return null to signal 'not found here'."><span class="opt-letter">A</span>null — signaling "neither p nor q found in this subtree"</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The parent node</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>-1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>p or q depending on depth</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">If p is an ancestor of q, where is the LCA?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>q itself</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When we reach p during DFS, we immediately return p without searching further — since q must be somewhere in p's subtree, p is the LCA."><span class="opt-letter">B</span>p itself — we return p when we find it and don't look deeper</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The root</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The parent of p</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P113 Serialize / Deserialize Binary Tree -->
+  <div class="prob-section" id="p-serialize-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P113 — Hard</span><span class="prob-section-title">Serialize and Deserialize Binary Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">BFS</span><span class="prob-tag">Design</span></div>
+    <p class="prob-section-desc">Convert a binary tree to a string and back. BFS level-order encoding with "N" for null nodes captures the full structure — decoding replays the same BFS to rebuild the tree.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) serialize · O(n) deserialize</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>BFS encode: write each node's value; write <strong>"N" for null</strong>. Decode: use a queue — pop a node, read next two tokens as its left and right children.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-serialize-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we need to encode null nodes?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Without null markers, different tree shapes could produce the same sequence of values. Nulls mark where subtrees end and allow exact reconstruction."><span class="opt-letter">A</span>Without them, different tree shapes could encode identically — nulls preserve structure</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Null nodes have values that must be stored</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>BFS doesn't visit null nodes otherwise</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To save memory</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Pre-order DFS serialize also works. What extra condition is needed to reconstruct uniquely?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The tree must be a BST</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Pre-order DFS also needs null markers to know when a subtree ends and the next sibling begins. With null markers, pre-order is self-contained for reconstruction."><span class="opt-letter">B</span>Null markers are still required to mark leaf boundaries</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>A second traversal (in-order) must accompany it</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Node values must be unique primes</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P114 Reverse Nodes in K-Group -->
+  <div class="prob-section" id="p-reverse-k-group">
+    <div class="prob-section-header"><span class="prob-section-num">P114 — Hard</span><span class="prob-section-title">Reverse Nodes in K-Group</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Linked List</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc">Reverse every k consecutive nodes in a linked list; leave the tail (if shorter than k) unchanged. Check that k nodes exist before reversing, then reconnect the reversed group to the rest.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(n/k) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Peek ahead k nodes before reversing — if fewer than k remain, stop. After reversing, the <strong>old head becomes the new tail</strong> and connects to the next group's result.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-reverse-k-group"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we confirm k nodes exist before reversing?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem states the remainder (< k nodes) should stay in original order. We must count k nodes first to know whether to reverse or leave as-is."><span class="opt-letter">A</span>The remainder must stay unchanged — reversing a partial group would violate the problem</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Reversing fewer than k nodes always causes a cycle</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It's a performance optimization only</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>k is always guaranteed to divide the list evenly</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After reversing one group of k, where does the old head of that group point?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Back to the new head of the group</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Reversing flips the direction. The old head becomes the new tail of the reversed group and must connect to whatever comes next (the result of recursing on the remainder)."><span class="opt-letter">B</span>To the result of recursively reversing the next k-group</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To null always</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To the old tail of the group</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P115 Copy List with Random Pointer -->
+  <div class="prob-section" id="p-copy-list-random">
+    <div class="prob-section-header"><span class="prob-section-num">P115 — Medium</span><span class="prob-section-title">Copy List with Random Pointer</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Linked List</span><span class="prob-tag">Hash Map</span></div>
+    <p class="prob-section-desc">Deep-copy a linked list where each node has a next pointer and a random pointer to any node. First pass creates all clones; second pass wires next and random using a map from original → clone.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Build a <strong>map: original → copy</strong> in pass 1. In pass 2, copy.next = map[orig.next] and copy.random = map[orig.random]. Simple and clean.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-copy-list-random"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't we set random pointers in the first pass?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The random pointer may point to a node we haven't cloned yet. We need all clones to exist before we can wire them together."><span class="opt-letter">A</span>The clone the random pointer targets may not exist yet</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Random pointers always point backwards</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The map isn't initialized in pass 1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It would cause infinite loops</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">An O(1)-space solution exists. What is its trick?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Sort the list before copying</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Interleave clones: insert each clone right after its original (A→A'→B→B'). Then wire random pointers (orig.random.next), then separate the two lists."><span class="opt-letter">B</span>Interleave clones into the original list, wire randoms, then split the two lists apart</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Use the stack to store pointers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Copy only next pointers then fix random</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P116 LRU Cache -->
+  <div class="prob-section" id="p-lru-cache">
+    <div class="prob-section-header"><span class="prob-section-num">P116 — Medium</span><span class="prob-section-title">LRU Cache</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Design</span><span class="prob-tag">Hash Map</span><span class="prob-tag">DLL</span></div>
+    <p class="prob-section-desc">Design a cache that evicts the least recently used item when full. A HashMap gives O(1) key lookup; a doubly linked list tracks recency order — move accessed items to front, evict from back.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(1) get · O(1) put</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>HashMap maps key → DLL node. DLL keeps MRU at head, LRU at tail. <strong>On access: remove node + re-insert at head. On evict: remove tail.</strong></span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lru-cache"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is a doubly linked list used instead of a singly linked list?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Removing a node from the middle requires updating the previous node's next pointer. A doubly linked list lets us remove any node in O(1) without scanning from the head."><span class="opt-letter">A</span>Removing a node in O(1) requires access to both its previous and next pointers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Singly linked lists can't store key-value pairs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>DLL uses less memory</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It allows random access by index</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What happens when we get a key that's already in the cache?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Evict it and re-insert</div>
+          <div class="quiz-option" data-correct="true" data-explanation="A cache hit means the item was recently used — move it to the MRU position (head) so it's the last to be evicted. Return its value."><span class="opt-letter">B</span>Return the value and move the node to the MRU position</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Return -1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Leave the node in its current position</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P117 Combination Sum II -->
+  <div class="prob-section" id="p-combo-sum-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P117 — Medium</span><span class="prob-section-title">Combination Sum II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Backtracking</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Find all unique combinations that sum to a target, where each number can only be used once. Sort first, then backtrack — skip duplicate values at the same depth level to avoid repeated combinations.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(2ⁿ) worst case</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort → backtrack. Skip <code>candidates[i] == candidates[i-1]</code> when <code>i &gt; start</code>. This prunes duplicate <strong>siblings</strong> without skipping the first occurrence.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-combo-sum-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why skip candidates[i] when candidates[i] == candidates[i-1] and i > start?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="At the same recursion depth (same start), choosing the second duplicate would produce an identical subtree to the first duplicate — a duplicate result. We only skip siblings (i > start), not descendants (i > start allows using the same value deeper)."><span class="opt-letter">A</span>Choosing a duplicate at the same depth produces an identical subtree → duplicate result in output</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Duplicates always cause infinite recursion</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sorted order makes duplicates always exceed the target</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We skip all duplicate values unconditionally</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does Combination Sum II differ from Combination Sum I?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>II uses BFS; I uses DFS</div>
+          <div class="quiz-option" data-correct="true" data-explanation="In I, each candidate can be reused unlimited times (recurse with same index i). In II, each element is used at most once (recurse with i+1), and duplicates in input must be deduplicated in output."><span class="opt-letter">B</span>II uses each element at most once (recurse i+1) and must deduplicate; I allows unlimited reuse</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>II always has more solutions</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>II requires a sorted target</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P118 N-Queens -->
+  <div class="prob-section" id="p-n-queens">
+    <div class="prob-section-header"><span class="prob-section-num">P118 — Hard</span><span class="prob-section-title">N-Queens</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Backtracking</span></div>
+    <p class="prob-section-desc">Place n queens on an n×n chessboard so no two attack each other. Place one queen per row, track which columns and diagonals are blocked, and backtrack when stuck.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n!) · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Three sets: blocked <strong>columns</strong>, blocked <strong>↘ diagonals</strong> (row−col), blocked <strong>↗ diagonals</strong> (row+col). O(1) conflict check per position.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-n-queens"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is placing one queen per row (not cell) a valid strategy?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Every row must contain exactly one queen — two queens in the same row attack each other. Fixing one queen per row cuts the search space from all-cells to just which column within each row."><span class="opt-letter">A</span>Each row must have exactly one queen — this eliminates all row conflicts by construction</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Queens can only move horizontally</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It's faster but not necessarily correct</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Diagonal conflicts are ignored this way</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What key insight lets us check diagonal conflicts in O(1)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Queens on the same diagonal have the same row</div>
+          <div class="quiz-option" data-correct="true" data-explanation="All cells on the same top-left→bottom-right diagonal share the same (row−col) value. All cells on the same top-right→bottom-left diagonal share the same (row+col) value. Store these in a set for O(1) lookup."><span class="opt-letter">B</span>All cells on the same ↘ diagonal have equal (row−col); all on ↗ diagonal have equal (row+col)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Diagonals always cross at the center</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We scan all placed queens each time</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P119 Last Stone Weight -->
+  <div class="prob-section" id="p-last-stone">
+    <div class="prob-section-header"><span class="prob-section-num">P119 — Easy</span><span class="prob-section-title">Last Stone Weight</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heap</span><span class="prob-tag">Greedy</span></div>
+    <p class="prob-section-desc">Smash the two heaviest stones together each round — equal stones both shatter, unequal ones leave a remainder. Repeat until at most one stone is left. A max-heap always gives the two heaviest in O(log n).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Max-heap: pop top two, push the difference if non-zero. Repeat until <strong>≤ 1 stone remains</strong>. The answer is the last stone or 0.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-last-stone"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we use a max-heap (not min-heap)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The rule says smash the two heaviest stones each round. A max-heap gives the two largest elements in O(log n) — that's exactly what we need."><span class="opt-letter">A</span>The rule requires the two heaviest stones each round — max-heap provides them in O(log n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Min-heap would give wrong stone weights</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Max-heap stores more elements</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Min-heap doesn't support the smash operation</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When all stones have been smashed and the heap is empty, what is the answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>-1</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If all stones destroyed each other with no remainder, no stone remains — return 0."><span class="opt-letter">B</span>0 — all stones canceled out</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The initial maximum stone weight</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The number of rounds</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P120 Sliding Window Maximum -->
+  <div class="prob-section" id="p-sliding-win-max">
+    <div class="prob-section-header"><span class="prob-section-num">P120 — Hard</span><span class="prob-section-title">Sliding Window Maximum</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Sliding Window</span><span class="prob-tag">Deque</span><span class="prob-tag">Monotonic</span></div>
+    <p class="prob-section-desc">Return the maximum of every window of size k as it slides across the array. A monotonic deque keeps indices in decreasing value order — the front is always the window's maximum.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(k) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Before pushing index i: pop from back while <strong>nums[back] ≤ nums[i]</strong> — those smaller elements will never be a future max. Pop front if it's out of window.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-sliding-win-max"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can we safely discard elements smaller than the incoming element?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If nums[i] is larger, it will be in the window at least as long as the smaller element (it arrived later and leaves later). The smaller element can never be a maximum while nums[i] is present — discard it."><span class="opt-letter">A</span>They can never be the window max while the larger incoming element is also in the window</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Smaller elements are always out of bounds</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The deque only stores the maximum</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>They will be re-added when needed</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we store indices in the deque rather than values?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We need to check whether the front of the deque is still inside the current window (deque[0] >= i-k+1). Without the index, we can't determine if an element has slid out of the window."><span class="opt-letter">A</span>We need the index to check whether the front element is still inside the current window</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Values may be duplicated and ambiguous</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Indices are smaller numbers so the deque uses less memory</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Values can't be compared directly</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P101 Contains Duplicate -->
   <div class="prob-section" id="p-contains-dup">
     <div class="prob-section-header"><span class="prob-section-num">P101 — Easy</span><span class="prob-section-title">Contains Duplicate</span></div>
@@ -4074,7 +4334,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">110 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">120 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -4184,6 +4444,16 @@
       if(window.DSAProbs.carFleet&&document.getElementById('prob-car-fleet'))window.DSAProbs.carFleet('prob-car-fleet');
       if(window.DSAProbs.kokoEating&&document.getElementById('prob-koko-eating'))window.DSAProbs.kokoEating('prob-koko-eating');
       if(window.DSAProbs.searchMatrix&&document.getElementById('prob-search-matrix'))window.DSAProbs.searchMatrix('prob-search-matrix');
+      if(window.DSAProbs.validateBST&&document.getElementById('prob-validate-bst'))window.DSAProbs.validateBST('prob-validate-bst');
+      if(window.DSAProbs.lcaBinaryTree&&document.getElementById('prob-lca-bt'))window.DSAProbs.lcaBinaryTree('prob-lca-bt');
+      if(window.DSAProbs.serializeTree&&document.getElementById('prob-serialize-tree'))window.DSAProbs.serializeTree('prob-serialize-tree');
+      if(window.DSAProbs.reverseKGroup&&document.getElementById('prob-reverse-k-group'))window.DSAProbs.reverseKGroup('prob-reverse-k-group');
+      if(window.DSAProbs.copyListRandom&&document.getElementById('prob-copy-list-random'))window.DSAProbs.copyListRandom('prob-copy-list-random');
+      if(window.DSAProbs.lruCache&&document.getElementById('prob-lru-cache'))window.DSAProbs.lruCache('prob-lru-cache');
+      if(window.DSAProbs.combinationSumII&&document.getElementById('prob-combo-sum-ii'))window.DSAProbs.combinationSumII('prob-combo-sum-ii');
+      if(window.DSAProbs.nQueens&&document.getElementById('prob-n-queens'))window.DSAProbs.nQueens('prob-n-queens');
+      if(window.DSAProbs.lastStoneWeight&&document.getElementById('prob-last-stone'))window.DSAProbs.lastStoneWeight('prob-last-stone');
+      if(window.DSAProbs.slidingWindowMax&&document.getElementById('prob-sliding-win-max'))window.DSAProbs.slidingWindowMax('prob-sliding-win-max');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
