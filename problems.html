@@ -3810,6 +3810,267 @@
     </div>
   </div>
 
+  <!-- P121 K Closest Points to Origin -->
+  <div class="prob-section" id="p-k-closest">
+    <div class="prob-section-header"><span class="prob-section-num">P121 — Medium</span><span class="prob-section-title">K Closest Points to Origin</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heap</span><span class="prob-tag">Sorting</span></div>
+    <p class="prob-section-desc">Find the k points nearest to the origin (0,0). Sort by squared distance (no sqrt needed) and take the first k, or use a max-heap of size k to stream through large inputs.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Sort: O(n log n)</span><span class="prob-compl-chip">Heap: O(n log k)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Distance² = x²+y² — <strong>no square root needed</strong> since order is preserved. Avoids floating point error and is cheaper to compute.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-k-closest"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can we compare distances using x²+y² without taking the square root?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Square root is a monotonically increasing function — if d₁² < d₂², then d₁ < d₂. The relative ordering is identical, so we skip the expensive sqrt."><span class="opt-letter">A</span>√ is monotonically increasing — comparing squares gives the same ordering as comparing distances</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Distances are always whole numbers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The origin is always at (0,0)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Square root rounds to the nearest integer</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When is the max-heap approach preferred over sorting?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Always — it's faster in all cases</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When k << n, O(n log k) beats O(n log n). Useful for streaming data where n is huge but k is small."><span class="opt-letter">B</span>When k is much smaller than n — O(n log k) vs O(n log n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When all points have the same distance</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When k equals n</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P122 Time Based Key-Value Store -->
+  <div class="prob-section" id="p-time-based-kv">
+    <div class="prob-section-header"><span class="prob-section-num">P122 — Medium</span><span class="prob-section-title">Time Based Key-Value Store</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Binary Search</span><span class="prob-tag">Design</span></div>
+    <p class="prob-section-desc">Design a store where each key maps to a list of (timestamp, value) pairs. set() appends; get(key, t) returns the value with the largest timestamp ≤ t — binary search on the sorted timestamp list.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">set: O(1) · get: O(log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Timestamps arrive in increasing order (guaranteed), so the list is always sorted. Binary search for the <strong>rightmost timestamp ≤ t</strong>.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-time-based-kv"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the timestamp list always sorted without extra sorting?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem guarantees timestamps are strictly increasing with each set() call. Appending maintains sorted order automatically."><span class="opt-letter">A</span>The problem guarantees set() is called with strictly increasing timestamps</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We sort on every get() call</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Timestamps are always 1, 2, 3…</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The HashMap sorts automatically</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What should get() return if no timestamp ≤ t exists for the key?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The earliest stored value</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If no timestamp at or before t has been set for this key, there's no valid value to return — return empty string."><span class="opt-letter">B</span>Empty string "" — no valid entry exists at or before t</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>-1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The latest stored value regardless of time</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P123 Cheapest Flights Within K Stops -->
+  <div class="prob-section" id="p-cheapest-flights">
+    <div class="prob-section-header"><span class="prob-section-num">P123 — Medium</span><span class="prob-section-title">Cheapest Flights Within K Stops</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Bellman-Ford</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Find the cheapest flight from src to dst using at most k stops. Bellman-Ford with exactly k+1 relaxation rounds — each round represents one more edge (stop) allowed.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O((k+1) · E)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Run k+1 rounds of Bellman-Ford. Use a <strong>copy of prices</strong> each round so you don't chain relaxations within the same round (that would allow more than k+1 edges).</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-cheapest-flights"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we need a copy of the prices array each Bellman-Ford round?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Without a copy, a relaxation in round i could feed into another relaxation in the same round, effectively using more than k+1 edges. The copy ensures each round only adds one edge."><span class="opt-letter">A</span>Without it, a relaxation could chain into another in the same round — exceeding k stops</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It avoids modifying the flight list</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It makes the algorithm faster</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's only needed when k = 0</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">k stops means how many edges in the path?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>k edges</div>
+          <div class="quiz-option" data-correct="true" data-explanation="k stops = k intermediate cities = k+1 flights (edges). src→stop1→stop2→...→dst has k+1 edges."><span class="opt-letter">B</span>k+1 edges (src to dst via k intermediate stops)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>k−1 edges</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>k² edges</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P124 Alien Dictionary -->
+  <div class="prob-section" id="p-alien-dict">
+    <div class="prob-section-header"><span class="prob-section-num">P124 — Hard</span><span class="prob-section-title">Alien Dictionary</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Topological Sort</span></div>
+    <p class="prob-section-desc">Given words sorted in an alien language, deduce the character ordering. Compare adjacent words to extract "char A comes before char B" rules, then topological-sort the character graph.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(C) C = total unique characters</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Compare adjacent word pairs — the <strong>first differing character</strong> gives one ordering rule. Collect all rules, then BFS topo-sort. A cycle means invalid input.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-alien-dict"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When is the input considered invalid?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>When any two words are identical</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Two cases: (1) a cycle in the character graph — no valid ordering exists; (2) a word appears before a word that is its prefix — that violates sorted order (like 'abc' before 'ab')."><span class="opt-letter">B</span>When the character graph has a cycle, or a longer word precedes its own prefix</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When fewer than 26 characters appear</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When the same character appears in multiple words</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many ordering rules can we extract from two adjacent words?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Only the FIRST differing character gives us an ordering rule — once we find it, subsequent characters tell us nothing (the words could be in any order after that point)."><span class="opt-letter">A</span>Exactly one — only the first differing character position gives information</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>One per character position</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>As many as the shorter word's length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Zero — words alone can't infer ordering</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P125 Hand of Straights -->
+  <div class="prob-section" id="p-hand-straights">
+    <div class="prob-section-header"><span class="prob-section-num">P125 — Medium</span><span class="prob-section-title">Hand of Straights</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Hash Map</span></div>
+    <p class="prob-section-desc">Can you arrange cards into groups of consecutive values of size w? Count card frequencies, then greedily consume groups starting from the smallest card — if any card in the run is missing, return false.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>The smallest remaining card <strong>must</strong> start a group — if it can't, no valid grouping exists. Always process the minimum card first.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-hand-straights"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must the smallest remaining card always start a group?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The smallest card can't be placed in the middle or end of any group — no smaller cards are available to precede it. It must be a group starter, or the hand is invalid."><span class="opt-letter">A</span>No smaller cards exist to come before it — it can only start a group, never join one already begun</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Larger cards are always exhausted first</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The problem requires ascending order</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It minimizes the number of groups needed</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What quick check lets you return false immediately?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If the total number of cards isn't divisible by w, you can't possibly form complete groups of size w — return false immediately."><span class="opt-letter">B</span>len(hand) % w ≠ 0 — can't form whole groups</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The maximum card value exceeds w</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If the total number of cards isn't divisible by w, you can't possibly form complete groups of size w — return false immediately."><span class="opt-letter">B</span>len(hand) % w ≠ 0 — can't form complete groups of size w</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Any card appears more than w times</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The minimum and maximum values differ by more than w</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P126 Partition Labels -->
+  <div class="prob-section" id="p-partition-labels">
+    <div class="prob-section-header"><span class="prob-section-num">P126 — Medium</span><span class="prob-section-title">Partition Labels</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">String</span></div>
+    <p class="prob-section-desc">Partition a string into as many parts as possible so each letter appears in only one part. Record the last index of each character, then greedily extend the current partition until you've passed all last occurrences of letters seen so far.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Track <code>end = max(end, last[char])</code> as you scan. When <strong>i == end</strong>, the current partition is complete — cut here and start a new one.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-partition-labels"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we record the last occurrence of each character before scanning?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We need to know how far right we must extend the current partition — a character can't be cut off unless all copies of it are included. The last index tells us the minimum right boundary."><span class="opt-letter">A</span>It tells us the minimum right boundary we must reach before we can cut — all copies of a character must stay in one part</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>To sort the characters</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To count character frequencies</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To detect palindromes</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What determines when a partition ends?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>When a new character is seen</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When the current index i equals the running maximum last-occurrence (end), every character seen so far has had its last occurrence included — the partition is self-contained and we can cut."><span class="opt-letter">B</span>When current index i equals the maximum last-occurrence seen so far</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When the partition reaches a fixed size</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When a space character is encountered</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P127 Valid Parenthesis String -->
+  <div class="prob-section" id="p-valid-paren-str">
+    <div class="prob-section-header"><span class="prob-section-num">P127 — Medium</span><span class="prob-section-title">Valid Parenthesis String</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">String</span></div>
+    <p class="prob-section-desc">Check if a string with '(', ')' and '*' (wildcard for any char or empty) is valid. Track a range [lo, hi] of possible open-paren counts — '*' expands the range, ')' shrinks it.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>lo</strong> = min possible opens (treat * as ')'), <strong>hi</strong> = max possible opens (treat * as '('). Valid at end if lo==0. Invalid mid-scan if hi&lt;0.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-paren-str"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What do lo and hi represent at each step?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="lo is the minimum number of unmatched '(' if we treat all '*' as ')' or empty. hi is the maximum if we treat all '*' as '('. The valid count of open parens lies somewhere in [lo, hi]."><span class="opt-letter">A</span>lo = min possible unmatched '(' count; hi = max possible unmatched '(' count across all * interpretations</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The count of left and right parentheses</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Stack depth and star count</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Left and right pointer positions</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we clamp lo to max(0, lo-1) instead of just lo-1?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A negative lo would mean we've opened a 'virtual' negative parenthesis count — which doesn't make sense. '*' can be empty string, so the minimum open count can't go below 0."><span class="opt-letter">A</span>lo can't go below 0 — '*' can be empty string, meaning 0 unmatched opens is always possible</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>To avoid integer overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Because ')' always increases lo</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's a performance optimization</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P128 Merge Triplets to Form Target -->
+  <div class="prob-section" id="p-merge-triplets">
+    <div class="prob-section-header"><span class="prob-section-num">P128 — Medium</span><span class="prob-section-title">Merge Triplets to Form Target</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Can you merge (element-wise max) a subset of triplets to form the target? Skip any triplet with a value exceeding the target — merging it would overshoot. Check if the rest can reach the target.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Only use triplets where <strong>all three values ≤ target</strong>. Element-wise max the qualifying triplets — if the result equals target, return true.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-merge-triplets"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we skip triplets where any value exceeds the target?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Merging uses element-wise max. If a triplet has any value > target[i], merging it would make result[i] > target[i] — impossible to equal the target after that."><span class="opt-letter">A</span>Merging uses element-wise max — an over-target value would push the result above target, which can't be undone</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Such triplets aren't in the input</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>They'd cause integer overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We take element-wise min, not max</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What does element-wise max mean for merging triplets?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Pick the triplet with the largest sum</div>
+          <div class="quiz-option" data-correct="true" data-explanation="For each position, take the maximum across all merged triplets independently. [2,5,3] merged with [1,7,5] gives [max(2,1), max(5,7), max(3,5)] = [2,7,5]."><span class="opt-letter">B</span>For each of the three positions independently, take the maximum across all chosen triplets</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Add all three positions together</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Average across triplets</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P129 Meeting Rooms II -->
+  <div class="prob-section" id="p-meeting-rooms-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P129 — Medium</span><span class="prob-section-title">Meeting Rooms II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Intervals</span><span class="prob-tag">Heap</span></div>
+    <p class="prob-section-desc">Find the minimum number of conference rooms needed for all meetings. Sort by start time; if the earliest-ending meeting finishes before the next one starts, reuse that room — otherwise open a new one.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Min-heap of end times: if <strong>heap.min ≤ next.start</strong>, pop (reuse room) then push new end. Otherwise just push (new room). Heap size = rooms needed.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-meeting-rooms-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does the min-heap store, and why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The heap stores the end times of ongoing meetings. We always want to check if the soonest-ending meeting is done before the next one starts — min-heap gives us that in O(log n)."><span class="opt-letter">A</span>End times of ongoing meetings — so we can quickly find the earliest room that might free up</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Start times of all meetings</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Room numbers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Meeting durations</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The two-pointer (split starts/ends) approach also works. What does it track?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The number of rooms used historically</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sort start times and end times separately. Two pointers scan both arrays: if next start < next end, a room is needed (rooms++, move start pointer). Otherwise a room freed (rooms--, move end pointer). Track the max rooms."><span class="opt-letter">B</span>Separate sorted start/end arrays; a room opens when start pointer advances, closes when end pointer catches up</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The total number of meetings</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Meeting overlap durations</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P130 Pow(x, n) -->
+  <div class="prob-section" id="p-pow-x-n">
+    <div class="prob-section-header"><span class="prob-section-num">P130 — Medium</span><span class="prob-section-title">Pow(x, n)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Math</span><span class="prob-tag">Recursion</span></div>
+    <p class="prob-section-desc">Compute x raised to the power n efficiently. Naive multiplication takes O(n) steps — fast exponentiation halves the exponent each round by squaring the base, achieving O(log n).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Naive: O(n)</span><span class="prob-compl-chip">Fast exp: O(log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>If n is even: x^n = (x²)^(n/2). If odd: x^n = x · (x²)^((n-1)/2). <strong>Halving n each step</strong> gives log₂(n) multiplications total.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-pow-x-n"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How do you handle a negative exponent n?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Return 0</div>
+          <div class="quiz-option" data-correct="true" data-explanation="x^(-n) = 1 / x^n. Compute the result for |n|, then invert it."><span class="opt-letter">B</span>Compute pow(x, |n|) then return 1 / result</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Negate x and use positive n</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Return -pow(x, -n)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many multiplications does fast exponentiation need for n=1024?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>1024</div>
+          <div class="quiz-option" data-correct="true" data-explanation="log₂(1024) = 10. Fast exponentiation needs only 10 squarings — versus 1024 multiplications naively."><span class="opt-letter">B</span>10 — log₂(1024) = 10 squarings</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>512</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>32</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P111 Validate BST -->
   <div class="prob-section" id="p-validate-bst">
     <div class="prob-section-header"><span class="prob-section-num">P111 — Medium</span><span class="prob-section-title">Validate Binary Search Tree</span></div>
@@ -4334,7 +4595,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">120 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">130 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -4454,6 +4715,16 @@
       if(window.DSAProbs.nQueens&&document.getElementById('prob-n-queens'))window.DSAProbs.nQueens('prob-n-queens');
       if(window.DSAProbs.lastStoneWeight&&document.getElementById('prob-last-stone'))window.DSAProbs.lastStoneWeight('prob-last-stone');
       if(window.DSAProbs.slidingWindowMax&&document.getElementById('prob-sliding-win-max'))window.DSAProbs.slidingWindowMax('prob-sliding-win-max');
+      if(window.DSAProbs.kClosestPoints&&document.getElementById('prob-k-closest'))window.DSAProbs.kClosestPoints('prob-k-closest');
+      if(window.DSAProbs.timeBasedKV&&document.getElementById('prob-time-based-kv'))window.DSAProbs.timeBasedKV('prob-time-based-kv');
+      if(window.DSAProbs.cheapestFlights&&document.getElementById('prob-cheapest-flights'))window.DSAProbs.cheapestFlights('prob-cheapest-flights');
+      if(window.DSAProbs.alienDictionary&&document.getElementById('prob-alien-dict'))window.DSAProbs.alienDictionary('prob-alien-dict');
+      if(window.DSAProbs.handOfStraights&&document.getElementById('prob-hand-straights'))window.DSAProbs.handOfStraights('prob-hand-straights');
+      if(window.DSAProbs.partitionLabels&&document.getElementById('prob-partition-labels'))window.DSAProbs.partitionLabels('prob-partition-labels');
+      if(window.DSAProbs.validParenString&&document.getElementById('prob-valid-paren-str'))window.DSAProbs.validParenString('prob-valid-paren-str');
+      if(window.DSAProbs.mergeTriplets&&document.getElementById('prob-merge-triplets'))window.DSAProbs.mergeTriplets('prob-merge-triplets');
+      if(window.DSAProbs.meetingRoomsII&&document.getElementById('prob-meeting-rooms-ii'))window.DSAProbs.meetingRoomsII('prob-meeting-rooms-ii');
+      if(window.DSAProbs.powXN&&document.getElementById('prob-pow-x-n'))window.DSAProbs.powXN('prob-pow-x-n');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
