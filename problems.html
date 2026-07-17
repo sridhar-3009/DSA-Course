@@ -4072,6 +4072,266 @@
     </div>
   </div>
 
+  <!-- P150 Minimum Interval to Include Each Query -->
+  <div class="prob-section" id="p-min-interval-query">
+    <div class="prob-section-header"><span class="prob-section-num">P150 — Hard</span><span class="prob-section-title">Minimum Interval to Include Each Query</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Sorting</span><span class="prob-tag">Heap</span></div>
+    <p class="prob-section-desc">For each query point, find the smallest interval that contains it. Sort both, sweep with a min-heap keyed by interval size.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log n + q log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Sort intervals by start and queries by value. Sweep: add intervals whose start ≤ query, evict expired ones, then <strong>the heap top gives the smallest active interval</strong>.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-interval-query"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What key does the min-heap use to return the "minimum interval"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The heap is keyed by interval size (right−left+1). We want the smallest enclosing interval, so a min-heap by size always gives us the best candidate at the top."><span class="opt-letter">A</span>Interval size (right − left + 1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Interval start value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Interval end value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Query index</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why must we sort queries before sweeping?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To avoid duplicates</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Sorting queries lets us advance the interval pointer monotonically — each interval only enters the heap once. Without sorted queries, we'd need to re-scan intervals for every query."><span class="opt-letter">B</span>So the interval pointer advances monotonically — each interval is added at most once</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To output answers in sorted order</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Binary search requires sorted queries</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P149 Pascal's Triangle -->
+  <div class="prob-section" id="p-pascal-triangle">
+    <div class="prob-section-header"><span class="prob-section-num">P149 — Easy</span><span class="prob-section-title">Pascal's Triangle</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Build Pascal's Triangle row by row — each interior cell is the sum of the two cells directly above it.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(n²) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Each row starts and ends with 1. Interior value at column c: <strong>triangle[r−1][c−1] + triangle[r−1][c]</strong>. Classic DP where each state depends on exactly two previous states.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-pascal-triangle"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What is Pascal's Triangle row 4 (0-indexed)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>[1, 3, 3, 1]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Row 4 (0-indexed) is [1,4,6,4,1]. Each value is a binomial coefficient C(4,k). The pattern follows C(n,k) = C(n−1,k−1) + C(n−1,k)."><span class="opt-letter">B</span>[1, 4, 6, 4, 1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>[1, 5, 10, 10, 5, 1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>[1, 4, 4, 1]</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How can you generate just row n in O(n) space?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Keep only one row and update it in-place from right to left: row[c] += row[c−1]. Going right-to-left prevents overwriting values you still need."><span class="opt-letter">A</span>Update a single array in-place from right to left: row[c] += row[c−1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Recursion with memoization</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Use binomial coefficients with factorials</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>You must store all previous rows</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P148 Maximum Product of Word Lengths -->
+  <div class="prob-section" id="p-max-product-word-lengths">
+    <div class="prob-section-header"><span class="prob-section-num">P148 — Medium</span><span class="prob-section-title">Maximum Product of Word Lengths</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">String</span><span class="prob-tag">Bit Manipulation</span></div>
+    <p class="prob-section-desc">Find the maximum product of lengths of two words that share no common letters. Encode each word as a 26-bit integer to make the "no shared letter" check an O(1) AND operation.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n² + Σ|word|) time · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Set bit i if letter (i+'a') appears in the word. Two words share no letters iff <strong>mask[i] &amp; mask[j] === 0</strong> — a single bitwise AND replaces a 26-char intersection check.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-product-word-lengths"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How does a bitmask encode which letters are in a word?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="For each character c in the word, set bit (c−'a') of an integer. Bit 0 = 'a', bit 1 = 'b', …, bit 25 = 'z'. The resulting 26-bit integer is the word's letter fingerprint."><span class="opt-letter">A</span>Set bit (c − 'a') for each character c — a 26-bit integer covers all lowercase letters</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Count character frequencies</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Hash each word to a 32-bit value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Store character ASCII values</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What does mask[i] & mask[j] === 0 guarantee?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The words are anagrams</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The words have the same length</div>
+          <div class="quiz-option" data-correct="true" data-explanation="When no bit position is set in both masks simultaneously, the two words have zero letters in common — exactly the condition we need."><span class="opt-letter">C</span>The two words share no common letters</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>One word is a substring of the other</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P147 Jump Game III -->
+  <div class="prob-section" id="p-jump-game-iii">
+    <div class="prob-section-header"><span class="prob-section-num">P147 — Medium</span><span class="prob-section-title">Jump Game III</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">BFS</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Starting at a given index, can you reach any index with value 0? From index i you can jump left or right by arr[i] steps — BFS explores all reachable positions.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>BFS or DFS both work — mark visited to avoid cycles. The key: from index i, only two destinations exist: <strong>i + arr[i]</strong> and <strong>i − arr[i]</strong>. Stop the moment you land on a 0.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-jump-game-iii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we track visited indices?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Without a visited set, the BFS/DFS could cycle between two indices indefinitely — e.g., index 2 jumps to index 4 and index 4 jumps back to index 2. Tracking visited prevents re-processing any index."><span class="opt-letter">A</span>To prevent infinite cycles — indices can jump back to each other</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>To count the number of jumps</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Array values change after jumping</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>To enable binary search</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">From index i with arr[i] = 3 and n = 7, what are the possible next indices?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>i−1 and i+1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Only i+3 (can't go negative)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Both i+arr[i] and i−arr[i] are valid as long as they're within bounds [0, n−1]. If i=5, we can jump to 8 (out of bounds, skip) and 2 (valid)."><span class="opt-letter">C</span>i + arr[i] and i − arr[i], if within bounds [0, n−1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>All indices reachable in 3 steps</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P146 Find All Anagrams in String -->
+  <div class="prob-section" id="p-find-all-anagrams">
+    <div class="prob-section-header"><span class="prob-section-num">P146 — Medium</span><span class="prob-section-title">Find All Anagrams in a String</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Sliding Window</span><span class="prob-tag">Hash Map</span></div>
+    <p class="prob-section-desc">Find every starting index in s where a substring of length |p| is an anagram of p. A fixed-size sliding window with character frequency maps makes this O(n).</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space (26-char alphabet)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Window size is fixed at |p|. Slide right: <strong>add the new right char, remove the leftmost char</strong>. Check equality of frequency maps — a match means the window is an anagram.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-all-anagrams"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the window size fixed at |p| in this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="An anagram of p must have exactly the same characters in the same count — therefore the same length. A window shorter or longer than |p| can never be an anagram of p."><span class="opt-letter">A</span>An anagram must have the same length as p — different lengths can't be anagrams</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>For efficiency — variable windows are slower</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The problem constrains the substring length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Hash maps only work with fixed windows</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does comparing arrays of 26 ints beat comparing hash maps?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Array comparison is O(n) while hash map is O(1)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Comparing two fixed-length 26-element arrays is O(26) = O(1). Hash map equality requires iterating over all keys and handling missing-key edge cases, which is slower in practice."><span class="opt-letter">B</span>Fixed 26-element array comparison is O(1) — simpler and cache-friendly versus hash map key iteration</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Arrays use less memory always</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Hash maps can't store character counts</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P145 Next Permutation -->
+  <div class="prob-section" id="p-next-permutation">
+    <div class="prob-section-header"><span class="prob-section-num">P145 — Medium</span><span class="prob-section-title">Next Permutation</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Rearrange numbers into the lexicographically next greater permutation, in-place and in O(1) space. Three steps: find the pivot, swap with the next-greater element, then reverse the suffix.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Find the rightmost index i where <strong>arr[i] &lt; arr[i+1]</strong> (the "pivot"). Swap arr[i] with the smallest element to its right that's larger than it, then <strong>reverse the suffix</strong> after i.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-next-permutation"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does it mean if no pivot is found (arr is fully descending)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A fully descending array is the largest permutation. The 'next' permutation wraps around to the smallest — which is the fully ascending array. The algorithm handles this by reversing the entire array."><span class="opt-letter">A</span>It's the last permutation — wrap around by reversing the whole array to get the smallest</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The array is already sorted</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>There is no next permutation</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Output -1</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why reverse the suffix (not sort it) after the swap?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Reversing is more memory-efficient</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The suffix after the pivot is already in descending order (that's why the pivot was the rightmost ascent). Reversing a descending sequence yields ascending — the lexicographically smallest suffix — in O(n) without sorting."><span class="opt-letter">B</span>The suffix is already descending, so reversing it gives ascending (smallest) in O(n) without a sort</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sorting would change the wrong elements</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The suffix is already ascending</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P144 Decode String -->
+  <div class="prob-section" id="p-decode-string">
+    <div class="prob-section-header"><span class="prob-section-num">P144 — Medium</span><span class="prob-section-title">Decode String</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Stack</span></div>
+    <p class="prob-section-desc">Decode a pattern like "3[a2[c]]" into "accaccacc". A stack naturally handles nested brackets — push the current string and repeat count when you see "[", and pop and expand when you see "]".</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(output length) time · O(depth) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>On "[": push <strong>(current_string, repeat_count)</strong> and reset both. On "]": pop, then set current = popped_string + current × repeat_count. The stack handles any nesting depth.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-decode-string"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What is stored on the stack when "[" is encountered?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We push (current_string, k) — the string built so far before this bracket and the repeat count. After pushing, both are reset. When ']' is found, we pop and prepend the saved string to k copies of what we built inside."><span class="opt-letter">A</span>(current_string, repeat_count k) — saving state before entering a nested block</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Only the repeat count</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The bracket character itself</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The index of the opening bracket</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How would you decode "2[3[a]]" step by step?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>"aaaaaa" (6 a's) via two passes</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Push ('',2) on outer '['. Push ('',3) on inner '['. On first ']': cur = '' + 'a'×3 = 'aaa'. On second ']': cur = '' + 'aaa'×2 = 'aaaaaa'."><span class="opt-letter">B</span>Push ('',2), push ('',3), ']' → 'aaa', ']' → 'aaaaaa'</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Recursively decode inner first: 3[a]=aaa, then 2[aaa]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The stack can't handle this nesting</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P143 Binary Tree Zigzag Level Order -->
+  <div class="prob-section" id="p-zigzag-level-order">
+    <div class="prob-section-header"><span class="prob-section-num">P143 — Medium</span><span class="prob-section-title">Binary Tree Zigzag Level Order Traversal</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Traverse a binary tree level by level, but alternate direction — left-to-right on even levels and right-to-left on odd levels. Standard BFS with a level counter handles this cleanly.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>BFS naturally gives you level-at-a-time rows. Just track <strong>level % 2</strong>: if odd, reverse the row before adding to results. One conditional, zero extra data structures.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-zigzag-level-order"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">At which levels do values go right-to-left (assuming root = level 0)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Even levels (0, 2, 4, …)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The problem uses level 0 (root) as left-to-right. Odd levels (1, 3, 5…) are reversed. This alternating pattern is what makes it 'zigzag'."><span class="opt-letter">B</span>Odd levels (1, 3, 5, …)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>All levels</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only the last level</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Using a deque (double-ended queue), how can you avoid reversing the row?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="For left-to-right levels, append to the back of the deque. For right-to-left levels, prepend to the front. Both are O(1) per node, so no O(k) reverse step is needed."><span class="opt-letter">A</span>Append to back for L→R levels; prepend to front for R→L levels — both O(1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Use two separate queues</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Reverse the BFS queue itself</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>You still need to reverse — deque doesn't help</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P142 Symmetric Tree -->
+  <div class="prob-section" id="p-symmetric-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P142 — Easy</span><span class="prob-section-title">Symmetric Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">DFS</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Check if a binary tree is a mirror of itself. A recursive helper compares the left subtree against the right subtree in mirror order — left.left vs right.right, and left.right vs right.left.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(h) space (call stack)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Compare (left, right) as a pair: both null → match; one null → mismatch; values differ → mismatch. Then recurse: <strong>isMirror(left.left, right.right) && isMirror(left.right, right.left)</strong>.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-symmetric-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Which recursive call checks the correct mirror pairs?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>isMirror(left.left, right.left) && isMirror(left.right, right.right)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="For a mirror: the outer children (left.left ↔ right.right) and inner children (left.right ↔ right.left) must match. Crossing the sides is the key distinction from a standard subtree equality check."><span class="opt-letter">B</span>isMirror(left.left, right.right) && isMirror(left.right, right.left)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>isEqual(left, right)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>isMirror(left.right, right.right)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How do you solve Symmetric Tree iteratively?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Use a queue initialized with (root.left, root.right). Each iteration dequeues a pair: check equality, then enqueue (left.left, right.right) and (left.right, right.left). If any pair mismatches, return false."><span class="opt-letter">A</span>BFS with a queue of paired nodes: dequeue (L, R), check values, enqueue (L.left,R.right) and (L.right,R.left)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>In-order traversal and check palindrome</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Level-order traversal and compare each level</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Iterative DFS on both subtrees simultaneously</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P141 Flatten Binary Tree to Linked List -->
+  <div class="prob-section" id="p-flatten-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P141 — Medium</span><span class="prob-section-title">Flatten Binary Tree to Linked List</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Tree</span><span class="prob-tag">Linked List</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Flatten a binary tree into a linked list in-place using pre-order traversal order. Morris traversal does this with O(1) extra space by threading the predecessor's right pointer.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Pre-order: O(n) · O(n) — Morris: O(n) · O(1)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Pre-order gives the final node sequence. For each node, <strong>move the right subtree to the rightmost leaf of the left subtree</strong>, then move the left subtree to the right and null out left. Repeat in-place.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-flatten-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What traversal order determines the flattened sequence?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem explicitly states the result should follow pre-order: root → left subtree → right subtree. This places the root first, then all left descendants, then all right descendants."><span class="opt-letter">A</span>Pre-order (root, left, right)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>In-order (left, root, right)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Post-order (left, right, root)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Level-order (BFS)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the O(1) space approach, where does the current node's right subtree go?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>It is discarded</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Find the rightmost node of the left subtree (it's the pre-order predecessor). Attach the right subtree there as its right child. Then move the entire left subtree to the right and null out left. This relinks without extra space."><span class="opt-letter">B</span>Attached to the rightmost node of the left subtree, then the left subtree becomes the right child</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Saved in a stack</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Appended after the entire left subtree is flattened</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P121 K Closest Points to Origin -->
   <div class="prob-section" id="p-k-closest">
     <div class="prob-section-header"><span class="prob-section-num">P121 — Medium</span><span class="prob-section-title">K Closest Points to Origin</span></div>
@@ -4857,7 +5117,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">140 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">150 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -4997,6 +5257,16 @@
       if(window.DSAProbs.kSmallestPairs&&document.getElementById('prob-k-smallest-pairs'))window.DSAProbs.kSmallestPairs('prob-k-smallest-pairs');
       if(window.DSAProbs.pathSumII&&document.getElementById('prob-path-sum-ii'))window.DSAProbs.pathSumII('prob-path-sum-ii');
       if(window.DSAProbs.countGoodTriplets&&document.getElementById('prob-count-good-triplets'))window.DSAProbs.countGoodTriplets('prob-count-good-triplets');
+      if(window.DSAProbs.flattenTree&&document.getElementById('prob-flatten-tree'))window.DSAProbs.flattenTree('prob-flatten-tree');
+      if(window.DSAProbs.symmetricTree&&document.getElementById('prob-symmetric-tree'))window.DSAProbs.symmetricTree('prob-symmetric-tree');
+      if(window.DSAProbs.zigzagLevelOrder&&document.getElementById('prob-zigzag-level-order'))window.DSAProbs.zigzagLevelOrder('prob-zigzag-level-order');
+      if(window.DSAProbs.decodeString&&document.getElementById('prob-decode-string'))window.DSAProbs.decodeString('prob-decode-string');
+      if(window.DSAProbs.nextPermutation&&document.getElementById('prob-next-permutation'))window.DSAProbs.nextPermutation('prob-next-permutation');
+      if(window.DSAProbs.findAllAnagrams&&document.getElementById('prob-find-all-anagrams'))window.DSAProbs.findAllAnagrams('prob-find-all-anagrams');
+      if(window.DSAProbs.jumpGameIII&&document.getElementById('prob-jump-game-iii'))window.DSAProbs.jumpGameIII('prob-jump-game-iii');
+      if(window.DSAProbs.maxProductWordLengths&&document.getElementById('prob-max-product-word-lengths'))window.DSAProbs.maxProductWordLengths('prob-max-product-word-lengths');
+      if(window.DSAProbs.pascalTriangle&&document.getElementById('prob-pascal-triangle'))window.DSAProbs.pascalTriangle('prob-pascal-triangle');
+      if(window.DSAProbs.minIntervalQuery&&document.getElementById('prob-min-interval-query'))window.DSAProbs.minIntervalQuery('prob-min-interval-query');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
