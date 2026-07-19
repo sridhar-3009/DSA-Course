@@ -4072,6 +4072,266 @@
     </div>
   </div>
 
+  <!-- P160 Distinct Subsequences -->
+  <div class="prob-section" id="p-distinct-subseq">
+    <div class="prob-section-header"><span class="prob-section-num">P160 — Hard</span><span class="prob-section-title">Distinct Subsequences</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Count the number of distinct ways to form string t as a subsequence of s. The DP table tracks how many ways each prefix of s can produce each prefix of t.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>If s[i]=t[j]: <strong>dp[i][j] = dp[i−1][j] + dp[i−1][j−1]</strong> (skip s[i], or match it). If not: dp[i][j] = dp[i−1][j] (skip s[i] only). Row 0 is all 1s — empty t matches any prefix.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-distinct-subseq"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is dp[i][0] = 1 for all i?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="An empty target t can always be formed from any prefix of s in exactly one way — by choosing no characters. This is the base case analogous to dp[0][0]=1."><span class="opt-letter">A</span>An empty target string can always be matched in exactly one way — choose nothing</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The first character always matches</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We initialize to 1 to avoid division by zero</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[i][0] tracks the number of characters used</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When s[i]=t[j], why do we add dp[i−1][j−1] to dp[i−1][j]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>To count duplicates</div>
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i−1][j] counts ways that skip s[i]. dp[i−1][j−1] counts ways that use s[i] to match t[j]. Both are valid distinct subsequences, so we add them."><span class="opt-letter">B</span>dp[i−1][j] = ways skipping s[i]; dp[i−1][j−1] = ways using s[i] to match t[j] — both count</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To reset the count for overlapping matches</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only dp[i−1][j−1] should be added</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P159 Regular Expression Matching -->
+  <div class="prob-section" id="p-regex-matching">
+    <div class="prob-section-header"><span class="prob-section-num">P159 — Hard</span><span class="prob-section-title">Regular Expression Matching</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Match a string s against pattern p with "." (any char) and "*" (zero or more of previous). DP solves it by building a truth table — does s[0..i] match p[0..j]?</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>For "<strong>x*</strong>": either use zero copies → dp[i][j−2], or use one more → dp[i−1][j] if x matches s[i]. The "<strong>.</strong>" wildcard matches any character. All other chars must match exactly.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-regex-matching"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How does "x*" match zero characters?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="By looking at dp[i][j−2]: we check if the string matches without the 'x*' pattern at all (treat it as if x* were deleted). This is the 'zero occurrences' case."><span class="opt-letter">A</span>dp[i][j−2] — check if the match holds with x* deleted (zero occurrences)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>dp[i−1][j]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>dp[i][j+2]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[i−1][j−1]</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why is "." simpler to handle than "*"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'.' matches exactly one character (any). So dp[i][j] = dp[i−1][j−1] — same as a direct character match. No branching needed. '*' is harder because it can match 0, 1, or many characters."><span class="opt-letter">A</span>"." always matches exactly one char — dp[i][j] = dp[i−1][j−1]. No branching, unlike "*" which can match zero or more</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>"." can be skipped</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>"." only applies to digits</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>"." and "*" are handled identically</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P158 Burst Balloons -->
+  <div class="prob-section" id="p-burst-balloons">
+    <div class="prob-section-header"><span class="prob-section-num">P158 — Hard</span><span class="prob-section-title">Burst Balloons</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Interval DP</span></div>
+    <p class="prob-section-desc">Burst all balloons to maximize coins, where bursting balloon i earns nums[i−1]×nums[i]×nums[i+1]. Interval DP reverses the thinking — choose which balloon to burst last in each interval.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n³) time · O(n²) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Instead of "which to burst first," ask: <strong>which balloon k is the last to burst in [l, r]?</strong> When k bursts last, its neighbors are the boundaries l and r — coins = nums[l]×nums[k]×nums[r] + dp[l][k] + dp[k][r].</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-burst-balloons"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does "last to burst" make the DP recurrence well-defined?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If k is the last balloon in [l,r], then when k bursts, all others in [l,r] are already gone. So k's neighbors are exactly l and r — fixed and known. Thinking 'first to burst' is harder because the neighbors change unpredictably."><span class="opt-letter">A</span>When k bursts last, all others in [l,r] are already gone, so k's only neighbors are l and r — always known</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It avoids negative numbers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It enables memoization</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The "first to burst" formulation gives the same recurrence</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What are the dummy boundary values added to nums, and why?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Prepend and append 1 so that bursting a balloon at the edge of the array uses 1 as its phantom neighbor. This avoids out-of-bounds edge-case checks throughout the DP."><span class="opt-letter">A</span>1 is prepended and appended so edge balloons always multiply by 1 — no special boundary logic needed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>0 is added on both sides</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The max value is added to both sides</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>No boundary values are needed</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P157 Edit Distance -->
+  <div class="prob-section" id="p-edit-distance">
+    <div class="prob-section-header"><span class="prob-section-num">P157 — Hard</span><span class="prob-section-title">Edit Distance</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Find the minimum insertions, deletions, and replacements to convert word1 into word2. The DP table builds up from single characters — matching chars cost 0, mismatches cost 1 + the best of three operations.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>When chars match: <strong>dp[i][j] = dp[i−1][j−1]</strong> (free move). When they differ: <strong>dp[i][j] = 1 + min(dp[i−1][j], dp[i][j−1], dp[i−1][j−1])</strong> — delete, insert, or replace.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-edit-distance"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What do dp[i−1][j], dp[i][j−1], and dp[i−1][j−1] represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i−1][j]: delete s[i] (move up). dp[i][j−1]: insert t[j] into s (move left). dp[i−1][j−1]: replace s[i] with t[j] (move diagonally). The minimum of these three + 1 gives the optimal edit."><span class="opt-letter">A</span>Delete s[i] / insert t[j] / replace s[i] with t[j] — three operations modeled by three adjacent DP cells</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Swap / copy / delete</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Previous row / previous column / current cell</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Mismatch count at three positions</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How can you reduce space from O(m·n) to O(n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Use a hash map instead of a 2D array</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Each cell dp[i][j] depends only on the current and previous row. Keep two 1D arrays (prev and curr) and overwrite prev with curr after each row. This reduces space to O(n)."><span class="opt-letter">B</span>Keep only two 1D arrays (prev row and current row) — each cell depends only on the row above</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Fill the table column by column instead of row by row</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Use recursion without memoization</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P156 Longest Increasing Subsequence -->
+  <div class="prob-section" id="p-lis">
+    <div class="prob-section-header"><span class="prob-section-num">P156 — Medium</span><span class="prob-section-title">Longest Increasing Subsequence</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Binary Search</span></div>
+    <p class="prob-section-desc">Find the length of the longest strictly increasing subsequence. The O(n²) DP tracks the best length ending at each index; the O(n log n) binary search approach builds a patience-sorting "pile" array.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">DP: O(n²)</span><span class="prob-compl-chip">Binary Search: O(n log n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>For O(n log n): maintain a <strong>tails</strong> array where tails[i] = smallest tail of any increasing subsequence of length i+1. Binary search to find where each new element fits — replace or extend.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lis"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">In the O(n²) DP, what does dp[i] store?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i] stores the length of the longest increasing subsequence that ends at index i (including nums[i] itself). To compute dp[i], scan all j < i where nums[j] < nums[i] and take max(dp[j]+1)."><span class="opt-letter">A</span>The length of the longest increasing subsequence ending exactly at index i</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The starting index of the LIS ending at i</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The global LIS length seen so far</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The number of LIS of length i</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the O(n log n) approach, what does the "tails" array represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The actual LIS elements</div>
+          <div class="quiz-option" data-correct="true" data-explanation="tails[i] is the smallest ending element of any increasing subsequence of length i+1 seen so far. This ensures tails is always sorted, enabling binary search. The final length of tails is the LIS length."><span class="opt-letter">B</span>The smallest tail of every increasing subsequence of each possible length — sorted, so binary search applies</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The last element of the overall best LIS</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Elements sorted in reverse order</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P155 Unique Paths -->
+  <div class="prob-section" id="p-unique-paths">
+    <div class="prob-section-header"><span class="prob-section-num">P155 — Medium</span><span class="prob-section-title">Unique Paths</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Math</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Count the distinct paths from the top-left to the bottom-right of an m×n grid, moving only right or down. Each cell's count equals the sum of the cell above and the cell to the left.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">DP: O(m·n)</span><span class="prob-compl-chip">Math: O(m+n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>You always take exactly (m−1) down moves and (n−1) right moves — in some order. The answer is the number of ways to arrange them: <strong>C(m+n−2, m−1)</strong>. The DP grid builds the same answer bottom-up.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-unique-paths"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the entire top row and left column filled with 1?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="From any cell in the top row, there's only one way to reach it (all right moves). Same for the left column (all down moves). These are the base cases — no choices exist on the edges."><span class="opt-letter">A</span>There's exactly one path to reach any edge cell — only right moves (top row) or only down moves (left column)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It's an initialization trick to avoid null checks</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The robot starts at all edge cells</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1 represents the number of obstacles</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why does the combinatorics formula C(m+n−2, m−1) give the right answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Because the grid has m+n−2 total paths</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Every path consists of exactly (m−1) down moves and (n−1) right moves — always (m+n−2) total. The number of paths = ways to choose which (m−1) of those moves are 'down' = C(m+n−2, m−1)."><span class="opt-letter">B</span>A path is always m+n−2 steps; choose which m−1 steps are "down" — the rest are "right"</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Pascal's triangle rows match path counts</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's a coincidence for small grids only</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P154 Coin Change II -->
+  <div class="prob-section" id="p-coin-change-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P154 — Medium</span><span class="prob-section-title">Coin Change II</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Count the number of distinct combinations (not permutations) of coins that sum to amount. The 2D DP collapses to 1D by processing one coin denomination at a time.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · amount) time · O(amount) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Iterate coins in the outer loop, amounts in the inner loop: <strong>dp[a] += dp[a − coin]</strong>. The outer-coin loop ensures each denomination is counted once, not as permutations.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-coin-change-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does swapping the loop order (coins outer, amounts inner) avoid counting permutations?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="With coins in the outer loop, for each coin we extend existing combinations. Any combination built so far only uses coins we've already processed — so [1,2] and [2,1] are never counted separately. Reversing the loops (amounts outer) would count both orders."><span class="opt-letter">A</span>Processing each coin completely before moving on ensures [1,2] and [2,1] are treated as the same combination</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The inner loop sorts the coins automatically</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The outer loop prevents reusing coins</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Loop order doesn't affect the result</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does Coin Change I (minimum coins) differ from Coin Change II (count combos)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>They use different coin sets</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Change I uses dp[a] = min(dp[a], dp[a−c]+1) — seeking the minimum number of coins. Change II uses dp[a] += dp[a−c] — accumulating the count of ways. Same loop structure, different update."><span class="opt-letter">B</span>Change I: dp[a] = min(dp[a], dp[a−c]+1). Change II: dp[a] += dp[a−c] — update rule differs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Change II needs a 2D table, Change I uses 1D</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Change I counts combos, Change II finds minimum</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P153 Longest Common Subsequence -->
+  <div class="prob-section" id="p-lcs-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P153 — Medium</span><span class="prob-section-title">Longest Common Subsequence</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Find the length of the longest subsequence present in both strings. A 2D DP table fills row by row — matching characters extend the diagonal, mismatches take the max of adjacent cells.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space → O(n) with rolling array</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>If a[i]=b[j]: <strong>dp[i][j] = dp[i−1][j−1] + 1</strong>. Else: <strong>dp[i][j] = max(dp[i−1][j], dp[i][j−1])</strong>. The diagonal represents "both match," while up/left represent skipping one character.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-lcs-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When characters match, why use dp[i−1][j−1] instead of dp[i−1][j] or dp[i][j−1]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i−1][j−1] is the best LCS without either of the current characters. Since both chars match, we extend that by 1. Using dp[i−1][j] or dp[i][j−1] would mean we've only consumed one side, not both."><span class="opt-letter">A</span>It's the LCS of the prefixes without both current characters — matching extends exactly that by 1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>dp[i−1][j−1] is always the largest value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We always use dp[i−1][j−1] regardless of match</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The diagonal move avoids counting the same char twice</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">LCS between "AGGTAB" and "GXTXAYB" is what length?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>3 ("GTB")</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The LCS is 'GTAB' (length 4): G(2)→T(4)→A(5)→B(7) from string 2 mapped to G(2)→T(3)→A(5)→B(6) from string 1."><span class="opt-letter">B</span>4 ("GTAB")</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>5</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>2</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P152 House Robber -->
+  <div class="prob-section" id="p-house-robber">
+    <div class="prob-section-header"><span class="prob-section-num">P152 — Medium</span><span class="prob-section-title">House Robber</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Rob houses in a row without hitting two adjacent ones. At each house you choose: skip it (keep prior max) or rob it (add its value to the best two-houses-back). Classic DP reduced to two variables.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i] = max(dp[i−1], dp[i−2] + nums[i]). You never need the full array — just <strong>two rolling variables</strong>: "best without current house" and "best if we rob current house."</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-house-robber"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't you rob two adjacent houses?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem states adjacent houses have a connected alarm — robbing both triggers it. This constraint creates the DP recurrence: at each house, choose between taking this house plus the non-adjacent best, or skipping it."><span class="opt-letter">A</span>Adjacent houses share an alarm system — triggering both raises an alert</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>You can only carry one house's worth of loot</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The second house is always empty</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It's a greedy constraint, not a DP one</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For nums = [2,7,9,3,1], what is the maximum loot?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>11 (rob houses 0,2)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Rob houses at indices 0, 2, 4: 2+9+1=12. The DP trace: dp=[2,7,11,11,12]. Maximum is 12."><span class="opt-letter">B</span>12 (rob houses 0,2,4: 2+9+1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>10 (rob houses 1,4: 7+3)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>13 (rob all odd indices)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P151 Climbing Stairs -->
+  <div class="prob-section" id="p-climbing-stairs">
+    <div class="prob-section-header"><span class="prob-section-num">P151 — Easy</span><span class="prob-section-title">Climbing Stairs</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Count how many distinct ways you can climb n stairs, taking 1 or 2 steps at a time. The answer is the Fibonacci sequence — you can only arrive at stair n from stair n−1 or n−2.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space (two vars)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[n] = dp[n−1] + dp[n−2] — identical to Fibonacci. You never need the full array: <strong>two variables rolling forward</strong> give the answer in O(1) space.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-climbing-stairs"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is dp[n] = dp[n−1] + dp[n−2]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="You reach stair n either from stair n−1 (take 1 step) or stair n−2 (take 2 steps). The ways to reach each of those are independent, so we add them. This is exactly the Fibonacci recurrence."><span class="opt-letter">A</span>You reach stair n from n−1 (1-step) or n−2 (2-step) — the ways to reach those two stairs are independent and add up</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Because n−1 and n−2 are always valid stairs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It mirrors Pascal's Triangle recurrence</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The staircase has branching factor 2</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">If you could take 1, 2, or 3 steps at a time, how would the recurrence change?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>dp[n] = dp[n−1] × dp[n−2] × dp[n−3]</div>
+          <div class="quiz-option" data-correct="true" data-explanation="With steps of 1, 2, or 3, you can arrive at stair n from n−1, n−2, or n−3. Sum all three. This is the 'Tribonacci' recurrence."><span class="opt-letter">B</span>dp[n] = dp[n−1] + dp[n−2] + dp[n−3] — the Tribonacci recurrence</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>dp[n] = 3 × dp[n−1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[n] = dp[n−1] + dp[n−3] (skip n−2)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P150 Minimum Interval to Include Each Query -->
   <div class="prob-section" id="p-min-interval-query">
     <div class="prob-section-header"><span class="prob-section-num">P150 — Hard</span><span class="prob-section-title">Minimum Interval to Include Each Query</span></div>
@@ -5117,7 +5377,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">150 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">160 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -5267,6 +5527,16 @@
       if(window.DSAProbs.maxProductWordLengths&&document.getElementById('prob-max-product-word-lengths'))window.DSAProbs.maxProductWordLengths('prob-max-product-word-lengths');
       if(window.DSAProbs.pascalTriangle&&document.getElementById('prob-pascal-triangle'))window.DSAProbs.pascalTriangle('prob-pascal-triangle');
       if(window.DSAProbs.minIntervalQuery&&document.getElementById('prob-min-interval-query'))window.DSAProbs.minIntervalQuery('prob-min-interval-query');
+      if(window.DSAProbs.climbingStairs&&document.getElementById('prob-climbing-stairs'))window.DSAProbs.climbingStairs('prob-climbing-stairs');
+      if(window.DSAProbs.houseRobber&&document.getElementById('prob-house-robber'))window.DSAProbs.houseRobber('prob-house-robber');
+      if(window.DSAProbs.lcsII&&document.getElementById('prob-lcs-ii'))window.DSAProbs.lcsII('prob-lcs-ii');
+      if(window.DSAProbs.coinChangeII&&document.getElementById('prob-coin-change-ii'))window.DSAProbs.coinChangeII('prob-coin-change-ii');
+      if(window.DSAProbs.uniquePaths&&document.getElementById('prob-unique-paths'))window.DSAProbs.uniquePaths('prob-unique-paths');
+      if(window.DSAProbs.lis&&document.getElementById('prob-lis'))window.DSAProbs.lis('prob-lis');
+      if(window.DSAProbs.editDistance&&document.getElementById('prob-edit-distance'))window.DSAProbs.editDistance('prob-edit-distance');
+      if(window.DSAProbs.burstBalloons&&document.getElementById('prob-burst-balloons'))window.DSAProbs.burstBalloons('prob-burst-balloons');
+      if(window.DSAProbs.regexMatching&&document.getElementById('prob-regex-matching'))window.DSAProbs.regexMatching('prob-regex-matching');
+      if(window.DSAProbs.distinctSubseq&&document.getElementById('prob-distinct-subseq'))window.DSAProbs.distinctSubseq('prob-distinct-subseq');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
