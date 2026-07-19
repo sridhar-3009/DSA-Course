@@ -10103,6 +10103,355 @@ function initTargetSum(id){
   });
 }
 
+/* ── P171 Number of Islands ─────────────────────────────── */
+function initNumberOfIslands(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defGrid=[['1','1','0','0','0'],['1','1','0','0','0'],['0','0','1','0','0'],['0','0','0','1','1']];
+  function buildSteps(grid){
+    var g=grid.map(function(r){return r.slice();}),m=g.length,n=g[0].length,count=0,steps=[];
+    steps.push({g:g.map(function(r){return r.slice();}),count:0,msg:'BFS/DFS: for each unvisited "1", flood-fill the island and increment count'});
+    function bfs(r,c){
+      var q=[[r,c]];g[r][c]='2';
+      while(q.length){var rc=q.shift(),cr=rc[0],cc=rc[1];[[cr-1,cc],[cr+1,cc],[cr,cc-1],[cr,cc+1]].forEach(function(p){if(p[0]>=0&&p[0]<m&&p[1]>=0&&p[1]<n&&g[p[0]][p[1]]==='1'){g[p[0]][p[1]]='2';q.push(p);}});}
+    }
+    for(var r=0;r<m;r++){for(var c=0;c<n;c++){if(g[r][c]==='1'){bfs(r,c);count++;steps.push({g:g.map(function(r){return r.slice();}),count:count,msg:'Island '+count+' found starting at ('+r+','+c+')'});}}}
+    steps.push({g:g.map(function(r){return r.slice();}),count:count,msg:'Total islands: '+count});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'bfs',label:'BFS O(m·n)'},{key:'dfs',label:'DFS O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Grid (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='1,1,0,0;1,1,0,0;0,0,1,0;0,0,0,1';i.style.width='190px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',');});return buildSteps(g.length?g:defGrid);},
+    buildSteps:function(){return buildSteps(defGrid.map(function(r){return r.slice();}));},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var g=s.g||[],rows=g.length,cols=g[0]?g[0].length:1;
+      var cw=Math.min(52,Math.floor((W-20)/cols)),ch=Math.min(42,Math.floor((H-24)/rows));
+      var ox=(W-cols*cw)/2,oy=8;
+      g.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v==='0'?'·':v,v==='2'?'found':v==='1'?'active':'water');});});
+      lbl(ctx,'islands: '+s.count,W/2,H-6,'#34D399',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P172 Course Schedule ────────────────────────────────── */
+function initCourseSchedule(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defN=4,defPre=[[1,0],[2,0],[3,1],[3,2]];
+  function buildSteps(n,pre){
+    var adj=Array.from({length:n},function(){return[];}),indeg=new Array(n).fill(0),steps=[];
+    pre.forEach(function(p){adj[p[1]].push(p[0]);indeg[p[0]]++;});
+    var queue=[],state=new Array(n).fill('default'),order=[];
+    for(var i=0;i<n;i++)if(indeg[i]===0){queue.push(i);state[i]='active';}
+    steps.push({state:state.slice(),indeg:indeg.slice(),order:[],msg:'Kahn BFS: start with all 0-indegree nodes'});
+    while(queue.length){
+      var u=queue.shift();order.push(u);state[u]='found';
+      adj[u].forEach(function(v){indeg[v]--;if(indeg[v]===0){queue.push(v);state[v]='active';}});
+      steps.push({state:state.slice(),indeg:indeg.slice(),order:order.slice(),msg:'Process '+u+' → order=['+order.join(',')+']'});
+    }
+    var ok=order.length===n;
+    steps.push({state:state.slice(),indeg:indeg.slice(),order:order.slice(),msg:ok?'Finished! All '+n+' courses completable ✓':'Cycle detected — '+( n-order.length)+' course(s) stuck ✗'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:140,
+    approaches:[{key:'kahn',label:"Kahn's BFS O(V+E)"},{key:'dfs',label:'DFS cycle detect O(V+E)'}],
+    inputs:[
+      {id:'n',lbl:'Courses',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defN;i.min=2;i.max=8;i.style.width='45px';return i;})()},
+      {id:'pre',lbl:'Prereqs [[a,b],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[1,0],[2,0],[3,1],[3,2]';i.style.width='190px';return i;})()}
+    ],
+    onInputs:function(vals){var p=[];try{p=JSON.parse('['+vals.pre+']');}catch(e){p=defPre;}return buildSteps(parseInt(vals.n)||defN,p);},
+    buildSteps:function(){return buildSteps(defN,defPre);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var state=s.state||[],n=state.length,cw=Math.min(58,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=20;
+      state.forEach(function(st,i){cell(ctx,sx+i*cw,sy,cw-2,ch,i,st);lbl(ctx,'in:'+s.indeg[i],sx+i*cw+cw/2-1,sy+ch+13,'#4B5563',9,'center');});
+      lbl(ctx,'order: ['+((s.order||[]).join('→'))+']',W/2,sy+ch+30,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P173 Pacific Atlantic Water Flow ────────────────────── */
+function initPacificAtlantic(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defH=[[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]];
+  function buildSteps(heights){
+    var m=heights.length,n=heights[0].length,steps=[];
+    var pac=Array.from({length:m},function(){return new Array(n).fill(false);}),
+        atl=Array.from({length:m},function(){return new Array(n).fill(false);});
+    function bfs(queue,visited){
+      while(queue.length){
+        var rc=queue.shift(),r=rc[0],c=rc[1];
+        [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(function(p){
+          var nr=p[0],nc=p[1];
+          if(nr>=0&&nr<m&&nc>=0&&nc<n&&!visited[nr][nc]&&heights[nr][nc]>=heights[r][c]){visited[nr][nc]=true;queue.push([nr,nc]);}
+        });
+      }
+    }
+    var pq=[],aq=[];
+    for(var r=0;r<m;r++){pac[r][0]=true;pq.push([r,0]);atl[r][n-1]=true;aq.push([r,n-1]);}
+    for(var c=0;c<n;c++){pac[0][c]=true;pq.push([0,c]);atl[m-1][c]=true;aq.push([m-1,c]);}
+    steps.push({pac:pac.map(function(r){return r.slice();}),atl:atl.map(function(r){return r.slice();}),msg:'Start BFS from Pacific borders (top, left) and Atlantic borders (bottom, right)'});
+    bfs(pq,pac);bfs(aq,atl);
+    var result=[];
+    for(var r=0;r<m;r++)for(var c=0;c<n;c++)if(pac[r][c]&&atl[r][c])result.push([r,c]);
+    steps.push({pac:pac.map(function(r){return r.slice();}),atl:atl.map(function(r){return r.slice();}),result:result,msg:'Cells reachable by BOTH: '+result.length+' cells'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:210,
+    approaches:[{key:'bfs',label:'Multi-source BFS O(m·n)'}],
+    inputs:[{id:'h',lbl:'Heights (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='1,2,2,3,5;3,2,3,4,4;2,4,5,3,1;6,7,1,4,5;5,1,1,2,4';i.style.width='230px';return i;})()}],
+    onInputs:function(vals){try{var g=(vals.h||'').split(';').map(function(r){return r.split(',').map(Number);});if(g.length&&g[0].length)return buildSteps(g);}catch(e){}return buildSteps(defH);},
+    buildSteps:function(){return buildSteps(defH);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var pac=s.pac||[],atl=s.atl||[],rows=pac.length,cols=pac[0]?pac[0].length:1,res=s.result||[];
+      var cw=Math.min(44,Math.floor((W-20)/cols)),ch=Math.min(36,Math.floor((H-18)/rows));
+      var ox=(W-cols*cw)/2,oy=8;
+      pac.forEach(function(row,r){row.forEach(function(pv,c){
+        var av=atl[r]&&atl[r][c];
+        var st=pv&&av?'found':pv?'selected':av?'visited':'default';
+        cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,defH[r]?defH[r][c]||'':'-',st);
+      });});
+      lbl(ctx,'■ both  ■ pacific  ■ atlantic   result: '+res.length,W/2,H-5,'#A78BFA',10,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P174 Max Area of Island ─────────────────────────────── */
+function initMaxAreaIsland(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defGrid=[[0,0,1,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1],[0,1,1,0,1,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0],[0,1,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[1,1,0,0,0,0,0,1,1,0],[1,0,0,0,0,0,0,0,0,0]];
+  var simpleGrid=[[0,1,1,0],[0,1,0,0],[1,1,0,1],[0,0,0,1]];
+  function buildSteps(grid){
+    var g=grid.map(function(r){return r.map(Number);}),m=g.length,n=g[0].length,best=0,steps=[];
+    steps.push({g:g.map(function(r){return r.slice();}),best:0,msg:'DFS each unvisited 1, count cells, track maximum area'});
+    function dfs(r,c){if(r<0||r>=m||c<0||c>=n||g[r][c]!==1)return 0;g[r][c]=2;return 1+dfs(r-1,c)+dfs(r+1,c)+dfs(r,c-1)+dfs(r,c+1);}
+    for(var r=0;r<m;r++){for(var c=0;c<n;c++){if(g[r][c]===1){var area=dfs(r,c);if(area>best)best=area;steps.push({g:g.map(function(r){return r.slice();}),best:best,msg:'Island at ('+r+','+c+'): area='+area+', best='+best});}}}
+    steps.push({g:g.map(function(r){return r.slice();}),best:best,msg:'Max island area: '+best});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:190,
+    approaches:[{key:'dfs',label:'DFS O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Grid (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='0,1,1,0;0,1,0,0;1,1,0,1;0,0,0,1';i.style.width='180px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',').map(Number);});return buildSteps(g.length&&g[0].length?g:simpleGrid);},
+    buildSteps:function(){return buildSteps(simpleGrid.map(function(r){return r.slice();}));},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var g=s.g||[],rows=g.length,cols=g[0]?g[0].length:1;
+      var cw=Math.min(52,Math.floor((W-20)/cols)),ch=Math.min(42,Math.floor((H-22)/rows));
+      var ox=(W-cols*cw)/2,oy=8;
+      g.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v===0?'·':v===2?'★':'1',v===2?'found':v===1?'active':'water');});});
+      lbl(ctx,'max area: '+s.best,W/2,H-5,'#34D399',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P175 Rotting Oranges ────────────────────────────────── */
+function initRottingOranges(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defGrid=[[2,1,1],[1,1,0],[0,1,1]];
+  function buildSteps(grid){
+    var g=grid.map(function(r){return r.slice();}),m=g.length,n=g[0].length,steps=[];
+    var queue=[],fresh=0;
+    for(var r=0;r<m;r++)for(var c=0;c<n;c++){if(g[r][c]===2)queue.push([r,c,0]);if(g[r][c]===1)fresh++;}
+    steps.push({g:g.map(function(r){return r.slice();}),time:0,fresh:fresh,msg:'Multi-source BFS from all rotten oranges simultaneously'});
+    var time=0;
+    while(queue.length){
+      var rc=queue.shift(),r=rc[0],c=rc[1],t=rc[2];
+      time=Math.max(time,t);
+      [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(function(p){
+        var nr=p[0],nc=p[1];
+        if(nr>=0&&nr<m&&nc>=0&&nc<n&&g[nr][nc]===1){g[nr][nc]=2;fresh--;queue.push([nr,nc,t+1]);steps.push({g:g.map(function(r){return r.slice();}),time:t+1,fresh:fresh,msg:'Minute '+(t+1)+': orange at ('+nr+','+nc+') rots. Fresh left: '+fresh});}
+      });
+    }
+    steps.push({g:g.map(function(r){return r.slice();}),time:fresh>0?-1:time,fresh:fresh,msg:fresh>0?'Impossible — '+fresh+' fresh orange(s) unreachable':'All rotten in '+time+' minute(s)'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:185,
+    approaches:[{key:'bfs',label:'Multi-source BFS O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Grid (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='2,1,1;1,1,0;0,1,1';i.style.width='140px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',').map(Number);});return buildSteps(g.length&&g[0].length?g:defGrid);},
+    buildSteps:function(){return buildSteps(defGrid.map(function(r){return r.slice();}));},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var g=s.g||[],rows=g.length,cols=g[0]?g[0].length:1;
+      var cw=Math.min(64,Math.floor((W-20)/cols)),ch=Math.min(52,Math.floor((H-24)/rows));
+      var ox=(W-cols*cw)/2,oy=10;
+      g.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v===0?'·':v===1?'🍊':'💀',v===2?'found':v===1?'active':'water');});});
+      lbl(ctx,'minute: '+s.time+'  fresh left: '+s.fresh,W/2,H-5,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P176 Clone Graph ────────────────────────────────────── */
+function initCloneGraph(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defAdj=[[2,4],[1,3],[2,4],[1,3]];
+  function buildSteps(adj){
+    var n=adj.length,steps=[],cloned=new Array(n+1).fill(false),order=[];
+    steps.push({cloned:cloned.slice(),order:[],msg:'BFS from node 1: clone each node on first visit, then clone all edges'});
+    var queue=[1];cloned[1]=true;
+    while(queue.length){
+      var u=queue.shift();order.push(u);
+      adj[u-1].forEach(function(v){if(!cloned[v]){cloned[v]=true;queue.push(v);}});
+      steps.push({cloned:cloned.slice(),order:order.slice(),cur:u,msg:'Clone node '+u+' → neighbors: ['+adj[u-1].join(',')+']'});
+    }
+    steps.push({cloned:cloned.slice(),order:order.slice(),msg:'All '+n+' nodes cloned with edges preserved'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:140,
+    approaches:[{key:'bfs',label:'BFS O(V+E)'},{key:'dfs',label:'DFS + HashMap O(V+E)'}],
+    inputs:[{id:'adj',lbl:'Adjacency [[neighbors],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[2,4],[1,3],[2,4],[1,3]';i.style.width='200px';return i;})()}],
+    onInputs:function(vals){try{var a=JSON.parse('['+vals.adj+']');return buildSteps(a);}catch(e){return buildSteps(defAdj);}},
+    buildSteps:function(){return buildSteps(defAdj);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var n=s.cloned.length-1,cw=Math.min(58,Math.floor((W-40)/Math.max(n,1))),ch=44,sx=(W-n*cw)/2,sy=20;
+      for(var i=1;i<=n;i++){cell(ctx,sx+(i-1)*cw,sy,cw-2,ch,i,i===s.cur?'active':s.cloned[i]?'found':'default');}
+      lbl(ctx,'cloned: ['+((s.order||[]).join('→'))+']',W/2,sy+ch+22,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P177 Number of Connected Components ─────────────────── */
+function initConnectedComponents(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defN=5,defEdges=[[0,1],[1,2],[3,4]];
+  function buildSteps(n,edges){
+    var parent=Array.from({length:n},function(_,i){return i;}),rank=new Array(n).fill(0),components=n,steps=[];
+    function find(x){while(parent[x]!==x){parent[x]=parent[parent[x]];x=parent[x];}return x;}
+    function union(a,b){var pa=find(a),pb=find(b);if(pa===pb)return false;if(rank[pa]<rank[pb]){var t=pa;pa=pb;pb=t;}parent[pb]=pa;if(rank[pa]===rank[pb])rank[pa]++;components--;return true;}
+    steps.push({parent:parent.slice(),comp:components,msg:'Union-Find: start with '+n+' components (one per node)'});
+    edges.forEach(function(e){
+      var merged=union(e[0],e[1]);
+      if(merged)components=components;
+      steps.push({parent:parent.slice(),comp:components,cur:e,msg:'Union('+e[0]+','+e[1]+'): '+(merged?'merged → '+components+' components':'already same component')});
+    });
+    steps.push({parent:parent.slice(),comp:components,msg:'Connected components: '+components});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:130,
+    approaches:[{key:'uf',label:'Union-Find O(α·n)'},{key:'dfs',label:'DFS O(V+E)'}],
+    inputs:[
+      {id:'n',lbl:'Nodes',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defN;i.min=2;i.max=8;i.style.width='45px';return i;})()},
+      {id:'edges',lbl:'Edges [[a,b],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[0,1],[1,2],[3,4]';i.style.width='180px';return i;})()}
+    ],
+    onInputs:function(vals){var e=[];try{e=JSON.parse('['+vals.edges+']');}catch(ex){e=defEdges;}return buildSteps(parseInt(vals.n)||defN,e);},
+    buildSteps:function(){return buildSteps(defN,defEdges);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var par=s.parent||[],n=par.length,cw=Math.min(58,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      par.forEach(function(p,i){var isRoot=p===i;cell(ctx,sx+i*cw,sy,cw-2,ch,i,s.cur&&(i===s.cur[0]||i===s.cur[1])?'active':isRoot?'found':'sorted');lbl(ctx,'→'+p,sx+i*cw+cw/2-1,sy+ch+13,'#4B5563',9,'center');});
+      lbl(ctx,'components: '+s.comp,W/2,sy+ch+28,'#A78BFA',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P178 Redundant Connection ───────────────────────────── */
+function initRedundantConnection(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defEdges=[[1,2],[1,3],[2,3]];
+  function buildSteps(edges){
+    var n=edges.length,parent=Array.from({length:n+1},function(_,i){return i;}),steps=[],result=null;
+    function find(x){while(parent[x]!==x){parent[x]=parent[parent[x]];x=parent[x];}return x;}
+    steps.push({parent:parent.slice(),result:null,msg:'Union-Find: add edges one by one. If both endpoints already share a root, this edge is redundant.'});
+    edges.forEach(function(e){
+      var pa=find(e[0]),pb=find(e[1]);
+      if(pa===pb){result=e;steps.push({parent:parent.slice(),result:e,msg:'Edge ['+e[0]+','+e[1]+']: both root='+pa+' → REDUNDANT ✓'});}
+      else{parent[pb]=pa;steps.push({parent:parent.slice(),result:null,cur:e,msg:'Edge ['+e[0]+','+e[1]+']: union '+pa+' + '+pb+' → OK'});}
+    });
+    steps.push({parent:parent.slice(),result:result,msg:'Redundant edge: ['+( result||[])+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:130,
+    approaches:[{key:'uf',label:'Union-Find O(n·α)'}],
+    inputs:[{id:'edges',lbl:'Edges [[a,b],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[1,2],[1,3],[2,3]';i.style.width='180px';return i;})()}],
+    onInputs:function(vals){var e=[];try{e=JSON.parse('['+vals.edges+']');}catch(ex){e=defEdges;}return buildSteps(e);},
+    buildSteps:function(){return buildSteps(defEdges);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var par=s.parent||[],n=par.length,cw=Math.min(54,Math.floor((W-40)/n)),ch=42,sx=(W-n*cw)/2,sy=18;
+      par.forEach(function(p,i){if(i===0)return;var isRoot=p===i;cell(ctx,sx+(i-1)*cw,sy,cw-2,ch,i,s.cur&&(i===s.cur[0]||i===s.cur[1])?'active':s.result&&(i===s.result[0]||i===s.result[1])?'pivot':isRoot?'found':'sorted');lbl(ctx,'→'+p,sx+(i-1)*cw+cw/2-1,sy+ch+13,'#4B5563',9,'center');});
+      if(s.result)lbl(ctx,'redundant: ['+s.result.join(',')+']',W/2,sy+ch+28,'#F87171',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P179 Graph Valid Tree ───────────────────────────────── */
+function initGraphValidTree(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defN=5,defEdges=[[0,1],[0,2],[0,3],[1,4]];
+  function buildSteps(n,edges){
+    var parent=Array.from({length:n},function(_,i){return i;}),steps=[],hasCycle=false;
+    function find(x){while(parent[x]!==x){parent[x]=parent[parent[x]];x=parent[x];}return x;}
+    steps.push({parent:parent.slice(),ok:null,msg:'Valid tree: n−1 edges, no cycle, all connected'});
+    if(edges.length!==n-1){steps.push({parent:parent.slice(),ok:false,msg:'Edge count '+edges.length+' ≠ n−1='+(n-1)+' → NOT a tree'});return steps;}
+    for(var i=0;i<edges.length;i++){
+      var e=edges[i],pa=find(e[0]),pb=find(e[1]);
+      if(pa===pb){hasCycle=true;steps.push({parent:parent.slice(),ok:false,cur:e,msg:'Cycle: ['+e[0]+','+e[1]+'] already connected → NOT a tree'});break;}
+      parent[pb]=pa;steps.push({parent:parent.slice(),ok:null,cur:e,msg:'Add edge ['+e[0]+','+e[1]+'] → OK'});
+    }
+    if(!hasCycle)steps.push({parent:parent.slice(),ok:true,msg:'No cycle + n−1 edges → VALID TREE ✓'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:130,
+    approaches:[{key:'uf',label:'Union-Find O(n·α)'},{key:'dfs',label:'DFS cycle check O(V+E)'}],
+    inputs:[
+      {id:'n',lbl:'Nodes',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defN;i.min=2;i.max=8;i.style.width='45px';return i;})()},
+      {id:'edges',lbl:'Edges [[a,b],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[0,1],[0,2],[0,3],[1,4]';i.style.width='180px';return i;})()}
+    ],
+    onInputs:function(vals){var e=[];try{e=JSON.parse('['+vals.edges+']');}catch(ex){e=defEdges;}return buildSteps(parseInt(vals.n)||defN,e);},
+    buildSteps:function(){return buildSteps(defN,defEdges);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var par=s.parent||[],n=par.length,cw=Math.min(58,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=18;
+      par.forEach(function(p,i){cell(ctx,sx+i*cw,sy,cw-2,ch,i,s.cur&&(i===s.cur[0]||i===s.cur[1])?'active':p===i?'found':'sorted');lbl(ctx,'→'+p,sx+i*cw+cw/2-1,sy+ch+13,'#4B5563',9,'center');});
+      var msg=s.ok===true?'✓ Valid Tree':s.ok===false?'✗ Not a Tree':'checking…';
+      lbl(ctx,msg,W/2,sy+ch+28,s.ok===true?'#34D399':s.ok===false?'#F87171':'#A78BFA',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P180 Surrounded Regions ─────────────────────────────── */
+function initSurroundedRegions(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defBoard=[['X','X','X','X'],['X','O','O','X'],['X','X','O','X'],['X','O','X','X']];
+  function buildSteps(board){
+    var g=board.map(function(r){return r.slice();}),m=g.length,n=g[0].length,steps=[];
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'Step 1: BFS from all border O\'s — mark them safe (S)'});
+    function bfs(r,c){var q=[[r,c]];g[r][c]='S';while(q.length){var p=q.shift(),pr=p[0],pc=p[1];[[pr-1,pc],[pr+1,pc],[pr,pc-1],[pr,pc+1]].forEach(function(pp){if(pp[0]>=0&&pp[0]<m&&pp[1]>=0&&pp[1]<n&&g[pp[0]][pp[1]]==='O'){g[pp[0]][pp[1]]='S';q.push(pp);}});}}
+    for(var r=0;r<m;r++){if(g[r][0]==='O')bfs(r,0);if(g[r][n-1]==='O')bfs(r,n-1);}
+    for(var c=0;c<n;c++){if(g[0][c]==='O')bfs(0,c);if(g[m-1][c]==='O')bfs(m-1,c);}
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'Step 2: remaining O\'s are surrounded — flip to X. S → O (restore safe cells)'});
+    for(var r=0;r<m;r++)for(var c=0;c<n;c++){if(g[r][c]==='O')g[r][c]='X';else if(g[r][c]==='S')g[r][c]='O';}
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'Done: all surrounded O\'s flipped to X'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'bfs',label:'BFS from borders O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Board (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='X,X,X,X;X,O,O,X;X,X,O,X;X,O,X,X';i.style.width='200px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',');});return buildSteps(g.length&&g[0].length?g:defBoard.map(function(r){return r.slice();}));},
+    buildSteps:function(){return buildSteps(defBoard.map(function(r){return r.slice();}));},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var g=s.g||[],rows=g.length,cols=g[0]?g[0].length:1;
+      var cw=Math.min(60,Math.floor((W-20)/cols)),ch=Math.min(48,Math.floor((H-20)/rows));
+      var ox=(W-cols*cw)/2,oy=10;
+      g.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v,v==='X'?'water':v==='S'?'visited':'found');});});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
 /* ── Export ────────────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
@@ -10275,6 +10624,16 @@ window.DSAProbs={
   stockCooldown:initStockCooldown,
   longestPalinSubstring:initLongestPalinSubstring,
   targetSum:initTargetSum,
+  numberOfIslands:initNumberOfIslands,
+  courseSchedule:initCourseSchedule,
+  pacificAtlantic:initPacificAtlantic,
+  maxAreaIsland:initMaxAreaIsland,
+  rottingOranges:initRottingOranges,
+  cloneGraph:initCloneGraph,
+  connectedComponents:initConnectedComponents,
+  redundantConnection:initRedundantConnection,
+  graphValidTree:initGraphValidTree,
+  surroundedRegions:initSurroundedRegions,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -10450,6 +10809,16 @@ window.DSAProbs={
     if(document.getElementById('prob-stock-cooldown'))initStockCooldown('prob-stock-cooldown');
     if(document.getElementById('prob-longest-palin-substring'))initLongestPalinSubstring('prob-longest-palin-substring');
     if(document.getElementById('prob-target-sum'))initTargetSum('prob-target-sum');
+    if(document.getElementById('prob-number-of-islands'))initNumberOfIslands('prob-number-of-islands');
+    if(document.getElementById('prob-course-schedule'))initCourseSchedule('prob-course-schedule');
+    if(document.getElementById('prob-pacific-atlantic'))initPacificAtlantic('prob-pacific-atlantic');
+    if(document.getElementById('prob-max-area-island'))initMaxAreaIsland('prob-max-area-island');
+    if(document.getElementById('prob-rotting-oranges'))initRottingOranges('prob-rotting-oranges');
+    if(document.getElementById('prob-clone-graph'))initCloneGraph('prob-clone-graph');
+    if(document.getElementById('prob-connected-components'))initConnectedComponents('prob-connected-components');
+    if(document.getElementById('prob-redundant-connection'))initRedundantConnection('prob-redundant-connection');
+    if(document.getElementById('prob-graph-valid-tree'))initGraphValidTree('prob-graph-valid-tree');
+    if(document.getElementById('prob-surrounded-regions'))initSurroundedRegions('prob-surrounded-regions');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();

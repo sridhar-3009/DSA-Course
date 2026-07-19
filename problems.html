@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeetCode 150 — DSA Illustrated</title>
-  <meta name="description" content="100 NeetCode problems fully animated — brute → optimal step-by-step canvas demos, key insights, quiz questions, and user input. Zero dependencies.">
+  <meta name="description" content="250 NeetCode problems fully animated — brute → optimal step-by-step canvas demos, key insights, quiz questions, and user input. Zero dependencies.">
   <script>try{var t=localStorage.getItem('dsa-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -104,7 +104,7 @@
 
 <div class="prob-hero">
   <div class="prob-tag-row">
-    <span class="prob-tag">NeetCode 200</span>
+    <span class="prob-tag">NeetCode 250</span>
     <span class="prob-tag">200 Problems</span>
     <span class="prob-tag">Brute → Optimal</span>
     <span class="prob-tag">User Input</span>
@@ -4072,6 +4072,266 @@
     </div>
   </div>
 
+  <!-- P180 Surrounded Regions -->
+  <div class="prob-section" id="p-surrounded-regions">
+    <div class="prob-section-header"><span class="prob-section-num">P180 — Medium</span><span class="prob-section-title">Surrounded Regions</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Matrix</span><span class="prob-tag">BFS</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Flip all 'O' regions that are completely surrounded by 'X' to 'X'. The key insight: any 'O' connected to a border can never be surrounded — BFS from border 'O's to mark them safe first.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Don't hunt for surrounded regions directly. Instead: <strong>mark all border-connected O's as safe (S)</strong>. Then flip: remaining O → X (surrounded), S → O (restore safe). Two-pass, zero false-positives.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-surrounded-regions"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we BFS from border O's instead of interior O's?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Any O connected to the border cannot be surrounded — it has an escape route. BFS from border O's marks all 'safe' O's in one sweep. The remaining O's are definitively surrounded and can be flipped."><span class="opt-letter">A</span>Border-connected O's can never be surrounded — marking them first makes the remaining O's definitively trapped</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Border O's are always more numerous</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Interior O's are always X in the input</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS can't start from interior cells</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What does the temporary 'S' marker represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'S' temporarily marks O's that are connected to the border and therefore safe (not surrounded). After both BFS passes, we restore S → O and flip remaining O → X. Without the marker, we'd lose track of which O's should survive."><span class="opt-letter">A</span>'S' marks border-connected O's that are safe to keep — they get restored to O in the final pass</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>'S' means the cell was skipped</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>'S' marks cells already flipped to X</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>'S' stands for "surrounded"</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P179 Graph Valid Tree -->
+  <div class="prob-section" id="p-graph-valid-tree">
+    <div class="prob-section-header"><span class="prob-section-num">P179 — Medium</span><span class="prob-section-title">Graph Valid Tree</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Union-Find</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Check if n nodes and their edges form a valid tree. A tree must have exactly n−1 edges and no cycle — Union-Find checks both conditions in one pass.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · α(n)) — nearly O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Two conditions: exactly <strong>n−1 edges</strong> (otherwise disconnected or has cycle) and <strong>no cycle</strong> (Union-Find: if both endpoints already share a root, adding the edge creates a cycle).</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-graph-valid-tree"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does a valid tree on n nodes require exactly n−1 edges?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A tree is a connected acyclic graph. Every edge you add connects one new node to the existing tree. Starting from 1 node (0 edges), adding n−1 edges connects all n nodes. Any more creates a cycle; any fewer leaves the graph disconnected."><span class="opt-letter">A</span>Each edge connects exactly one new node — n−1 edges connect n nodes. Fewer = disconnected; more = cycle</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It's a coincidence for small graphs</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Trees always have n+1 edges</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>n−1 edges prevent self-loops</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">If edges.length === n−1 but Union-Find detects no merge (all nodes already connected), what's wrong?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The graph has too many nodes</div>
+          <div class="quiz-option" data-correct="true" data-explanation="If both endpoints are already in the same component before the edge is added, this edge creates a cycle. Even if the edge count is n−1, a cycle means the graph is not a tree — Union-Find detects it immediately."><span class="opt-letter">B</span>A cycle exists — both endpoints were already connected before this edge was processed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The graph is valid — no action needed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The rank array is corrupt</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P178 Redundant Connection -->
+  <div class="prob-section" id="p-redundant-connection">
+    <div class="prob-section-header"><span class="prob-section-num">P178 — Medium</span><span class="prob-section-title">Redundant Connection</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Union-Find</span></div>
+    <p class="prob-section-desc">Find the edge that, when removed, turns a graph with one cycle back into a tree. Add edges one by one with Union-Find — the first edge that connects two nodes already in the same component is redundant.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · α(n)) — nearly O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Process edges in order. For each edge [u, v]: <strong>if find(u) == find(v), they're already connected — this edge is redundant</strong>. Otherwise union them. The last such edge is the answer (return it directly).</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-redundant-connection"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we return the redundant edge as soon as we find it?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem guarantees exactly one redundant edge. The first edge where find(u) == find(v) is that edge — it creates a cycle and is the answer. Stopping immediately is both correct and efficient."><span class="opt-letter">A</span>The problem has exactly one redundant edge — the first edge creating a cycle is definitively the answer</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Later edges might be more optimal</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We need to check all edges before deciding</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Union-Find becomes incorrect after a redundant edge</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is Union-Find's "path compression" optimization?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Compress the adjacency list to save space</div>
+          <div class="quiz-option" data-correct="true" data-explanation="During find(x), point every node along the path directly to the root. Future finds for those nodes become O(1). Combined with union by rank, this gives near-O(1) amortized time per operation."><span class="opt-letter">B</span>During find(x), rewire every node on the path to point directly to the root — future finds become O(1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Remove unused nodes from the parent array</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Merge smaller components into larger ones only</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P177 Number of Connected Components -->
+  <div class="prob-section" id="p-connected-components">
+    <div class="prob-section-header"><span class="prob-section-num">P177 — Medium</span><span class="prob-section-title">Number of Connected Components</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Union-Find</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Count the number of connected components in an undirected graph. Union-Find starts with n components and decrements each time two distinct groups are merged by an edge.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O((V + E) · α(V))</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Start with <strong>components = n</strong>. For each edge, if the two endpoints are in different components, union them and decrement components. Final count = number of connected groups.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-connected-components"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How does Union-Find count components more efficiently than DFS?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Union-Find processes each edge once in near-O(1) amortized time. DFS builds the full adjacency list first (O(V+E)) then visits every node. For dynamic graphs where edges arrive online, Union-Find supports incremental updates without rebuilding."><span class="opt-letter">A</span>Each edge is processed once in near-O(1) — and unlike DFS, it handles dynamically added edges without rebuilding</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Union-Find uses less memory always</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>DFS requires a sorted edge list</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>DFS can't count components in undirected graphs</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">For n=5 and edges [[0,1],[1,2],[3,4]], how many components?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>4</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Start: 5 components. Edge [0,1]: merge → 4. Edge [1,2]: merge → 3. Edge [3,4]: merge → 2. Result: 2 components ({0,1,2} and {3,4})."><span class="opt-letter">B</span>2 — {0,1,2} and {3,4}</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>3</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P176 Clone Graph -->
+  <div class="prob-section" id="p-clone-graph">
+    <div class="prob-section-header"><span class="prob-section-num">P176 — Medium</span><span class="prob-section-title">Clone Graph</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">BFS</span><span class="prob-tag">Hash Map</span></div>
+    <p class="prob-section-desc">Deep-copy an undirected graph where each node has a value and a list of neighbors. BFS traverses every node once; a hash map from original → clone prevents duplicating nodes during neighbor wiring.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(V + E) time · O(V) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Key: <strong>use a map from old node → new clone</strong>. When processing a node's neighbors, create the clone only if not already in the map — then wire the edge. Handles cycles without infinite loops.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-clone-graph"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we need a hash map from original to clone?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Without the map, we'd create duplicate clones for the same node every time it appears as a neighbor. The map ensures each original node has exactly one corresponding clone, and lets us look up existing clones when wiring edges."><span class="opt-letter">A</span>To ensure each original node gets exactly one clone — without it, the same node gets cloned multiple times as it appears in neighbors</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>To sort the neighbors by value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To detect negative weights</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The map stores edge weights</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does the map prevent infinite loops in cyclic graphs?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Before enqueuing or recursing on a neighbor, we check if it's already in the map. If it is, it was already processed — skip it (BFS) or return the existing clone (DFS). This is the 'visited' check in disguise."><span class="opt-letter">B</span>Checking 'is node in map?' before processing serves as the visited check — already-cloned nodes are never re-enqueued</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>The map stores cycle counts</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Cycles are removed during cloning</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS queues prevent cycles automatically</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P175 Rotting Oranges -->
+  <div class="prob-section" id="p-rotting-oranges">
+    <div class="prob-section-header"><span class="prob-section-num">P175 — Medium</span><span class="prob-section-title">Rotting Oranges</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Matrix</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Find the minimum minutes until all oranges are rotten, where each rotten orange infects adjacent fresh ones every minute. Multi-source BFS from all initially rotten oranges simultaneously gives the correct minimum time.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Add <strong>all initially rotten oranges to the BFS queue at once</strong> with timestamp 0. The wave expands outward each level — the timestamp on the last orange reached is the answer. If any fresh orange remains after BFS: return −1.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-rotting-oranges"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why start BFS from all rotten oranges simultaneously instead of one at a time?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Starting from all rotten oranges at once correctly models simultaneous infection — they all rot neighbors at the same minute. Starting one at a time would overcount minutes for fresh oranges reachable from multiple rotten sources."><span class="opt-letter">A</span>All rotten oranges infect their neighbors at the same minute — single-source BFS would overcount time for oranges reachable from multiple sources</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Single-source BFS would visit cells twice</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Multi-source is faster in terms of time complexity</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS requires an even number of sources</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When should you return −1 instead of the BFS time?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="After BFS completes, if any fresh orange (value 1) still exists in the grid, it was unreachable — isolated by walls (0s) with no path from any rotten orange. Return −1."><span class="opt-letter">A</span>If any fresh orange remains after BFS — it was isolated and unreachable from all rotten sources</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>If the BFS queue was ever empty</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>If the grid has no rotten oranges initially</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>If time exceeds the grid size</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P174 Max Area of Island -->
+  <div class="prob-section" id="p-max-area-island">
+    <div class="prob-section-header"><span class="prob-section-num">P174 — Medium</span><span class="prob-section-title">Max Area of Island</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Matrix</span><span class="prob-tag">DFS</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Find the island with the most cells in a binary grid. DFS flood-fills each unvisited land cell, counts how many cells it reaches, and returns the maximum count across all islands.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space (call stack)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>DFS returns 1 + recursive calls on all 4 neighbors. Mark cells visited (set to 2) before recursing to avoid counting them twice. The recursion naturally <strong>sums the entire connected region</strong>.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-area-island"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does the DFS return value represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="DFS(r,c) returns the count of land cells reachable from (r,c): 1 (current cell) + the counts returned by the 4 neighbor calls. Each cell contributes 1 to the total area of its island."><span class="opt-letter">A</span>The number of land cells in the island rooted at (r,c) — 1 (self) plus the area of all 4 neighboring sub-islands</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The depth of the DFS tree</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The perimeter of the island</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The index of the island</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does this differ from Number of Islands (P171)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Number of Islands counts distinct islands (increment counter per BFS/DFS). Max Area of Island counts cells per island and tracks the maximum. Same traversal mechanics, different aggregation."><span class="opt-letter">A</span>Islands: count how many distinct groups exist. Max Area: count cells per group and track the global max — same traversal, different aggregation</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Max Area uses BFS; Number of Islands uses DFS</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Max Area requires a priority queue</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>They are identical problems</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P173 Pacific Atlantic Water Flow -->
+  <div class="prob-section" id="p-pacific-atlantic">
+    <div class="prob-section-header"><span class="prob-section-num">P173 — Medium</span><span class="prob-section-title">Pacific Atlantic Water Flow</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Matrix</span><span class="prob-tag">BFS</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Find all cells from which water can flow to both the Pacific (top/left edges) and Atlantic (bottom/right edges) oceans. Reverse the flow — BFS inward from each ocean's border, going uphill.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Instead of simulating downhill flow from every cell, <strong>reverse direction</strong>: BFS uphill from ocean borders. Pacific-reachable ∩ Atlantic-reachable gives the answer in two passes — O(m·n) total.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-pacific-atlantic"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does BFS go uphill (to higher or equal heights) instead of downhill?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We're reversing the flow. Water flows downhill from cell to ocean. To find which cells can reach ocean X, we BFS from ocean X's border going uphill — the cells we reach are exactly those that can flow down to X."><span class="opt-letter">A</span>We reverse the direction: start at the ocean and move to cells that could drain into it — those cells are at equal or higher elevation</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Downhill BFS would overflow the queue</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Water can only flow uphill in this problem</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Uphill BFS avoids revisiting cells</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the result set — cells reachable from Pacific OR Atlantic?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>All cells reachable from either ocean</div>
+          <div class="quiz-option" data-correct="true" data-explanation="We need cells that can drain to BOTH oceans simultaneously. The answer is the intersection: Pacific-reachable AND Atlantic-reachable. 'Or' would include cells that drain to only one ocean."><span class="opt-letter">B</span>The intersection — cells reachable from BOTH Pacific and Atlantic (can drain to both)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Cells reachable from neither ocean</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>All border cells</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P172 Course Schedule -->
+  <div class="prob-section" id="p-course-schedule">
+    <div class="prob-section-header"><span class="prob-section-num">P172 — Medium</span><span class="prob-section-title">Course Schedule</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Topological Sort</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Can you finish all courses given prerequisite pairs? This is cycle detection on a directed graph — Kahn's BFS algorithm processes nodes with zero in-degree first, decrementing neighbors' counts as it goes.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(V + E) time · O(V + E) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Kahn's: if all n nodes are processed, no cycle exists → return true. If some nodes remain (their in-degree never hits 0), they're part of a cycle → return false. <strong>Order processed = valid schedule.</strong></span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-course-schedule"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does in-degree represent in the context of course prerequisites?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="In-degree of course X = number of courses that must be completed before X. A course with in-degree 0 has no prerequisites and can be taken immediately. Kahn's processes these first."><span class="opt-letter">A</span>The number of prerequisites for that course — in-degree 0 means it can be taken right away</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The number of courses that depend on it</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The course's difficulty rating</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The number of edges leaving the node</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does Kahn's BFS detect a cycle?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="In a cycle, every node has at least one incoming edge from within the cycle — their in-degree never reaches 0. Kahn's queue empties before processing all nodes. If processed count < n, a cycle exists."><span class="opt-letter">B</span>Nodes in a cycle always have in-degree ≥ 1 — they're never enqueued. If processed < n, a cycle exists</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>It tracks a "visited" set and detects back-edges</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It marks nodes gray/black like DFS</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Cycles cause the queue to overflow</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P171 Number of Islands -->
+  <div class="prob-section" id="p-number-of-islands">
+    <div class="prob-section-header"><span class="prob-section-num">P171 — Medium</span><span class="prob-section-title">Number of Islands</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Matrix</span><span class="prob-tag">BFS</span><span class="prob-tag">DFS</span><span class="prob-tag">Union-Find</span></div>
+    <p class="prob-section-desc">Count the distinct land masses in a binary grid. For each unvisited '1', trigger a BFS/DFS that marks the entire connected island as visited — one trigger per island equals the count.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(min(m,n)) BFS space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Flood-fill: when you find an unvisited '1', increment the counter and BFS to mark the entire island (all connected '1's) as visited. The <strong>number of times you start a new BFS = number of islands</strong>.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-number-of-islands"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does modifying the grid in-place (marking '1' as '2') work as a "visited" set?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Once we flood-fill an island, all its '1's become '2' (visited). Future outer-loop iterations skip '2' cells automatically. This eliminates the need for a separate boolean visited array, saving O(m·n) space."><span class="opt-letter">A</span>Marked cells ('2') are skipped by the outer loop — the grid itself acts as the visited set, saving extra space</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Marking as '2' converts water to land</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The original values are restored after BFS</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It only works for BFS, not DFS</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the maximum BFS queue size for an m×n grid?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>m × n (all cells)</div>
+          <div class="quiz-option" data-correct="true" data-explanation="In the worst case, the BFS frontier (queue) contains cells on the diagonal boundary of the flood-fill. This is bounded by min(m,n). The total work is O(m·n) but the max queue size is O(min(m,n))."><span class="opt-letter">B</span>O(min(m,n)) — the BFS frontier grows along diagonals, bounded by the shorter dimension</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>O(m + n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>O(1) — BFS reuses the same queue slot</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P170 Target Sum -->
   <div class="prob-section" id="p-target-sum">
     <div class="prob-section-header"><span class="prob-section-num">P170 — Medium</span><span class="prob-section-title">Target Sum</span></div>
@@ -5637,7 +5897,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">170 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">180 animated from 250 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -5807,6 +6067,16 @@
       if(window.DSAProbs.stockCooldown&&document.getElementById('prob-stock-cooldown'))window.DSAProbs.stockCooldown('prob-stock-cooldown');
       if(window.DSAProbs.longestPalinSubstring&&document.getElementById('prob-longest-palin-substring'))window.DSAProbs.longestPalinSubstring('prob-longest-palin-substring');
       if(window.DSAProbs.targetSum&&document.getElementById('prob-target-sum'))window.DSAProbs.targetSum('prob-target-sum');
+      if(window.DSAProbs.numberOfIslands&&document.getElementById('prob-number-of-islands'))window.DSAProbs.numberOfIslands('prob-number-of-islands');
+      if(window.DSAProbs.courseSchedule&&document.getElementById('prob-course-schedule'))window.DSAProbs.courseSchedule('prob-course-schedule');
+      if(window.DSAProbs.pacificAtlantic&&document.getElementById('prob-pacific-atlantic'))window.DSAProbs.pacificAtlantic('prob-pacific-atlantic');
+      if(window.DSAProbs.maxAreaIsland&&document.getElementById('prob-max-area-island'))window.DSAProbs.maxAreaIsland('prob-max-area-island');
+      if(window.DSAProbs.rottingOranges&&document.getElementById('prob-rotting-oranges'))window.DSAProbs.rottingOranges('prob-rotting-oranges');
+      if(window.DSAProbs.cloneGraph&&document.getElementById('prob-clone-graph'))window.DSAProbs.cloneGraph('prob-clone-graph');
+      if(window.DSAProbs.connectedComponents&&document.getElementById('prob-connected-components'))window.DSAProbs.connectedComponents('prob-connected-components');
+      if(window.DSAProbs.redundantConnection&&document.getElementById('prob-redundant-connection'))window.DSAProbs.redundantConnection('prob-redundant-connection');
+      if(window.DSAProbs.graphValidTree&&document.getElementById('prob-graph-valid-tree'))window.DSAProbs.graphValidTree('prob-graph-valid-tree');
+      if(window.DSAProbs.surroundedRegions&&document.getElementById('prob-surrounded-regions'))window.DSAProbs.surroundedRegions('prob-surrounded-regions');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
