@@ -4072,6 +4072,266 @@
     </div>
   </div>
 
+  <!-- P170 Target Sum -->
+  <div class="prob-section" id="p-target-sum">
+    <div class="prob-section-header"><span class="prob-section-num">P170 — Medium</span><span class="prob-section-title">Target Sum</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">DFS</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Assign a + or − sign to each number — count how many assignments make the total equal the target. DFS explores all 2ⁿ assignments; DP reduces it to a subset-sum problem.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">DFS: O(2ⁿ)</span><span class="prob-compl-chip">DP: O(n·sum)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Let P = sum of + numbers. Then P − (total − P) = target → <strong>P = (total + target) / 2</strong>. Count subsets summing to P — this converts the problem to a standard 0/1 knapsack count.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-target-sum"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">How does the DFS/backtracking approach work?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="At each index, we branch into two recursive calls: one adding the current number, one subtracting it. When we reach the end, check if the running sum equals the target. Each branch explores one complete assignment."><span class="opt-letter">A</span>At each index, recurse twice: once with +nums[i] and once with −nums[i]; count branches where the final sum equals target</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Sort first and use two pointers</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Greedy: always assign the sign that moves sum closer to target</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS level by level with a running sum</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The DP insight reduces this to "count subsets summing to P = (total+target)/2". What if (total+target) is odd?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If (total + target) is odd, P cannot be an integer — no valid split exists. Return 0 immediately. The DP is only valid when (total + target) is even and non-negative."><span class="opt-letter">A</span>Return 0 — P must be a whole number; odd sum means no valid assignment exists</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Round P down and proceed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Use floating-point DP</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Fall back to DFS in this edge case</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P169 Longest Palindromic Substring -->
+  <div class="prob-section" id="p-longest-palin-substring">
+    <div class="prob-section-header"><span class="prob-section-num">P169 — Medium</span><span class="prob-section-title">Longest Palindromic Substring</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Find the longest substring of s that reads the same forwards and backwards. The expand-around-center approach treats each character (and each gap) as a potential palindrome center.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">Expand: O(n²) · O(1)</span><span class="prob-compl-chip">Manacher: O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Expand outward from each center while characters match. There are <strong>2n−1 centers</strong> (n single chars + n−1 gaps between chars). Track the longest expansion seen — no 2D table needed.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-palin-substring"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we check both odd and even-length palindromes separately?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Odd palindromes (like 'aba') expand from a single center character. Even palindromes (like 'abba') have their center between two characters. If we only checked single-char centers, we'd miss all even-length palindromes."><span class="opt-letter">A</span>Odd palindromes expand from one char (index i,i); even ones expand from the gap (i, i+1) — different starting points</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Even palindromes require DP; odd ones use expand</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Odd-length strings only have odd palindromes</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>They use different comparison directions</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the longest palindromic substring of "cbbd"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>"cbbd"</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>"cbb"</div>
+          <div class="quiz-option" data-correct="true" data-explanation="'bb' is a palindrome of length 2. No length-3 palindrome exists (cbbd has no three chars a,b,a or b,a,b pattern). 'c', 'b', 'b', 'd' are length-1 palindromes — 'bb' wins."><span class="opt-letter">B</span>"bb" (length 2)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>"b" (length 1 only)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P168 Stock Buy Sell with Cooldown -->
+  <div class="prob-section" id="p-stock-cooldown">
+    <div class="prob-section-header"><span class="prob-section-num">P168 — Medium</span><span class="prob-section-title">Best Time to Buy and Sell Stock with Cooldown</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Maximize profit from unlimited trades, but after selling you must rest one day before buying again. A three-state machine (hold, sold, rest) captures every valid transition cleanly.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Three states: <strong>hold</strong> (own stock), <strong>sold</strong> (just sold today), <strong>rest</strong> (cooldown/idle). Transitions: hold → sold, sold → rest, rest → hold or rest. Max answer is max(sold, rest) on the last day.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-stock-cooldown"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why can't you buy on the day immediately after selling?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem imposes a cooldown: after selling, you must wait one day before you can buy again. The 'sold → rest → hold' path in the state machine enforces this one-day gap."><span class="opt-letter">A</span>The problem's cooldown rule requires a one-day rest — modeled by the sold → rest → hold path</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>You might hold two stocks simultaneously</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The price on that day is always lower</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Commission fees apply on buy-after-sell</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is hold[i] in terms of previous states?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="hold[i] = max(hold[i−1], rest[i−1] − price[i]). Either we already held the stock (hold[i−1]) or we buy today (only from 'rest' state, paying price[i])."><span class="opt-letter">A</span>max(hold[i−1], rest[i−1] − price[i]) — keep holding, or buy from rest state</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>max(sold[i−1], rest[i−1]) − price[i]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>hold[i−1] + price[i]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>max(hold[i−1], hold[i−2] − price[i])</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P167 Maximal Square -->
+  <div class="prob-section" id="p-maximal-square">
+    <div class="prob-section-header"><span class="prob-section-num">P167 — Medium</span><span class="prob-section-title">Maximal Square</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Matrix</span></div>
+    <p class="prob-section-desc">Find the largest square containing only 1s in a binary matrix. The DP table stores the side length of the largest all-1 square with each cell as its bottom-right corner.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space → O(n) with 2 rows</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[r][c] = 1 + <strong>min(dp[r−1][c], dp[r][c−1], dp[r−1][c−1])</strong> when grid[r][c]='1'. The minimum of three neighbors limits the square size — a single 0 in any direction caps it.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-maximal-square"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we take the minimum of three neighbors?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The square's side length is bounded by the smallest of: the square above (top), the square to the left, and the square diagonally up-left. A missing '1' in any direction breaks the square, so the minimum is the constraint."><span class="opt-letter">A</span>Any 0 in any direction breaks the square — the minimum of top, left, and diagonal limits the valid side length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We take the minimum to avoid overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Maximum would count non-square rectangles</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Three cells average to give the side length</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The answer is dp[r][c]² — what does the square of the DP value represent?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp[r][c] is the side length of the largest all-1 square ending at (r,c). The area = side² = dp[r][c]². We track the global maximum of dp[r][c] and square it at the end."><span class="opt-letter">A</span>dp[r][c] is the side length — area = side² so we square it to get the area in cells</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The DP value is already the area</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Squaring converts to perimeter</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The square root of dp[r][c] is the side length</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P166 Partition Equal Subset Sum -->
+  <div class="prob-section" id="p-partition-equal-subset">
+    <div class="prob-section-header"><span class="prob-section-num">P166 — Medium</span><span class="prob-section-title">Partition Equal Subset Sum</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Can the array be split into two subsets with equal sums? This is 0/1 knapsack: check if any subset sums to total/2. Traverse backwards to avoid reusing elements.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · sum/2) time · O(sum/2) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>For each number, iterate the dp array <strong>right to left</strong>: dp[s] |= dp[s−num]. Right-to-left ensures each number is used at most once (0/1 knapsack). If dp[total/2] is true, a valid split exists.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-partition-equal-subset"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must the total sum be even for a solution to exist?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Both subsets must have equal integer sums. If the total is odd, it can't be split into two equal integer halves — one would need to be a fraction. Early-exit with false."><span class="opt-letter">A</span>Equal integer sums require the total to be divisible by 2 — an odd total has no integer half</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The DP array size would be fractional</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Odd totals always have duplicate elements</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Even totals are easier to process in O(1)</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why iterate the dp array from right to left when adding each number?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Going right-to-left ensures that when we update dp[s], dp[s−num] still reflects the state before adding this number — so each number is only counted once (0/1 knapsack). Left-to-right would let a single number be reused (unbounded knapsack)."><span class="opt-letter">B</span>Right-to-left preserves dp[s−num] from before this number was added — prevents reusing the same element</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>Right-to-left is faster due to cache locality</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Left-to-right would skip some sums</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It doesn't matter — both directions give the same result</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P165 Decode Ways -->
+  <div class="prob-section" id="p-decode-ways">
+    <div class="prob-section-header"><span class="prob-section-num">P165 — Medium</span><span class="prob-section-title">Decode Ways</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Count the number of ways to decode a digit string where '1'→'A', …, '26'→'Z'. At each position you can decode one digit or two — but '0' alone is invalid and two-digit codes must be 10–26.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space (2 vars)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i] = dp[i−1] (if s[i−1] ≠ '0') + dp[i−2] (if s[i−2..i−1] in 10–26). A leading '0' makes the single-digit decode impossible; two-digit decode is only valid for "10"–"26".</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-decode-ways"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does '0' make dp[i] smaller?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'0' alone cannot map to any letter (letters start at '1'). So the single-char decode contributes 0 ways. Only if the preceding digit forms '10' or '20' does '0' contribute — via the two-digit path."><span class="opt-letter">A</span>'0' has no single-char mapping ('A'='1', 'Z'='26') — it contributes 0 to dp[i] unless the pair is '10' or '20'</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>'0' always means the string is invalid</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>'0' resets dp[i] to 0 always</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>'0' doubles the number of decodings</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How many ways can "226" be decoded?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'226' can be decoded as: [2,2,6]='BBF', [22,6]='VF', or [2,26]='BZ' — 3 ways. dp trace: dp[0]=1, dp[1]=1, dp[2]=2, dp[3]=3."><span class="opt-letter">A</span>3 ways: 'BBF' (2,2,6), 'VF' (22,6), 'BZ' (2,26)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>2 ways</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>4 ways</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>1 way</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P164 Minimum Path Sum -->
+  <div class="prob-section" id="p-min-path-sum">
+    <div class="prob-section-header"><span class="prob-section-num">P164 — Medium</span><span class="prob-section-title">Minimum Path Sum</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Matrix</span></div>
+    <p class="prob-section-desc">Find the path from top-left to bottom-right of a grid (only right/down moves) that minimizes the sum of all values visited. Build the DP table in-place.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(1) extra space (in-place)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[r][c] = grid[r][c] + <strong>min(dp[r−1][c], dp[r][c−1])</strong>. You can only arrive from above or from the left, so take the cheaper path to each cell. Update the grid in-place — no extra array needed.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-path-sum"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why are the first row and first column initialized with cumulative sums?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The first row has only right-moves available; the first column only down-moves. There's exactly one path to each edge cell, so its minimum cost is just the running sum of all preceding cells."><span class="opt-letter">A</span>Edge cells have only one direction to arrive from — cumulative sum is the only (and therefore minimum) path</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>They are set to infinity as sentinels</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>To enable binary search in inner cells</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Edge cells always contain 0</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What is the minimum path sum for grid [[1,3,1],[1,5,1],[4,2,1]]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>8</div>
+          <div class="quiz-option" data-correct="true" data-explanation="Path: 1→3→1→1→1 = 7. DP fills top-row=[1,4,5], left-col=[1,2,6]. Interior: dp[1][1]=5+min(4,2)=7→ actually 1+5+min… The optimal path is 1→3→1→1→1=7."><span class="opt-letter">B</span>7 (path: 1→3→1→1→1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>9</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>6</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P163 Maximum Product Subarray -->
+  <div class="prob-section" id="p-max-product-subarray">
+    <div class="prob-section-header"><span class="prob-section-num">P163 — Medium</span><span class="prob-section-title">Maximum Product Subarray</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Find the contiguous subarray with the largest product. Negatives flip max to min and vice versa — so you must track both the running maximum and minimum at every step.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>At each element, the candidates for the new max are: <strong>the element itself, maxSoFar×element, minSoFar×element</strong>. A negative × negative min becomes a new max — tracking both prevents missing this.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-max-product-subarray"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must you track the running minimum alongside the maximum?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A negative minimum can become the new maximum when multiplied by a negative number. If you only track the max, you'd miss the case where two negatives produce a large positive."><span class="opt-letter">A</span>A negative minimum × a negative element becomes a large positive — ignoring it misses the optimal answer</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The minimum tracks the worst-case answer</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Minimum avoids integer overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Both max and min are needed to detect zeros</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What happens to maxProduct when you encounter a 0?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Multiplying by 0 resets both maxProduct and minProduct to 0. The subarray effectively must restart after the 0. The next element starts fresh — both max and min become the element itself (since element × 0 = 0, and just the element alone may be better)."><span class="opt-letter">A</span>Both max and min reset to 0 (or the next element) — a 0 breaks any non-zero product subarray</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>maxProduct becomes −∞</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>maxProduct is unchanged — skip zeros</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The zero resets only the minimum, not the maximum</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P162 Palindrome Partitioning -->
+  <div class="prob-section" id="p-palindrome-partitioning">
+    <div class="prob-section-header"><span class="prob-section-num">P162 — Medium</span><span class="prob-section-title">Palindrome Partitioning</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Backtracking</span><span class="prob-tag">Dynamic Programming</span></div>
+    <p class="prob-section-desc">Return every way to split a string so every part is a palindrome. Backtracking tries each prefix — only extend when the current prefix is itself a palindrome.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · 2ⁿ) worst case</span><span class="prob-compl-chip">DP precompute isPalin: O(n²)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Precompute a 2D isPalin table so each check is O(1). Then backtrack: at each start index, <strong>try every ending position</strong> — only recurse deeper if the slice is a palindrome. Prune aggressively.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-palindrome-partitioning"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What is the base case in the backtracking function?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="When the start index reaches the end of the string, we've consumed all characters and the current path is a complete valid partition — add it to results."><span class="opt-letter">A</span>start == s.length — the whole string is consumed and the current partition is complete</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>When the current substring is not a palindrome</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>When path.length == s.length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>When no palindrome prefix exists</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">All partitions of "aab" are: ["a","a","b"], ["aa","b"]. Why not ["aab"]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'aab' reversed is 'baa' ≠ 'aab' — it's not a palindrome. Every part of a valid partition must be a palindrome, so 'aab' as a whole part is rejected immediately."><span class="opt-letter">A</span>"aab" reversed is "baa" — it is not a palindrome, so it can't be a part in any valid partition</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Partitions must have at least two parts</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The whole string is always skipped</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Only single-character substrings are palindromes</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P161 Word Break -->
+  <div class="prob-section" id="p-word-break">
+    <div class="prob-section-header"><span class="prob-section-num">P161 — Medium</span><span class="prob-section-title">Word Break</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">String</span><span class="prob-tag">Dynamic Programming</span><span class="prob-tag">Hash Set</span></div>
+    <p class="prob-section-desc">Can the string be segmented into words from a given dictionary? DP tracks reachable "split points" — a position is reachable if a valid dictionary word leads to it from some earlier reachable position.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) time · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i] = true if any j &lt; i satisfies dp[j]=true AND s[j..i−1] ∈ dictionary. Put the dictionary in a <strong>HashSet for O(1) lookup</strong>. dp[n]=true means the full string is segmentable.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-word-break"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does dp[i] = true mean?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i] = true means the prefix s[0..i−1] can be entirely segmented into dictionary words. dp[0] is the empty prefix — always true. dp[n] tells us whether the whole string is segmentable."><span class="opt-letter">A</span>The prefix s[0..i−1] can be fully segmented into valid dictionary words</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>s[i] is the start of a valid word</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The i-th word in the dictionary is used</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The substring from i to n is segmentable</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does storing the dictionary in a HashSet improve performance?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">A</span>It sorts the words for binary search</div>
+          <div class="quiz-option" data-correct="true" data-explanation="The inner loop checks s[j..i−1] against the dictionary for each (j,i) pair — O(n²) checks. Each check is O(word length) for hashing, but hash lookup is O(1) amortized vs O(n) for linear scan per word, saving a factor of d (dictionary size)."><span class="opt-letter">B</span>Lookup becomes O(1) amortized instead of O(d) linear scan — the inner loop's constant factor drops from O(d) to O(1)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It reduces the number of DP states</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>HashSet automatically segments the string</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P160 Distinct Subsequences -->
   <div class="prob-section" id="p-distinct-subseq">
     <div class="prob-section-header"><span class="prob-section-num">P160 — Hard</span><span class="prob-section-title">Distinct Subsequences</span></div>
@@ -5377,7 +5637,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">160 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">170 animated from 200 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -5537,6 +5797,16 @@
       if(window.DSAProbs.burstBalloons&&document.getElementById('prob-burst-balloons'))window.DSAProbs.burstBalloons('prob-burst-balloons');
       if(window.DSAProbs.regexMatching&&document.getElementById('prob-regex-matching'))window.DSAProbs.regexMatching('prob-regex-matching');
       if(window.DSAProbs.distinctSubseq&&document.getElementById('prob-distinct-subseq'))window.DSAProbs.distinctSubseq('prob-distinct-subseq');
+      if(window.DSAProbs.wordBreak&&document.getElementById('prob-word-break'))window.DSAProbs.wordBreak('prob-word-break');
+      if(window.DSAProbs.palindromePartitioning&&document.getElementById('prob-palindrome-partitioning'))window.DSAProbs.palindromePartitioning('prob-palindrome-partitioning');
+      if(window.DSAProbs.maxProductSubarray&&document.getElementById('prob-max-product-subarray'))window.DSAProbs.maxProductSubarray('prob-max-product-subarray');
+      if(window.DSAProbs.minPathSum&&document.getElementById('prob-min-path-sum'))window.DSAProbs.minPathSum('prob-min-path-sum');
+      if(window.DSAProbs.decodeWays&&document.getElementById('prob-decode-ways'))window.DSAProbs.decodeWays('prob-decode-ways');
+      if(window.DSAProbs.partitionEqualSubset&&document.getElementById('prob-partition-equal-subset'))window.DSAProbs.partitionEqualSubset('prob-partition-equal-subset');
+      if(window.DSAProbs.maximalSquare&&document.getElementById('prob-maximal-square'))window.DSAProbs.maximalSquare('prob-maximal-square');
+      if(window.DSAProbs.stockCooldown&&document.getElementById('prob-stock-cooldown'))window.DSAProbs.stockCooldown('prob-stock-cooldown');
+      if(window.DSAProbs.longestPalinSubstring&&document.getElementById('prob-longest-palin-substring'))window.DSAProbs.longestPalinSubstring('prob-longest-palin-substring');
+      if(window.DSAProbs.targetSum&&document.getElementById('prob-target-sum'))window.DSAProbs.targetSum('prob-target-sum');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();
