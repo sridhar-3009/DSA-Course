@@ -4072,6 +4072,526 @@
     </div>
   </div>
 
+  <!-- P200 Largest Rectangle in Histogram II -->
+  <div class="prob-section" id="p-largest-rect-histogram-ii">
+    <div class="prob-section-header"><span class="prob-section-num">P200 — Hard</span><span class="prob-section-title">Largest Rectangle in Histogram</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Stack</span><span class="prob-tag">Monotonic</span></div>
+    <p class="prob-section-desc">Find the largest rectangular area in a histogram. The monotonic stack approach processes each bar in O(1) amortized time by popping shorter bars and computing their maximum possible rectangle.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Keep a <strong>monotonically increasing stack</strong>. When a shorter bar appears, every taller bar in the stack can't extend further right. Pop each taller bar, using the current index and remaining stack top to determine the rectangle's width.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-largest-rect-histogram-ii"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">When we pop height h at index i, how do we compute the rectangle width?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The width is (current index i) − (new stack top index) − 1. The new stack top is the last index shorter than h (its left boundary), and i is the first index shorter than h on the right. Everything between them can be spanned at height h."><span class="opt-letter">A</span>width = current_index − stack_top_after_pop − 1; the stack top gives the left boundary, current index gives the right</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>width = right − left</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>width = height × index</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>width = stack size</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why do we append a sentinel height of 0 at the end?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The sentinel (0) acts as a trigger to flush the stack. Without it, bars that are never 'shorter than their successor' would remain in the stack after processing all bars — their rectangles would never be computed. The 0 is shorter than every bar, forcing all remaining bars to be popped and their areas calculated."><span class="opt-letter">A</span>It forces all remaining bars in the stack to be popped and their rectangles computed — without it, bars that never see a shorter successor would be skipped</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It represents the floor of the histogram</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It prevents index-out-of-bounds errors</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It marks the rightmost bar as visited</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P199 Find Median from Data Stream -->
+  <div class="prob-section" id="p-median-data-stream">
+    <div class="prob-section-header"><span class="prob-section-num">P199 — Hard</span><span class="prob-section-title">Find Median from Data Stream</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heap</span><span class="prob-tag">Two Heaps</span></div>
+    <p class="prob-section-desc">Design a data structure that supports adding numbers and returning the running median. Two heaps — a max-heap for the lower half and a min-heap for the upper half — keep the median at their tops.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log n) addNum · O(1) findMedian</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Split the stream into <strong>two halves</strong>: maxHeap (smaller values) and minHeap (larger values). Keep sizes balanced (differ by ≤ 1). Median is the top of the larger heap, or the average of both tops when equal.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-median-data-stream"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">After adding a new number, what's the rebalancing rule?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Step 1: push to maxHeap. Step 2: if maxHeap.top > minHeap.top, move maxHeap.top to minHeap (maintains ordering). Step 3: if |maxHeap| − |minHeap| > 1, move the top of the larger heap to the smaller. This keeps elements correctly split and sizes balanced."><span class="opt-letter">A</span>Push to maxHeap, then fix order (move max to minHeap if needed), then fix size balance by moving the top of the larger heap</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Always push to the smaller heap</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Re-sort both heaps after every insertion</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Push to minHeap if number is even</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How is the median computed from the two heaps?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If one heap is larger (|maxHeap| > |minHeap| or vice versa), the median is the top of the larger heap — it holds the true middle element. If both heaps have equal size, total elements is even, and the median is (maxHeap.top + minHeap.top) / 2.0."><span class="opt-letter">A</span>If sizes differ: top of the larger heap. If equal: average of both tops</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Always the minHeap top</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Sum of both tops divided by total count</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Always the maxHeap top</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P198 Find K Closest Elements -->
+  <div class="prob-section" id="p-find-k-closest">
+    <div class="prob-section-header"><span class="prob-section-num">P198 — Medium</span><span class="prob-section-title">Find K Closest Elements</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Binary Search</span><span class="prob-tag">Two Pointers</span></div>
+    <p class="prob-section-desc">Given a sorted array, find k closest elements to x. Binary search on the window's left boundary — compare which end of a k-wide window is farther from x.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log(n−k) + k) binary search · O(n) two pointers</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Binary search on the <strong>left boundary</strong> of the window. At each mid, compare arr[mid+k]−x vs x−arr[mid]. If the right end is closer, the window should shift right (lo = mid+1). The optimal window is found without ever computing all distances.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-k-closest"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why search for the window's left boundary rather than finding the closest element first?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Finding the closest single element is easy, but the k-element window might shift left or right depending on ties. Binary searching directly on the window boundary avoids tie-breaking logic and handles all edge cases — the comparison arr[mid+k]−x < x−arr[mid] cleanly determines whether to shift right."><span class="opt-letter">A</span>The window boundary subsumes tie-breaking; the single closest element doesn't tell you which direction the window should extend</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Finding one element is O(n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The array may not be sorted</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Binary search requires an even number of elements</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">The search space is [0, n−k]. Why n−k and not n−1?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="A k-wide window starting at index lo covers [lo, lo+k−1]. For this to be valid, lo+k−1 ≤ n−1, so lo ≤ n−k. The right boundary of the search space is n−k, not n−1, because any start index beyond n−k would make the window extend past the array end."><span class="opt-letter">A</span>The window [lo, lo+k−1] must fit in the array — lo+k−1 ≤ n−1 means lo ≤ n−k</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>n−k avoids integer overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The last k elements are always excluded</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We search only even indices</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P197 Kth Largest Element in Stream -->
+  <div class="prob-section" id="p-kth-largest-stream">
+    <div class="prob-section-header"><span class="prob-section-num">P197 — Easy</span><span class="prob-section-title">Kth Largest Element in a Stream</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Heap</span><span class="prob-tag">Design</span></div>
+    <p class="prob-section-desc">Design a class that returns the k-th largest element after each addition. A min-heap of size k keeps the k largest elements seen — its minimum (heap top) is always the k-th largest.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(log k) per add · O(k) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Maintain a <strong>min-heap of size exactly k</strong>. Adding a new value: push to heap, then pop if size &gt; k. The heap top is always the k-th largest because exactly k−1 elements are larger than it (the rest of the heap), and all evicted elements were smaller.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-kth-largest-stream"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does keeping only the k largest elements suffice?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We want the k-th largest — the element with exactly k−1 elements larger than it. By keeping a min-heap of size k, the minimum of those k elements has exactly k−1 larger elements in the heap. Any element smaller than the heap minimum is not in the top-k and can be safely evicted."><span class="opt-letter">A</span>The min of the top-k elements is the k-th largest — k−1 heap elements are larger than it; smaller elements are irrelevant</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We keep the k smallest instead</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The heap size must be n</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>A max-heap is more efficient here</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What happens if the new value is smaller than the current k-th largest?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If the new value is smaller than the heap top (current k-th largest), it's not in the top-k. After pushing it and popping the minimum, we just popped the new value itself — the heap is unchanged. The k-th largest stays the same. This is implicitly handled by push-then-pop-if-oversized."><span class="opt-letter">A</span>It gets pushed then immediately popped (it's the heap minimum after insertion) — the k-th largest is unchanged</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We skip inserting values smaller than the top</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The heap shrinks below size k</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We return −1 for that call</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P196 Arithmetic Slices -->
+  <div class="prob-section" id="p-arithmetic-slices">
+    <div class="prob-section-header"><span class="prob-section-num">P196 — Medium</span><span class="prob-section-title">Arithmetic Slices</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Array</span></div>
+    <p class="prob-section-desc">Count subarrays of length ≥ 3 that form arithmetic progressions. DP builds on previous results — each new element extending a run adds exactly dp[i−1]+1 new slices.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[i] = number of arithmetic slices ending at i. When <strong>nums[i]−nums[i−1] === nums[i−1]−nums[i−2]</strong>, dp[i] = dp[i−1]+1, because every previous slice ending at i−1 gains one more element plus a brand new 3-element slice.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-arithmetic-slices"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is dp[i] = dp[i−1] + 1 (not just 1) when the difference matches?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Every arithmetic slice ending at i−1 can be extended by one element (adding nums[i]) to form a new valid slice. Plus the brand-new 3-element slice [i−2, i−1, i] itself. So dp[i] = dp[i−1] (extended old slices) + 1 (new minimal slice)."><span class="opt-letter">A</span>All dp[i−1] prior slices gain one extension plus a new 3-element slice — dp[i] = dp[i−1] + 1</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>dp[i] = dp[i-2] + dp[i-1]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Each matching element adds exactly 2 slices</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[i] resets to 1 for each match</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Can this be solved in O(1) space?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Yes — we only need dp[i−1] to compute dp[i], so one variable suffices. We keep 'cur' (the current run count) and 'total'. When the arithmetic condition holds, cur++ and total += cur. When it breaks, cur resets to 0. The full dp array is not needed."><span class="opt-letter">A</span>Yes — only dp[i−1] is needed; use one variable 'cur' for the current run, incrementing and adding to total each step</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>No, we need the full array for backtracking</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Only O(log n) space is achievable</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The total depends on all previous dp values</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P195 Remove Invalid Parentheses -->
+  <div class="prob-section" id="p-remove-invalid-parens">
+    <div class="prob-section-header"><span class="prob-section-num">P195 — Hard</span><span class="prob-section-title">Remove Invalid Parentheses</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">BFS</span><span class="prob-tag">Backtracking</span></div>
+    <p class="prob-section-desc">Return all minimum-removal results that make a string's parentheses valid. BFS by levels ensures minimum removals — the first level with any valid result contains all optimal results.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n · 2^n) worst case</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>BFS is key: process strings level by level where each level = one more removal. The <strong>first level with a valid string</strong> contains ALL minimum-removal solutions. Stop exploring once any valid string is found — deeper levels have more removals.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-remove-invalid-parens"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why must we collect ALL valid strings at the first valid BFS level (not just one)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The problem asks for all minimum-removal results. Multiple strings at the same BFS level are all equally optimal (same number of removals). If we stop at the first valid string found, we'd miss other valid strings at the same level that are also minimum. We must exhaust the level once we confirm it has valid strings."><span class="opt-letter">A</span>All strings at the first valid level use the same number of removals — they're all equally optimal; returning just one would miss other valid solutions</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We don't need to — just return the first result</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Only the alphabetically first result matters</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Different levels can have the same result</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does the visited set prevent redundant work?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Many different removal sequences produce the same string (removing index 1 then 2 vs removing index 2 then 1 yields the same result for duplicates). Without a visited set, the BFS queue explodes with duplicates — each level can have exponentially many repeated strings. The set ensures each unique string is processed exactly once."><span class="opt-letter">A</span>Different removal sequences can produce the same string — the set prevents processing duplicates, keeping the queue from exploding exponentially</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The set stores valid results only</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It prevents revisiting the original string</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS doesn't need a visited set</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P194 Valid Parenthesis String -->
+  <div class="prob-section" id="p-valid-paren-string-2">
+    <div class="prob-section-header"><span class="prob-section-num">P194 — Medium</span><span class="prob-section-title">Valid Parenthesis String</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Greedy</span><span class="prob-tag">DP</span></div>
+    <p class="prob-section-desc">Check if a string with '(', ')' and '*' (wildcard: empty, '(', or ')') is valid. Track the range [low, high] of possible open-bracket counts — if 0 is ever reachable, the string can be valid.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Track <strong>[low, high]</strong>: minimum and maximum possible open counts. '(' increments both; ')' decrements both (clamp low at 0); '*' decrements low and increments high. If high &lt; 0 at any point → invalid. If low === 0 at the end → valid.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-valid-paren-string-2"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we clamp low to max(0, low−1) when processing ')' or '*'?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="'low' represents the minimum number of unmatched opens — it can't go below 0 because we can always treat '*' as empty or not place a ')' beyond what's available. Clamping prevents tracking impossible negative open counts. 'high' going below 0 is the real signal for invalidity."><span class="opt-letter">A</span>Unmatched open count can't be negative — clamping prevents tracking impossible states; high < 0 is the true invalidity signal</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Low going negative crashes the algorithm</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We only track even counts</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The clamp handles the * as a closing paren case</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What does high &lt; 0 during the scan mean?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="high tracks the maximum possible open-paren count (treating every * as '('). If even in the most optimistic interpretation high drops below 0, there are more ')' than any combination of '(' and '*' can match. The string is definitively invalid regardless of how we interpret wildcards."><span class="opt-letter">A</span>Even treating all * as '(' can't match the closing parens — the string is definitively invalid</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>There are too many opening parens</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>low and high have diverged too much</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The string has no wildcards left</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P193 Stone Game -->
+  <div class="prob-section" id="p-stone-game">
+    <div class="prob-section-header"><span class="prob-section-num">P193 — Medium</span><span class="prob-section-title">Stone Game</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Math</span><span class="prob-tag">Game Theory</span></div>
+    <p class="prob-section-desc">Two players alternately take stones from either end; the player with more wins. dp[i][j] stores the net advantage of the current player over the range [i,j] — Alice always wins with optimal play.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) DP · O(1) math insight</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Math insight: with an <strong>even number of piles</strong>, Alice can always choose the strategy that guarantees the higher total — she picks which group (odd-indexed or even-indexed piles) is larger, then always picks from that group. dp[0][n−1] &gt; 0 iff Alice wins.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-stone-game"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">What does dp[i][j] represent and why is it sufficient for solving the problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="dp[i][j] = the maximum net advantage (current player's score minus opponent's score) when playing optimally on piles[i..j]. A positive value means the current player wins on that subrange. dp[0][n-1] > 0 means Alice (first player) wins. Recurrence: dp[i][j] = max(piles[i] − dp[i+1][j], piles[j] − dp[i][j-1])."><span class="opt-letter">A</span>dp[i][j] = max net advantage of the current player on piles[i..j]; dp[0][n−1] > 0 iff Alice wins</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>dp[i][j] = total stones in piles[i..j]</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>dp[i][j] = number of moves remaining</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>dp[i][j] = which player goes first in that range</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why can Alice always win (return true) when the number of piles is even?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="With 2n piles, n are odd-indexed and n are even-indexed. Alice goes first and can always choose to pick from odd-indexed or even-indexed ends (she picks the end that belongs to the larger group). After she picks, whatever Bob picks, Alice can always stay on her chosen strategy — the ends always alternate between odd and even indexed."><span class="opt-letter">A</span>Alice can predetermine which parity (odd vs even indexed) totals more, then always pick from that group — Bob can never block this strategy</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The first player always wins any game</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Even piles means both players get equal turns</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Alice always picks the largest pile</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P192 Unique Paths (DP grid) -->
+  <div class="prob-section" id="p-unique-paths-2">
+    <div class="prob-section-header"><span class="prob-section-num">P192 — Medium</span><span class="prob-section-title">Unique Paths (Grid DP)</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DP</span><span class="prob-tag">Math</span></div>
+    <p class="prob-section-desc">Count distinct paths from top-left to bottom-right in an m×n grid moving only right or down. Each cell's value is the sum of paths coming from above and from the left.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space — optimizable to O(n)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>dp[r][c] = dp[r−1][c] + dp[r][c−1] — paths from above plus paths from the left. All first-row and first-column cells have exactly 1 path. The math closed form is <strong>C(m+n−2, m−1)</strong> — choose which m−1 of the m+n−2 steps are "down".</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-unique-paths-2"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why are all cells in the first row and column initialized to 1?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="From (0,0) to any cell in the first row, there's only one way — go right all the way. Similarly for the first column — go down all the way. These are the base cases for the DP. All other cells build on these by combining paths from above and from the left."><span class="opt-letter">A</span>There's only one path to any first-row or first-column cell — move straight right or straight down with no choice</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The grid starts with 1s everywhere</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We use 1 as a sentinel value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The boundary cells are always visited once</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How does the combinatorics formula C(m+n−2, m−1) arise?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Any valid path consists of exactly (m−1) down-moves and (n−1) right-moves, for a total of (m+n−2) steps. A path is fully determined by which (m−1) steps are down-moves. So the number of unique paths = ways to choose (m−1) positions out of (m+n−2) = C(m+n−2, m−1)."><span class="opt-letter">A</span>Every path has exactly (m−1) down and (n−1) right steps; choosing which (m−1) of the total (m+n−2) steps are down fully specifies the path</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It's a Fibonacci variant</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>C(m,n) counts cells not paths</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The formula only works for square grids</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P191 Longest Increasing Path in a Matrix -->
+  <div class="prob-section" id="p-longest-inc-path-matrix">
+    <div class="prob-section-header"><span class="prob-section-num">P191 — Hard</span><span class="prob-section-title">Longest Increasing Path in a Matrix</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">DFS</span><span class="prob-tag">Memo</span><span class="prob-tag">Topo Sort</span></div>
+    <p class="prob-section-desc">Find the length of the longest strictly increasing path in a matrix where moves are 4-directional. DFS with memoization avoids recomputing paths from any cell that's been explored.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>No cycles are possible in a strictly increasing path — values can never revisit a lower number. This means <strong>no visited set is needed</strong>. The DAG structure allows memoization: memo[r][c] stores the longest path starting from (r,c) and is computed exactly once.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-longest-inc-path-matrix"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why don't we need a visited set when doing DFS on this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="The strictly increasing constraint prevents cycles — a path can never revisit a cell because each step requires a larger value, and there's no way to return to a smaller one. The graph induced by 'can move from a to b if a < b' is a DAG. DFS on a DAG never revisits a node on the same path."><span class="opt-letter">A</span>Strictly increasing means no cycles — you can't revisit a cell because the path must always increase and can never return to a smaller value</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>All cells have unique values</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>DFS never revisits in grids</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The memo array serves as the visited set</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why is memoization correct here (no stale results)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="memo[r][c] is the LIP length starting from (r,c) — this depends only on the cell's value and its neighbors' values, not on which path led us here. Since the increasing constraint prevents cycles, DFS always fully resolves a cell before it could be needed by another caller, and the result is path-independent."><span class="opt-letter">A</span>memo[r][c] depends only on local structure (cell value, neighbors) — the result is path-independent and always fully computed before being cached</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Memoization requires visited sets to be correct</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Different paths to (r,c) give different LIP lengths</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We only memoize cells with value &gt; n</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P190 Count Primes -->
+  <div class="prob-section" id="p-count-primes">
+    <div class="prob-section-header"><span class="prob-section-num">P190 — Easy</span><span class="prob-section-title">Count Primes</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Math</span><span class="prob-tag">Sieve</span></div>
+    <p class="prob-section-desc">Count all primes strictly less than n. The Sieve of Eratosthenes crosses out multiples of each prime starting at p², giving sub-linear time per prime.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n log log n) time · O(n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Start marking multiples at <strong>p² not 2p</strong> — all smaller multiples (2p, 3p…) were already crossed out when p was smaller. This is the key optimization that gives the sieve its near-linear complexity.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-count-primes"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we start marking multiples from p² rather than 2p?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="All multiples 2p, 3p, …, (p-1)p were already eliminated when 2, 3, …, p-1 were processed. The first unmarked multiple of p is always p², so starting there avoids redundant work and gives the algorithm its efficiency."><span class="opt-letter">A</span>All smaller multiples (2p, 3p…) were already crossed out by smaller primes — p² is the first new composite</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Odd multiples are skipped for speed</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>p² is always odd</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We stop when p² &gt; n to avoid overflow</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">What's the time complexity of the Sieve of Eratosthenes?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="O(n log log n) — for each prime p we do n/p work. Summing n/p over all primes ≤ n gives n·(1/2 + 1/3 + 1/5 + …) ≈ n·log(log n) by Mertens' theorem. This is much better than the naive O(n√n) trial-division approach."><span class="opt-letter">A</span>O(n log log n) — the sum of n/p over all primes p ≤ n converges to this via Mertens' theorem</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>O(n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>O(n²)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>O(n log n)</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P189 First Missing Positive -->
+  <div class="prob-section" id="p-first-missing-positive">
+    <div class="prob-section-header"><span class="prob-section-num">P189 — Hard</span><span class="prob-section-title">First Missing Positive</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">In-place</span></div>
+    <p class="prob-section-desc">Find the smallest missing positive integer in an unsorted array in O(n) time and O(1) space. Each positive integer in [1,n] belongs in a specific index — use the array itself as a hash map.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Answer is always in <strong>[1, n+1]</strong>. Swap each value x to index x−1 (if x ∈ [1,n]). Then the first index where a[i] ≠ i+1 gives the answer — the array becomes its own lookup table.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-first-missing-positive"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the answer always in the range [1, n+1]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="With n numbers, the best case is [1,2,…,n] — then the answer is n+1. Any other arrangement leaves at least one gap in [1,n], so the answer is at most n+1. Values outside [1,n] don't affect the answer since we're looking for the smallest missing positive."><span class="opt-letter">A</span>The best-case array [1,2,…,n] gives answer n+1; any gap in [1,n] makes the answer ≤ n</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Negative numbers shift the range</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The answer could be 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We need n+1 buckets for duplicates</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After the swap phase, how do we find the answer in O(n)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="After placing each x at index x−1 (where possible), scan left to right. The first index i where a[i] ≠ i+1 means i+1 is missing. If all indices are correct (a[i] === i+1 for all i), the answer is n+1. One linear scan suffices."><span class="opt-letter">A</span>Scan for the first index i where a[i] ≠ i+1 — that i+1 is the missing positive</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Sort and scan for gap</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Use a bit mask to track presence</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Return the minimum value in the array</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P188 Find All Numbers Disappeared -->
+  <div class="prob-section" id="p-find-all-disappeared">
+    <div class="prob-section-header"><span class="prob-section-num">P188 — Easy</span><span class="prob-section-title">Find All Numbers Disappeared in an Array</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">In-place</span></div>
+    <p class="prob-section-desc">Given n integers in [1,n] with possible duplicates, find all integers missing from [1,n] without extra space. Negate the value at index v−1 to mark v as seen.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) extra space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Use <strong>sign as a presence flag</strong>: for each value v, negate a[|v|−1]. After processing, indices with positive values correspond to missing numbers. Negation is reversible and doesn't destroy the original values.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-find-all-disappeared"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we use |a[i]|−1 as the index (taking absolute value first)?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="When we encounter a[i], it might already be negative (negated by a previous pass when the same value appeared earlier). Taking the absolute value recovers the original number so we can derive the correct target index. Without abs(), we'd compute a negative index."><span class="opt-letter">A</span>a[i] may already be negative from a previous step — |a[i]| recovers the original number to compute the correct index</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The values are always negative</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>It handles the zero index</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We need to avoid index-out-of-bounds</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">After all negations, which indices tell us the missing numbers?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If a[i] is still positive after all passes, then no number equal to i+1 appeared in the array — it was never negated. So the missing numbers are exactly {i+1 | a[i] > 0}. Visited numbers have their corresponding index negated; unvisited remain positive."><span class="opt-letter">A</span>Indices where a[i] &gt; 0 — those numbers were never encountered so their index was never negated</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Indices where a[i] &lt; 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Indices where a[i] === 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The first and last indices always</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P187 Trapping Rain Water (Two-Pointer) -->
+  <div class="prob-section" id="p-trapping-rain-water">
+    <div class="prob-section-header"><span class="prob-section-num">P187 — Hard</span><span class="prob-section-title">Trapping Rain Water</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Array</span><span class="prob-tag">Two Pointers</span><span class="prob-tag">Prefix Max</span></div>
+    <p class="prob-section-desc">Calculate the total water trapped between elevation bars after rain. Water at each position is limited by the shorter of the tallest bars on either side.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n) time · O(1) space (two pointers)</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>water[i] = <strong>min(leftMax, rightMax) − height[i]</strong>. The two-pointer approach skips the prefix arrays: move the pointer on the side with the smaller max — that side's water is already determined by its max, regardless of what's ahead.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-trapping-rain-water"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why does water[i] equal min(leftMax, rightMax) − height[i]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Water can only fill up to the shorter wall on either side — the taller wall provides no benefit because the shorter wall is the bottleneck. The water level at i is therefore min(leftMax, rightMax). Subtracting height[i] gives the amount of water above the bar."><span class="opt-letter">A</span>Water level is bounded by the shorter wall — it can only fill as high as min(leftMax, rightMax); subtract the bar's own height for the trapped amount</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We use max not min</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Water fills from right to left</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>height[i] is always 0</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In the two-pointer approach, why do we move the pointer with the smaller max?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If leftMax &lt; rightMax, then leftMax is the bottleneck for the left pointer's water — the right side can only be ≥ rightMax ≥ leftMax. So water at left is determined solely by leftMax, and we can safely compute it and advance left. Moving the larger side would leave the smaller side's water uncertain."><span class="opt-letter">A</span>The smaller-max side's water is fully determined by its own max — the other side is always ≥ that max, so it's safe to compute and advance</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We always move left first</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The smaller pointer moves faster</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>It avoids negative water values</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P186 Evaluate Division -->
+  <div class="prob-section" id="p-evaluate-division">
+    <div class="prob-section-header"><span class="prob-section-num">P186 — Medium</span><span class="prob-section-title">Evaluate Division</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">BFS</span><span class="prob-tag">DFS</span></div>
+    <p class="prob-section-desc">Given equations a/b = k, answer division queries. Model each equation as a weighted directed edge — finding a/c is a path product from a to c in the graph.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(q·(V+E)) time · O(V+E) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Build a <strong>weighted graph</strong>: a→b with weight k, b→a with weight 1/k. A query src/dst is the <strong>product of edge weights along any path</strong> from src to dst — BFS accumulates the running product as it explores.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-evaluate-division"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why do we add a reverse edge b→a with weight 1/k when we're given a/b = k?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="If a/b = k then b/a = 1/k. Queries can ask for b/a, so we need the reverse edge. Without it, we'd only be able to evaluate ratios in one direction. The reverse edge at weight 1/k exactly encodes the inverse relationship."><span class="opt-letter">A</span>b/a = 1/k — the reverse edge lets us answer queries in either direction of the equation</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>It avoids negative edge weights</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>All graphs must be undirected</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS requires bidirectional edges</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When does a query return −1.0?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Two cases: (1) Either variable doesn't exist in any equation — it's not a node in our graph. (2) The variables exist but are in disconnected components — BFS from src never reaches dst. Both cases mean there's no chain of equations linking src to dst, so the result is undefined → −1."><span class="opt-letter">A</span>Either variable is unknown (not in any equation), or the two variables are in disconnected components</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The product of weights is negative</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The query divides by zero</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The graph has a cycle</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P185 Min Cost to Connect All Points -->
+  <div class="prob-section" id="p-min-cost-connect">
+    <div class="prob-section-header"><span class="prob-section-num">P185 — Medium</span><span class="prob-section-title">Min Cost to Connect All Points</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">MST</span><span class="prob-tag">Prim's</span></div>
+    <p class="prob-section-desc">Connect n points with minimum total Manhattan distance. This is a Minimum Spanning Tree problem — Prim's algorithm greedily adds the closest unconnected point each step.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n²) Prim's · O(n² log n) Kruskal's</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>It's a <strong>complete graph</strong> — every pair of points is connected with cost = Manhattan distance. For dense graphs, <strong>Prim's O(n²) beats Kruskal's</strong> because no sorting is needed; just maintain a minCost[] array and pick the cheapest unvisited node each step.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-min-cost-connect"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is Prim's O(n²) preferred over Kruskal's here despite Kruskal's being "better" in theory?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Kruskal's requires generating all O(n²) edges first, then sorting them in O(n² log n). Prim's (with a simple array) avoids generating the full edge list — it maintains minCost[] and picks the minimum in O(n) each step, totaling O(n²). For dense graphs, Prim's wins in practice."><span class="opt-letter">A</span>Kruskal's needs O(n²) edges sorted upfront; Prim's avoids the edge list entirely, checking only n nodes each step</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Prim's uses less memory</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Kruskal's can't handle Manhattan distance</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Prim's guarantees fewer edge crossings</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">In Prim's algorithm, what does minCost[v] represent at any point?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="minCost[v] is the minimum Manhattan distance from v to any node already in the MST. When we add a new node u to the MST, we update minCost[v] for all unvisited v by comparing their current cost with dist(u, v). The node with the smallest minCost[] is always added next."><span class="opt-letter">A</span>The cheapest Manhattan distance from v to any node already in the MST — updated each time a new node is added</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>The distance from v to the origin</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The number of edges connecting v</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Whether v has been visited</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P184 Shortest Bridge -->
+  <div class="prob-section" id="p-shortest-bridge">
+    <div class="prob-section-header"><span class="prob-section-num">P184 — Medium</span><span class="prob-section-title">Shortest Bridge</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">DFS</span><span class="prob-tag">BFS</span></div>
+    <p class="prob-section-desc">Given a binary matrix with exactly two islands (groups of 1s), find the minimum number of 0s to flip to connect them. DFS finds island 1, then multi-source BFS expands outward until it hits island 2.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Two-phase approach: <strong>DFS</strong> to paint the entire first island and seed the BFS queue, then <strong>BFS</strong> to expand outward layer-by-layer. The first layer that touches island 2 gives the shortest bridge length — BFS level = bridge flips needed.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-shortest-bridge"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why use DFS to find island 1 instead of BFS?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Both DFS and BFS work here — the goal is simply to visit every cell of island 1 and add them all to the BFS queue. DFS is typically chosen for its simpler recursive implementation and lower constant-factor overhead when just traversing a connected component. The BFS that follows is the phase requiring level-order guarantees."><span class="opt-letter">A</span>Both work for coloring a connected component — DFS is simpler to implement recursively; the BFS phase that follows is where level-order matters</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>BFS can't traverse grids</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>DFS finds the shortest path</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>DFS uses less memory always</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">Why does the BFS guarantee the minimum bridge length?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="BFS explores in level-order — all cells at distance d from island 1 are visited before any at distance d+1. The first time BFS touches a cell of island 2, it's doing so at the minimum possible distance. Reaching island 2 at distance d means flipping exactly d cells — that's the shortest bridge."><span class="opt-letter">A</span>BFS processes all distance-d cells before d+1 — first contact with island 2 is guaranteed to be at minimum distance</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>DFS would also give minimum distance</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We can only reach island 2 one way</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>The grid is always a straight line</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P183 Swim in Rising Water -->
+  <div class="prob-section" id="p-swim-rising-water">
+    <div class="prob-section-header"><span class="prob-section-num">P183 — Hard</span><span class="prob-section-title">Swim in Rising Water</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Dijkstra</span><span class="prob-tag">Binary Search</span></div>
+    <p class="prob-section-desc">Find the minimum time T such that you can travel from grid[0][0] to grid[n−1][n−1] where you can enter cell (r,c) only when time ≥ grid[r][c]. Dijkstra gives the optimal bottleneck path.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(n² log n) Dijkstra · O(n² log n) binary search + BFS</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>This is a <strong>minimax path problem</strong>: minimize the maximum value along the path. Dijkstra's cost to reach (r,c) is max(cost to arrive, grid[r][c]) — not the sum of edges. The priority queue always expands the cell reachable at the earliest time.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-swim-rising-water"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the "cost" to reach a neighbor max(t, grid[nr][nc]) instead of t + grid[nr][nc]?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="We're not accumulating cost — we're asking 'at what time can I first stand on this cell?' The answer is max(time to arrive, the cell's elevation) because you can wait at any cell for the water to rise. The bottleneck is the maximum elevation encountered along the path, not the sum."><span class="opt-letter">A</span>You can wait at any cell — the time to enter (nr,nc) is max(current time, grid[nr][nc]); it's a bottleneck (max) problem, not an additive (sum) one</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Summing would overflow</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>We subtract water levels</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>grid values are negative</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How would you solve this with binary search + BFS?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Binary search on the answer T in [0, n²−1]. For a given T, BFS/DFS to check if there's a path from (0,0) to (n−1,n−1) visiting only cells with value ≤ T. The smallest T for which BFS returns true is the answer. O(n² log n) — log n² = 2 log n binary search steps, each O(n²) BFS."><span class="opt-letter">A</span>Binary search on T; BFS checks if a path exists visiting only cells ≤ T — smallest valid T is the answer</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Binary search on path length</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>BFS alone finds the max elevation</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Binary search on cell coordinates</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P182 Network Delay Time -->
+  <div class="prob-section" id="p-network-delay-time">
+    <div class="prob-section-header"><span class="prob-section-num">P182 — Medium</span><span class="prob-section-title">Network Delay Time</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">Dijkstra</span><span class="prob-tag">Bellman-Ford</span></div>
+    <p class="prob-section-desc">Find the minimum time for a signal sent from node k to reach all nodes. This is single-source shortest path — Dijkstra works perfectly on non-negative weighted graphs.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O((V+E) log V) Dijkstra · O(V·E) Bellman-Ford</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span>Classic <strong>Dijkstra SSSP</strong>. The answer is max(dist[all nodes]) — the signal must reach the slowest node. If any node is unreachable (dist = ∞), return −1. All edge weights are non-negative so Dijkstra is optimal.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-network-delay-time"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is the answer max(dist[all nodes]) rather than the sum?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="All nodes receive the signal in parallel — the signal fans out from k simultaneously. The time for all n nodes to receive it is dictated by the last node to receive it, which is the one with the maximum shortest-path distance. If any node is unreachable (dist = ∞), not all nodes ever receive the signal."><span class="opt-letter">A</span>The signal propagates in parallel — all nodes receive it simultaneously; the last to receive it (max dist) determines the total time</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We sum all distances</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>The signal travels sequentially</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>We return the minimum distance</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">When would you choose Bellman-Ford over Dijkstra for this problem?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Bellman-Ford handles negative edge weights, which Dijkstra cannot correctly process. If the graph had negative-weight edges (e.g., negative delay makes no physical sense here, but hypothetically), Dijkstra's greedy assumption breaks down. For this problem all weights are positive, so Dijkstra is strictly better at O((V+E) log V) vs O(VE)."><span class="opt-letter">A</span>Bellman-Ford handles negative edge weights, which Dijkstra cannot — this problem has non-negative weights so Dijkstra is preferred</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Bellman-Ford is always faster</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Dijkstra requires a sorted graph</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Bellman-Ford uses less memory</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
+  <!-- P181 Walls and Gates -->
+  <div class="prob-section" id="p-walls-and-gates">
+    <div class="prob-section-header"><span class="prob-section-num">P181 — Medium</span><span class="prob-section-title">Walls and Gates</span></div>
+    <div class="prob-section-meta"><span class="prob-tag">Graph</span><span class="prob-tag">BFS</span><span class="prob-tag">Multi-source</span></div>
+    <p class="prob-section-desc">Fill each empty room (INF) in a grid with the distance to its nearest gate (0). Walls are −1. Multi-source BFS from all gates simultaneously gives the shortest distance for every room in one pass.</p>
+    <div class="prob-complexity"><span class="prob-compl-chip">O(m·n) time · O(m·n) space</span></div>
+    <div class="prob-insight"><span class="pi-icon">&#9670;</span><span><strong>Multi-source BFS</strong> beats running Dijkstra from each gate separately. Seed the BFS queue with all gates at once. Because BFS expands level-by-level, the first time each room is reached is guaranteed to be at the minimum distance — no updates needed.</span></div>
+    <div class="prob-demo"><div class="prob-demo-inner" id="prob-walls-and-gates"></div></div>
+    <div class="quiz-section" style="margin-top:1.5rem;">
+      <div class="quiz-question"><div class="quiz-q-num">Question 1 of 2</div><div class="quiz-q-text">Why is multi-source BFS from all gates faster than running BFS once per gate?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="Running BFS from each gate separately would be O(k · m·n) where k is the number of gates — each full BFS is O(m·n). Multi-source BFS seeds the queue with all k gates simultaneously and visits each cell exactly once, giving O(m·n) total. It's essentially the same BFS but parallelized across all sources."><span class="opt-letter">A</span>Multi-source BFS visits each cell exactly once total; per-gate BFS visits each cell up to k times — O(m·n) vs O(k·m·n)</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>Multi-source BFS uses a priority queue</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>Each gate's BFS is independent</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>BFS can't start from multiple sources</div>
+        </div><div class="quiz-feedback"></div></div>
+      <div class="quiz-question"><div class="quiz-q-num">Question 2 of 2</div><div class="quiz-q-text">How do we ensure BFS assigns minimum distances and doesn't overwrite with larger ones?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true" data-explanation="BFS processes cells in non-decreasing distance order. A room is only enqueued when first reached — we only update it if it's still INF (never visited). Once a room is updated, it's marked (no longer INF) so it can never be overwritten with a larger distance from a farther gate. This is the key property of BFS on unit-weight graphs."><span class="opt-letter">A</span>Rooms are only updated when still INF — once updated (first reach = minimum distance), they're skipped by all later, more-distant BFS waves</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">B</span>We use a min-heap for ordering</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">C</span>All rooms are initialized to 0</div>
+          <div class="quiz-option" data-correct="false"><span class="opt-letter">D</span>Walls block overwriting</div>
+        </div><div class="quiz-feedback"></div></div>
+    </div>
+  </div>
+
   <!-- P180 Surrounded Regions -->
   <div class="prob-section" id="p-surrounded-regions">
     <div class="prob-section-header"><span class="prob-section-num">P180 — Medium</span><span class="prob-section-title">Surrounded Regions</span></div>
@@ -5897,7 +6417,7 @@
 
 <footer class="site-footer">
   <div class="footer-brand">DSA Illustrated</div>
-  <p class="footer-sub">180 animated from 250 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
+  <p class="footer-sub">200 animated from 250 NeetCode problems. Brute to optimal. User input. Zero dependencies.</p>
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="topics/01-arrays.html">Arrays</a>
@@ -6077,6 +6597,26 @@
       if(window.DSAProbs.redundantConnection&&document.getElementById('prob-redundant-connection'))window.DSAProbs.redundantConnection('prob-redundant-connection');
       if(window.DSAProbs.graphValidTree&&document.getElementById('prob-graph-valid-tree'))window.DSAProbs.graphValidTree('prob-graph-valid-tree');
       if(window.DSAProbs.surroundedRegions&&document.getElementById('prob-surrounded-regions'))window.DSAProbs.surroundedRegions('prob-surrounded-regions');
+      if(window.DSAProbs.wallsAndGates&&document.getElementById('prob-walls-and-gates'))window.DSAProbs.wallsAndGates('prob-walls-and-gates');
+      if(window.DSAProbs.networkDelayTime&&document.getElementById('prob-network-delay-time'))window.DSAProbs.networkDelayTime('prob-network-delay-time');
+      if(window.DSAProbs.swimInRisingWater&&document.getElementById('prob-swim-rising-water'))window.DSAProbs.swimInRisingWater('prob-swim-rising-water');
+      if(window.DSAProbs.shortestBridge&&document.getElementById('prob-shortest-bridge'))window.DSAProbs.shortestBridge('prob-shortest-bridge');
+      if(window.DSAProbs.minCostConnectPoints&&document.getElementById('prob-min-cost-connect'))window.DSAProbs.minCostConnectPoints('prob-min-cost-connect');
+      if(window.DSAProbs.evaluateDivision&&document.getElementById('prob-evaluate-division'))window.DSAProbs.evaluateDivision('prob-evaluate-division');
+      if(window.DSAProbs.trappingRainWater&&document.getElementById('prob-trapping-rain-water'))window.DSAProbs.trappingRainWater('prob-trapping-rain-water');
+      if(window.DSAProbs.findAllDisappeared&&document.getElementById('prob-find-all-disappeared'))window.DSAProbs.findAllDisappeared('prob-find-all-disappeared');
+      if(window.DSAProbs.firstMissingPositive&&document.getElementById('prob-first-missing-positive'))window.DSAProbs.firstMissingPositive('prob-first-missing-positive');
+      if(window.DSAProbs.countPrimes&&document.getElementById('prob-count-primes'))window.DSAProbs.countPrimes('prob-count-primes');
+      if(window.DSAProbs.longestIncPathMatrix&&document.getElementById('prob-longest-inc-path-matrix'))window.DSAProbs.longestIncPathMatrix('prob-longest-inc-path-matrix');
+      if(window.DSAProbs.uniquePaths2&&document.getElementById('prob-unique-paths-2'))window.DSAProbs.uniquePaths2('prob-unique-paths-2');
+      if(window.DSAProbs.stoneGame&&document.getElementById('prob-stone-game'))window.DSAProbs.stoneGame('prob-stone-game');
+      if(window.DSAProbs.validParenString2&&document.getElementById('prob-valid-paren-string-2'))window.DSAProbs.validParenString2('prob-valid-paren-string-2');
+      if(window.DSAProbs.removeInvalidParens&&document.getElementById('prob-remove-invalid-parens'))window.DSAProbs.removeInvalidParens('prob-remove-invalid-parens');
+      if(window.DSAProbs.arithmeticSlices&&document.getElementById('prob-arithmetic-slices'))window.DSAProbs.arithmeticSlices('prob-arithmetic-slices');
+      if(window.DSAProbs.kthLargestStream&&document.getElementById('prob-kth-largest-stream'))window.DSAProbs.kthLargestStream('prob-kth-largest-stream');
+      if(window.DSAProbs.findKClosest&&document.getElementById('prob-find-k-closest'))window.DSAProbs.findKClosest('prob-find-k-closest');
+      if(window.DSAProbs.medianDataStream&&document.getElementById('prob-median-data-stream'))window.DSAProbs.medianDataStream('prob-median-data-stream');
+      if(window.DSAProbs.largestRectHistogramII&&document.getElementById('prob-largest-rect-histogram-ii'))window.DSAProbs.largestRectHistogramII('prob-largest-rect-histogram-ii');
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tryInit);else tryInit();

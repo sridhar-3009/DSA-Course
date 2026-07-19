@@ -10452,7 +10452,750 @@ function initSurroundedRegions(id){
   });
 }
 
-/* ── Export ────────────────────────────────────────────────── */
+/* ── P181 Walls and Gates ─────────��──────────────────────── */
+function initWallsAndGates(id){
+  var container=document.getElementById(id);if(!container)return;
+  var INF=2147483647;
+  var defGrid=[[INF,-1,0,INF],[INF,INF,INF,-1],[INF,-1,INF,-1],[0,-1,INF,INF]];
+  function buildSteps(grid){
+    var g=grid.map(function(r){return r.slice();}),m=g.length,n=g[0].length,steps=[],queue=[];
+    for(var r=0;r<m;r++)for(var c=0;c<n;c++)if(g[r][c]===0)queue.push([r,c]);
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'Multi-source BFS from all gates (0) simultaneously — fill shortest distance to nearest gate'});
+    while(queue.length){
+      var rc=queue.shift(),r=rc[0],c=rc[1];
+      [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(function(p){
+        var nr=p[0],nc=p[1];
+        if(nr>=0&&nr<m&&nc>=0&&nc<n&&g[nr][nc]===INF){g[nr][nc]=g[r][c]+1;queue.push([nr,nc]);steps.push({g:g.map(function(r){return r.slice();}),msg:'Cell ('+nr+','+nc+') distance: '+g[nr][nc]});}
+      });
+    }
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'All rooms filled with distance to nearest gate'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'bfs',label:'Multi-source BFS O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Grid (;=row, INF=rooms, -1=walls)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='I,-1,0,I;I,I,I,-1;I,-1,I,-1;0,-1,I,I';i.style.width='190px';return i;})()}],
+    onInputs:function(vals){
+      var g=(vals.grid||'').split(';').map(function(r){return r.split(',').map(function(x){return x.trim()==='I'?INF:x.trim()==='-1'?-1:Number(x);});});
+      return buildSteps(g.length&&g[0].length?g:defGrid.map(function(r){return r.slice();}));
+    },
+    buildSteps:function(){return buildSteps(defGrid.map(function(r){return r.slice();}));},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var g=s.g||[],rows=g.length,cols=g[0]?g[0].length:1;
+      var cw=Math.min(56,Math.floor((W-20)/cols)),ch=Math.min(46,Math.floor((H-20)/rows));
+      var ox=(W-cols*cw)/2,oy=10;
+      g.forEach(function(row,r){row.forEach(function(v,c){
+        var lbl_v=v===INF?'∞':v===-1?'■':v;
+        cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,lbl_v,v===0?'pivot':v===-1?'water':v===INF?'default':'found');
+      });});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P182 Network Delay Time ─────────────────────────────── */
+function initNetworkDelayTime(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defN=4,defK=2,defEdges=[[2,1,1],[2,3,1],[3,4,1]];
+  function buildSteps(times,n,k){
+    var dist=new Array(n+1).fill(Infinity);dist[k]=0;
+    var visited=new Array(n+1).fill(false),steps=[];
+    var adj=Array.from({length:n+1},function(){return[];});
+    times.forEach(function(t){adj[t[0]].push([t[1],t[2]]);});
+    var heap=[[0,k]];
+    steps.push({dist:dist.slice(),cur:-1,msg:'Dijkstra from node '+k+'. dist[k]=0, all others ∞'});
+    while(heap.length){
+      heap.sort(function(a,b){return a[0]-b[0];});
+      var top=heap.shift(),d=top[0],u=top[1];
+      if(visited[u])continue;
+      visited[u]=true;
+      steps.push({dist:dist.slice(),cur:u,msg:'Visit node '+u+' dist='+d});
+      adj[u].forEach(function(edge){
+        var v=edge[0],w=edge[1];
+        if(dist[u]+w<dist[v]){dist[v]=dist[u]+w;heap.push([dist[v],v]);steps.push({dist:dist.slice(),cur:u,msg:'Relax '+u+'→'+v+' dist['+v+']='+dist[v]});}
+      });
+    }
+    var maxD=Math.max.apply(null,dist.slice(1));
+    steps.push({dist:dist.slice(),cur:-1,msg:maxD===Infinity?'Some nodes unreachable → -1':'Max delay: '+maxD});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'dijk',label:'Dijkstra O((V+E) log V)'}],
+    inputs:[
+      {id:'edges',lbl:'Edges [[u,v,w],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[2,1,1],[2,3,1],[3,4,1]';i.style.width='200px';return i;})()},
+      {id:'n',lbl:'Nodes',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defN;i.min=1;i.max=8;i.style.width='42px';return i;})()},
+      {id:'k',lbl:'Source',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defK;i.min=1;i.max=8;i.style.width='42px';return i;})()}
+    ],
+    onInputs:function(vals){var e=[];try{e=JSON.parse('['+vals.edges+']');}catch(ex){e=defEdges;}return buildSteps(e,parseInt(vals.n)||defN,parseInt(vals.k)||defK);},
+    buildSteps:function(){return buildSteps(defEdges,defN,defK);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var dist=s.dist||[],n=dist.length-1,cw=Math.min(58,Math.floor((W-40)/n)),ch=44,sx=(W-n*cw)/2,sy=20;
+      for(var i=1;i<=n;i++){cell(ctx,sx+(i-1)*cw,sy,cw-2,ch,dist[i]===Infinity?'∞':dist[i],i===s.cur?'active':dist[i]<Infinity?'found':'default');lbl(ctx,'n'+i,sx+(i-1)*cw+cw/2-1,sy+ch+13,'#4B5563',9,'center');}
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P183 Swim in Rising Water ───────────────────────────── */
+function initSwimInRisingWater(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defGrid=[[0,2],[1,3]];
+  function buildSteps(grid){
+    var n=grid.length,dist=Array.from({length:n},function(){return new Array(n).fill(Infinity);}),steps=[];
+    dist[0][0]=grid[0][0];
+    var heap=[[grid[0][0],0,0]];
+    steps.push({dist:dist.map(function(r){return r.slice();}),cur:[-1,-1],msg:'Dijkstra: cost to reach (r,c) = max(cost to arrive, grid[r][c]). Start at (0,0).'});
+    while(heap.length){
+      heap.sort(function(a,b){return a[0]-b[0];});
+      var top=heap.shift(),t=top[0],r=top[1],c=top[2];
+      if(r===n-1&&c===n-1){steps.push({dist:dist.map(function(r){return r.slice();}),cur:[r,c],msg:'Reached bottom-right! Minimum time: '+t});break;}
+      [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(function(p){
+        var nr=p[0],nc=p[1];
+        if(nr>=0&&nr<n&&nc>=0&&nc<n){var nt=Math.max(t,grid[nr][nc]);if(nt<dist[nr][nc]){dist[nr][nc]=nt;heap.push([nt,nr,nc]);steps.push({dist:dist.map(function(r){return r.slice();}),cur:[nr,nc],msg:'('+nr+','+nc+') cost=max('+t+','+grid[nr][nc]+')='+nt});}}
+      });
+    }
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'dijk',label:'Dijkstra O(n² log n)'},{key:'bs',label:'Binary Search + BFS'}],
+    inputs:[{id:'grid',lbl:'Grid (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='0,1,2,3,4;24,23,22,21,5;12,13,14,15,16;11,17,18,19,20;10,9,8,7,6';i.style.width='230px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',').map(Number);});return buildSteps(g.length&&g[0].length?g:defGrid);},
+    buildSteps:function(){return buildSteps(defGrid);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var dist=s.dist||[],n=dist.length,cw=Math.min(48,Math.floor((W-20)/n)),ch=Math.min(40,Math.floor((H-20)/n));
+      var ox=(W-n*cw)/2,oy=10;
+      dist.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v===Infinity?'∞':v,s.cur&&r===s.cur[0]&&c===s.cur[1]?'active':v<Infinity?'found':'default');});});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P184 Word Ladder ��───────────────────────────────────── */
+function initShortestBridge(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defGrid=[[0,1,0],[0,0,0],[0,0,1]];
+  function buildSteps(grid){
+    var m=grid.length,n=grid[0].length,g=grid.map(function(r){return r.slice();}),steps=[],queue=[];
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'DFS to mark island 1 as "2", collect its cells as BFS sources, then BFS to reach island 2.'});
+    function dfs(r,c){if(r<0||r>=m||c<0||c>=n||g[r][c]!==1)return;g[r][c]=2;queue.push([r,c,0]);dfs(r+1,c);dfs(r-1,c);dfs(r,c+1);dfs(r,c-1);}
+    var found=false;
+    outer:for(var r=0;r<m;r++){for(var c=0;c<n;c++){if(g[r][c]===1){dfs(r,c);found=true;break outer;}}}
+    steps.push({g:g.map(function(r){return r.slice();}),msg:'Island 1 painted (shown as 2). BFS queue seeded with all island-1 cells.'});
+    var ans=-1;
+    while(queue.length){
+      var item=queue.shift(),r=item[0],c=item[1],dist=item[2];
+      var nbrs=[[r-1,c],[r+1,c],[r,c-1],[r,c+1]];
+      for(var k=0;k<4;k++){
+        var nr=nbrs[k][0],nc=nbrs[k][1];
+        if(nr<0||nr>=m||nc<0||nc>=n||g[nr][nc]===2)continue;
+        if(g[nr][nc]===1){steps.push({g:g.map(function(r){return r.slice();}),cur:[nr,nc],dist:dist,msg:'Reached island 2 at ('+nr+','+nc+')! Bridge length: '+dist});ans=dist;queue=[];break;}
+        g[nr][nc]=2;queue.push([nr,nc,dist+1]);steps.push({g:g.map(function(r){return r.slice();}),cur:[nr,nc],dist:dist+1,msg:'BFS expand ('+nr+','+nc+') dist='+(dist+1)});
+      }
+    }
+    if(ans>=0)steps.push({g:g.map(function(r){return r.slice();}),msg:'Shortest bridge length: '+ans});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'dfs_bfs',label:'DFS + BFS O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Grid (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='0,1,0;0,0,0;0,0,1';i.style.width='140px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',').map(Number);});return buildSteps(g.length&&g[0].length?g:defGrid);},
+    buildSteps:function(){return buildSteps(defGrid);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var g=s.g||[],rows=g.length,cols=g[0]?g[0].length:1;
+      var cw=Math.min(62,Math.floor((W-20)/cols)),ch=Math.min(56,Math.floor((H-20)/rows));
+      var ox=(W-cols*cw)/2,oy=10;
+      g.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v===0?'·':v===1?'1':'2',s.cur&&r===s.cur[0]&&c===s.cur[1]?'active':v===1?'pivot':v===2?'visited':'water');});});
+      if(s.dist!==undefined)lbl(ctx,'bridge dist: '+s.dist,W/2,H-5,'#34D399',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P185 Minimum Cost to Connect All Points ─────────────── */
+function initMinCostConnectPoints(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defPoints=[[0,0],[2,2],[3,10],[5,2],[7,0]];
+  function buildSteps(points){
+    var n=points.length,steps=[],inMST=new Array(n).fill(false),minCost=new Array(n).fill(Infinity),totalCost=0,edgesUsed=0;
+    minCost[0]=0;
+    steps.push({points:points,inMST:inMST.slice(),minCost:minCost.slice(),msg:"Prim's MST: start from node 0, greedily add the cheapest edge connecting MST to a new node"});
+    while(edgesUsed<n){
+      var u=-1;
+      for(var i=0;i<n;i++)if(!inMST[i]&&(u===-1||minCost[i]<minCost[u]))u=i;
+      inMST[u]=true;totalCost+=minCost[u];edgesUsed++;
+      steps.push({points:points,inMST:inMST.slice(),minCost:minCost.slice(),cur:u,total:totalCost,msg:'Add node '+u+' cost='+minCost[u]+' total='+totalCost});
+      for(var v=0;v<n;v++){
+        if(!inMST[v]){var d=Math.abs(points[u][0]-points[v][0])+Math.abs(points[u][1]-points[v][1]);if(d<minCost[v]){minCost[v]=d;steps.push({points:points,inMST:inMST.slice(),minCost:minCost.slice(),cur:u,total:totalCost,msg:'Update minCost['+v+']='+d+' (Manhattan dist to '+u+')'});}}
+      }
+    }
+    steps.push({points:points,inMST:inMST.slice(),minCost:minCost.slice(),total:totalCost,msg:"MST complete. Minimum cost: "+totalCost});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'prim',label:"Prim's O(n²)"},{key:'kruskal',label:"Kruskal's O(n² log n)"}],
+    inputs:[{id:'pts',lbl:'Points [[x,y],…]',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[0,0],[2,2],[3,10],[5,2],[7,0]';i.style.width='210px';return i;})()}],
+    onInputs:function(vals){var p=[];try{p=JSON.parse('['+vals.pts+']');}catch(e){p=defPoints;}return buildSteps(p.length?p:defPoints);},
+    buildSteps:function(){return buildSteps(defPoints);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var pts=s.points||[],inMST=s.inMST||[],n=pts.length;
+      if(!n)return;
+      var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+      var minX=Math.min.apply(null,xs),maxX=Math.max.apply(null,xs),minY=Math.min.apply(null,ys),maxY=Math.max.apply(null,ys);
+      var pad=30,scaleX=maxX===minX?1:(W-2*pad)/(maxX-minX),scaleY=maxY===minY?1:(H-2*pad-20)/(maxY-minY);
+      function px(x){return pad+(x-minX)*scaleX;}function py(y){return H-pad-20-(y-minY)*scaleY;}
+      pts.forEach(function(p,i){
+        var x=px(p[0]),y=py(p[1]),r=i===s.cur?9:7;
+        ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=inMST[i]?CS.found.g0:CS.default.g0;ctx.fill();
+        ctx.strokeStyle=inMST[i]?CS.found.sk:CS.default.sk;ctx.lineWidth=2;ctx.stroke();
+        lbl(ctx,i,x,y-14,'#A78BFA',10,'center');
+      });
+      lbl(ctx,'total: '+(s.total||0),W/2,H-5,'#34D399',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P186 Evaluate Division ──────────────────────────────── */
+function initEvaluateDivision(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defEq=[['a','b'],['b','c']],defVals=[2.0,3.0],defQ=[['a','c'],['b','a'],['a','e'],['a','a']];
+  function buildSteps(equations,values,queries){
+    var graph={},steps=[];
+    equations.forEach(function(eq,i){var a=eq[0],b=eq[1],v=values[i];if(!graph[a])graph[a]={};if(!graph[b])graph[b]={};graph[a][b]=v;graph[b][a]=1/v;});
+    steps.push({answers:[],msg:'Build weighted directed graph. a/b=v means edge a→b (weight v) and b→a (weight 1/v).'});
+    var answers=queries.map(function(q){
+      var src=q[0],dst=q[1];
+      if(!graph[src]||!graph[dst])return -1;
+      if(src===dst)return 1;
+      var visited=new Set(),queue=[[src,1]];
+      while(queue.length){
+        var item=queue.shift(),node=item[0],prod=item[1];
+        if(node===dst)return prod;
+        visited.add(node);
+        Object.keys(graph[node]).forEach(function(nb){if(!visited.has(nb))queue.push([nb,prod*graph[node][nb]]);});
+      }
+      return -1;
+    });
+    answers.forEach(function(ans,i){steps.push({answers:answers.slice(0,i+1),msg:'Query '+queries[i].join('/')+'='+( ans===-1?'−1':ans.toFixed(2))});});
+    steps.push({answers:answers.slice(),msg:'All results: ['+answers.map(function(v){return v===-1?'-1':v.toFixed(2);}).join(',')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'bfs',label:'BFS on weighted graph O(q·(V+E))'}],
+    inputs:[
+      {id:'eq',lbl:'Equations',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[a,b],[b,c]';i.style.width='110px';return i;})()},
+      {id:'vals',lbl:'Values',elem:(function(){var i=document.createElement('input');i.type='text';i.value='2,3';i.style.width='60px';return i;})()},
+      {id:'q',lbl:'Queries',elem:(function(){var i=document.createElement('input');i.type='text';i.value='[a,c],[b,a]';i.style.width='110px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var eq=[];try{eq=JSON.parse('['+vals.eq.replace(/\[([a-z]+),([a-z]+)\]/g,'["$1","$2"]')+']');}catch(e){eq=defEq;}
+      var v=(vals.vals||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      var q=[];try{q=JSON.parse('['+vals.q.replace(/\[([a-z]+),([a-z]+)\]/g,'["$1","$2"]')+']');}catch(e){q=defQ;}
+      return buildSteps(eq.length?eq:defEq,v.length?v:defVals,q.length?q:defQ);
+    },
+    buildSteps:function(){return buildSteps(defEq,defVals,defQ);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var ans=s.answers||[],n=ans.length,cw=Math.min(70,Math.floor((W-40)/Math.max(n,1))),ch=38,sx=(W-n*cw)/2,sy=20;
+      ans.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v===-1?'-1':v.toFixed(2),v===-1?'water':'found');});
+      if(!n)lbl(ctx,'computing…',W/2,sy+ch/2,'#4B5563',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P187 Trapping Rain Water ────────────────────────────── */
+function initTrappingRainWater(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defHeight=[0,1,0,2,1,0,1,3,2,1,2,1];
+  function buildSteps(h){
+    var n=h.length,left=new Array(n).fill(0),right=new Array(n).fill(0),water=new Array(n).fill(0),steps=[],total=0;
+    steps.push({h:h,left:left.slice(),right:right.slice(),water:water.slice(),total:0,msg:'Compute leftMax and rightMax prefix arrays, then water[i]=min(leftMax,rightMax)−h[i]'});
+    left[0]=h[0];for(var i=1;i<n;i++)left[i]=Math.max(left[i-1],h[i]);
+    right[n-1]=h[n-1];for(var i=n-2;i>=0;i--)right[i]=Math.max(right[i+1],h[i]);
+    for(var i=0;i<n;i++){water[i]=Math.max(0,Math.min(left[i],right[i])-h[i]);total+=water[i];steps.push({h:h,left:left.slice(),right:right.slice(),water:water.slice(),total:total,cur:i,msg:'water['+i+']=min('+left[i]+','+right[i]+')-'+h[i]+'='+water[i]+' total='+total});}
+    steps.push({h:h,left:left.slice(),right:right.slice(),water:water.slice(),total:total,msg:'Total trapped water: '+total});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:160,
+    approaches:[{key:'prefix',label:'Prefix Max O(n)'},{key:'twoptr',label:'Two Pointers O(n) · O(1)'}],
+    inputs:[{id:'h',lbl:'Heights',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defHeight.join(',');i.style.width='200px';return i;})()}],
+    onInputs:function(vals){var a=(vals.h||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(a.length?a:defHeight.slice());},
+    buildSteps:function(){return buildSteps(defHeight.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var h=s.h||[],n=h.length,w=s.water||[],maxH=Math.max.apply(null,h)||1;
+      var cw=Math.min(36,Math.floor((W-20)/n)),barMaxH=H-30,sx=(W-n*cw)/2;
+      for(var i=0;i<n;i++){
+        var barH=Math.round(h[i]/maxH*(barMaxH-10));
+        var waterH=Math.round(w[i]/maxH*(barMaxH-10));
+        if(waterH>0){ctx.fillStyle='rgba(34,211,238,0.35)';ctx.fillRect(sx+i*cw,barMaxH-barH-waterH,cw-1,waterH);}
+        if(barH>0){ctx.fillStyle=i===s.cur?CS.active.g0:CS.default.g0;ctx.strokeStyle=i===s.cur?CS.active.sk:CS.default.sk;ctx.lineWidth=1;ctx.fillRect(sx+i*cw,barMaxH-barH,cw-1,barH);ctx.strokeRect(sx+i*cw,barMaxH-barH,cw-1,barH);}
+      }
+      lbl(ctx,'total trapped: '+s.total,W/2,H-8,'#22d3ee',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P188 Spiral Matrix ────���─────────────────────────────── */
+function initFindAllDisappeared(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[4,3,2,7,8,2,3,1];
+  function buildSteps(nums){
+    var a=nums.slice(),n=a.length,steps=[];
+    steps.push({arr:a.slice(),result:[],msg:'In-place: for each value v, negate a[v-1] to mark v as seen. Then indices with positive values → missing numbers.'});
+    for(var i=0;i<n;i++){
+      var idx=Math.abs(a[i])-1;
+      if(a[idx]>0){a[idx]=-a[idx];steps.push({arr:a.slice(),cur:i,msg:'a['+i+']='+nums[i]+' → mark index '+(idx)+' negative'});}
+    }
+    var result=[];
+    for(var i=0;i<n;i++)if(a[i]>0){result.push(i+1);steps.push({arr:a.slice(),result:result.slice(),cur:i,msg:'a['+i+']='+a[i]+'>0 → '+(i+1)+' is missing'});}
+    steps.push({arr:a.slice(),result:result.slice(),msg:'Missing: ['+result.join(',')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'inplace',label:'In-place Negate O(n) · O(1)'}],
+    inputs:[{id:'arr',lbl:'Array (1..n)',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='170px';return i;})()}],
+    onInputs:function(vals){var a=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x)&&x>0;});return buildSteps(a.length?a:defArr.slice());},
+    buildSteps:function(){return buildSteps(defArr.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr||[],n=a.length,res=s.result||[],cw=Math.min(52,Math.floor((W-40)/n)),ch=40,sx=(W-n*cw)/2,sy=16;
+      a.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v,i===s.cur?'active':v<0?'sorted':'default');});
+      if(res.length)lbl(ctx,'missing: ['+res.join(',')+']',W/2,sy+ch+20,'#34D399',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ���─ P189 Jump Game ─────────���────────────────────────��───── */
+function initFirstMissingPositive(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[3,4,-1,1];
+  function buildSteps(nums){
+    var a=nums.slice(),n=a.length,steps=[];
+    steps.push({arr:a.slice(),msg:'Place each x in range [1,n] at index x-1. Then scan for first index where a[i]≠i+1.'});
+    var i=0;
+    while(i<n){
+      var x=a[i];
+      if(x>0&&x<=n&&a[x-1]!==x){var tmp=a[x-1];a[x-1]=x;a[i]=tmp;steps.push({arr:a.slice(),cur:i,msg:'Swap a['+i+']='+x+' to index '+(x-1)});}
+      else i++;
+    }
+    var ans=n+1;
+    for(var i=0;i<n;i++){if(a[i]!==i+1){ans=i+1;break;}}
+    steps.push({arr:a.slice(),msg:'First missing positive: '+ans});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'swap',label:'Cyclic Swap O(n) · O(1)'}],
+    inputs:[{id:'arr',lbl:'Array',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='120px';return i;})()}],
+    onInputs:function(vals){var a=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(a.length?a:defArr.slice());},
+    buildSteps:function(){return buildSteps(defArr.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr||[],n=a.length,cw=Math.min(58,Math.floor((W-40)/n)),ch=42,sx=(W-n*cw)/2,sy=16;
+      a.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v,i===s.cur?'active':v===i+1?'found':'default');});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P190 Count Primes ────��──────────────────────────────── */
+function initCountPrimes(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defN=30;
+  function buildSteps(n){
+    var sieve=new Array(n).fill(true),steps=[],count=0;
+    sieve[0]=sieve[1]=false;
+    steps.push({sieve:sieve.slice(),p:-1,msg:'Sieve of Eratosthenes: mark all composites. For each prime p, mark p², p²+p, p²+2p… as composite.'});
+    for(var p=2;p*p<n;p++){
+      if(!sieve[p])continue;
+      steps.push({sieve:sieve.slice(),p:p,msg:'p='+p+' is prime. Marking multiples from '+(p*p)+'.'});
+      for(var j=p*p;j<n;j+=p){sieve[j]=false;}
+      steps.push({sieve:sieve.slice(),p:p,msg:'Multiples of '+p+' crossed out.'});
+    }
+    for(var i=2;i<n;i++)if(sieve[i])count++;
+    steps.push({sieve:sieve.slice(),p:-1,msg:'Primes < '+n+': '+count});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'sieve',label:'Sieve O(n log log n)'}],
+    inputs:[{id:'n',lbl:'n',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defN;i.min=2;i.max=100;i.style.width='52px';return i;})()}],
+    onInputs:function(vals){var n=parseInt(vals.n)||defN;return buildSteps(Math.min(n,100));},
+    buildSteps:function(){return buildSteps(defN);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var sieve=s.sieve||[],n=sieve.length,cw=Math.max(10,Math.min(22,Math.floor((W-20)/n))),ch=34,sx=(W-n*cw)/2,sy=20;
+      sieve.forEach(function(isPrime,i){if(i<2)return;cell(ctx,sx+i*cw,sy,cw-1,ch,i,i===s.p?'active':isPrime?'found':'water');});
+      var cnt=sieve.filter(function(v,i){return i>=2&&v;}).length;
+      lbl(ctx,'primes so far: '+cnt,W/2,sy+ch+16,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P191 Longest Increasing Path in Matrix ──────────────── */
+function initLongestIncPathMatrix(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defGrid=[[9,9,4],[6,6,8],[2,1,1]];
+  function buildSteps(matrix){
+    var m=matrix.length,n=matrix[0].length,memo=Array.from({length:m},function(){return new Array(n).fill(0);}),steps=[],best=0;
+    function dfs(r,c){
+      if(memo[r][c])return memo[r][c];
+      var len=1;
+      [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(function(p){
+        var nr=p[0],nc=p[1];
+        if(nr>=0&&nr<m&&nc>=0&&nc<n&&matrix[nr][nc]>matrix[r][c])len=Math.max(len,1+dfs(nr,nc));
+      });
+      memo[r][c]=len;return len;
+    }
+    steps.push({matrix:matrix,memo:memo.map(function(r){return r.slice();}),msg:'DFS + memo: from each cell, explore strictly increasing neighbors. Cache the LIP length from each cell.'});
+    for(var r=0;r<m;r++){for(var c=0;c<n;c++){var v=dfs(r,c);if(v>best)best=v;steps.push({matrix:matrix,memo:memo.map(function(r){return r.slice();}),cur:[r,c],msg:'Cell ('+r+','+c+')='+matrix[r][c]+' → LIP='+memo[r][c]+' best='+best});}}
+    steps.push({matrix:matrix,memo:memo.map(function(r){return r.slice();}),msg:'Longest Increasing Path: '+best});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'memo',label:'DFS + Memo O(m·n)'}],
+    inputs:[{id:'grid',lbl:'Matrix (;=row)',elem:(function(){var i=document.createElement('input');i.type='text';i.value='9,9,4;6,6,8;2,1,1';i.style.width='140px';return i;})()}],
+    onInputs:function(vals){var g=(vals.grid||'').split(';').map(function(r){return r.split(',').map(Number);});return buildSteps(g.length&&g[0].length?g:defGrid);},
+    buildSteps:function(){return buildSteps(defGrid);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var m=s.matrix||[],rows=m.length,cols=m[0]?m[0].length:1,memo=s.memo||[];
+      var cw=Math.min(56,Math.floor((W-20)/cols)),ch=Math.min(46,Math.floor((H-24)/rows));
+      var ox=(W-cols*cw)/2,oy=8;
+      m.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v+(memo[r]&&memo[r][c]?'/'+memo[r][c]:''),s.cur&&r===s.cur[0]&&c===s.cur[1]?'active':memo[r]&&memo[r][c]?'found':'default');});});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P192 Number of Ways to Reach a Position ─────────────── */
+function initUniquePaths2(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defM=3,defN=3;
+  function buildSteps(m,n){
+    var dp=Array.from({length:m},function(){return new Array(n).fill(0);}),steps=[];
+    for(var c=0;c<n;c++)dp[0][c]=1;
+    for(var r=0;r<m;r++)dp[r][0]=1;
+    steps.push({dp:dp.map(function(r){return r.slice();}),msg:'Unique Paths II: dp[r][c] = ways to reach (r,c) from (0,0) moving only right or down.'});
+    for(var r=1;r<m;r++){for(var c=1;c<n;c++){dp[r][c]=dp[r-1][c]+dp[r][c-1];steps.push({dp:dp.map(function(r){return r.slice();}),cur:[r,c],msg:'dp['+r+']['+c+']=dp['+(r-1)+']['+c+']+dp['+r+']['+(c-1)+']='+dp[r][c]});}}
+    steps.push({dp:dp.map(function(r){return r.slice();}),msg:'Total unique paths: '+dp[m-1][n-1]});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'dp',label:'Bottom-up DP O(m·n)'}],
+    inputs:[
+      {id:'m',lbl:'Rows',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defM;i.min=1;i.max=7;i.style.width='42px';return i;})()},
+      {id:'n',lbl:'Cols',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defN;i.min=1;i.max=7;i.style.width='42px';return i;})()}
+    ],
+    onInputs:function(vals){return buildSteps(Math.max(1,Math.min(7,parseInt(vals.m)||defM)),Math.max(1,Math.min(7,parseInt(vals.n)||defN)));},
+    buildSteps:function(){return buildSteps(defM,defN);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var dp=s.dp||[],rows=dp.length,cols=dp[0]?dp[0].length:1;
+      var cw=Math.min(68,Math.floor((W-20)/cols)),ch=Math.min(52,Math.floor((H-20)/rows));
+      var ox=(W-cols*cw)/2,oy=10;
+      dp.forEach(function(row,r){row.forEach(function(v,c){cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v,s.cur&&r===s.cur[0]&&c===s.cur[1]?'active':v>0?'found':'default');});});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P193 Stone Game ─────────────────────────────────────── */
+function initStoneGame(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defPiles=[5,3,4,5];
+  function buildSteps(piles){
+    var n=piles.length,dp=Array.from({length:n},function(){return new Array(n).fill(0);}),steps=[];
+    for(var i=0;i<n;i++)dp[i][i]=piles[i];
+    steps.push({dp:dp.map(function(r){return r.slice();}),piles:piles,msg:'Interval DP: dp[i][j] = max stones the current player can collect from piles[i..j] more than the opponent.'});
+    for(var len=2;len<=n;len++){
+      for(var i=0;i<=n-len;i++){
+        var j=i+len-1;
+        dp[i][j]=Math.max(piles[i]-dp[i+1][j],piles[j]-dp[i][j-1]);
+        steps.push({dp:dp.map(function(r){return r.slice();}),cur:[i,j],msg:'dp['+i+']['+j+']=max(piles['+i+']-dp['+(i+1)+']['+j+'],piles['+j+']-dp['+i+']['+(j-1)+'])='+dp[i][j]});
+      }
+    }
+    steps.push({dp:dp.map(function(r){return r.slice();}),msg:'Alice wins: '+( dp[0][n-1]>0)});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:200,
+    approaches:[{key:'dp',label:'Interval DP O(n²)'},{key:'math',label:'Math: Alice always wins (even n)'}],
+    inputs:[{id:'piles',lbl:'Piles',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defPiles.join(',');i.style.width='110px';return i;})()}],
+    onInputs:function(vals){var a=(vals.piles||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(a.length>=2?a:defPiles.slice());},
+    buildSteps:function(){return buildSteps(defPiles.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var dp=s.dp||[],n=dp.length,cw=Math.min(52,Math.floor((W-20)/n)),ch=Math.min(42,Math.floor((H-10)/n));
+      var ox=(W-n*cw)/2,oy=5;
+      dp.forEach(function(row,r){row.forEach(function(v,c){if(c>=r)cell(ctx,ox+c*cw,oy+r*ch,cw-2,ch-2,v,s.cur&&r===s.cur[0]&&c===s.cur[1]?'active':v>0?'found':'water');});});
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P194 Valid Parenthesis String ───────────────────────── */
+function initValidParenString2(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defStr='(*)(';
+  function buildSteps(s){
+    var steps=[],low=0,high=0;
+    steps.push({s:s,low:0,high:0,cur:-1,msg:'Track range [low, high] of possible open-paren counts. low = fewest opens (treat * as close); high = most opens (treat * as open).'});
+    for(var i=0;i<s.length;i++){
+      var c=s[i];
+      if(c==='('){low++;high++;}
+      else if(c===')'){low=Math.max(0,low-1);high--;}
+      else{low=Math.max(0,low-1);high++;}
+      steps.push({s:s,low:low,high:high,cur:i,msg:'"'+c+'" → low='+low+' high='+high+(high<0?' INVALID':'')});
+      if(high<0){steps.push({s:s,low:low,high:high,msg:'high < 0 → too many closing parens → false'});return steps;}
+    }
+    steps.push({s:s,low:low,high:high,msg:low===0?'low=0 → valid ✓':'low>0 → unclosed opens → false ✗'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'greedy',label:'Greedy Range [low,high] O(n)'}],
+    inputs:[{id:'str',lbl:'String',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defStr;i.style.width='120px';return i;})()}],
+    onInputs:function(vals){return buildSteps(vals.str||defStr);},
+    buildSteps:function(){return buildSteps(defStr);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var str=s.s||'',n=str.length,cw=Math.min(48,Math.floor((W-40)/Math.max(n,1))),ch=40,sx=(W-n*cw)/2,sy=16;
+      for(var i=0;i<n;i++)cell(ctx,sx+i*cw,sy,cw-2,ch,str[i],i===s.cur?'active':i<s.cur?'sorted':'default');
+      lbl(ctx,'low='+s.low+'  high='+s.high,W/2,sy+ch+18,'#A78BFA',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P195 Remove Invalid Parentheses ────────────────────── */
+function initRemoveInvalidParens(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defStr='()())()';
+  function buildSteps(s){
+    var steps=[],result=[],visited=new Set([s]),queue=[s];
+    var found=false;
+    steps.push({queue:[s.substring(0,8)],msg:'BFS: try removing one paren at a time. First level with any valid string → all valid results at that level.'});
+    while(queue.length&&!found){
+      var nextQ=[];
+      queue.forEach(function(curr){
+        if(isValid(curr)){found=true;result.push(curr);steps.push({queue:queue.slice(0,4),cur:curr,result:result.slice(),msg:'"'+curr+'" is valid ✓'});}
+        if(!found){for(var i=0;i<curr.length;i++){if(curr[i]!=='('&&curr[i]!==')')continue;var next=curr.slice(0,i)+curr.slice(i+1);if(!visited.has(next)){visited.add(next);nextQ.push(next);}}}
+      });
+      if(!found)queue=nextQ;else break;
+    }
+    if(!result.length)result=[''];
+    steps.push({queue:[],result:result.slice(),msg:'Results: ['+result.join(',')+']'});
+    return steps;
+  }
+  function isValid(s){var c=0;for(var i=0;i<s.length;i++){if(s[i]==='(')c++;else if(s[i]===')')if(--c<0)return false;}return c===0;}
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'bfs',label:'BFS by levels O(n · 2^n)'}],
+    inputs:[{id:'str',lbl:'String',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defStr;i.style.width='120px';return i;})()}],
+    onInputs:function(vals){return buildSteps((vals.str||defStr).substring(0,12));},
+    buildSteps:function(){return buildSteps(defStr);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var res=s.result||[],n=Math.min(res.length,5),cw=Math.min(84,Math.floor((W-40)/Math.max(n,1))),ch=36,sx=(W-n*cw)/2,sy=20;
+      res.slice(0,5).forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v||'""',i===0&&s.cur?'active':'found');});
+      if(s.cur&&!s.result)lbl(ctx,'checking: "'+s.cur+'"',W/2,sy+ch+18,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P196 Arithmetic Slices ──────────────────────────────── */
+function initArithmeticSlices(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[1,2,3,4];
+  function buildSteps(nums){
+    var n=nums.length,dp=new Array(n).fill(0),total=0,steps=[];
+    steps.push({arr:nums,dp:dp.slice(),total:0,msg:'dp[i] = number of arithmetic slices ending at index i. dp[i] = dp[i-1]+1 if diff matches previous; contributes dp[i] new slices.'});
+    for(var i=2;i<n;i++){
+      if(nums[i]-nums[i-1]===nums[i-1]-nums[i-2]){dp[i]=dp[i-1]+1;total+=dp[i];}
+      steps.push({arr:nums,dp:dp.slice(),total:total,cur:i,msg:'['+i+']: dp['+i+']='+dp[i]+' total='+total});
+    }
+    steps.push({arr:nums,dp:dp.slice(),total:total,msg:'Total arithmetic slices: '+total});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'dp',label:'DP O(n) · O(n)'},{key:'math',label:'Math O(n) · O(1)'}],
+    inputs:[{id:'arr',lbl:'Array',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='130px';return i;})()}],
+    onInputs:function(vals){var a=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(a.length>=3?a:defArr.slice());},
+    buildSteps:function(){return buildSteps(defArr.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr||[],dp=s.dp||[],n=a.length,cw=Math.min(52,Math.floor((W-40)/n)),ch=38,sx=(W-n*cw)/2,sy=16;
+      a.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v,i===s.cur?'active':dp[i]>0?'found':'default');});
+      lbl(ctx,'dp: ['+dp.join(',')+']  total='+s.total,W/2,sy+ch+18,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P197 Kth Largest Element in Stream ─────────────────── */
+function initKthLargestStream(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defK=3,defInit=[4,5,8,2],defAdds=[3,5,10,9,4];
+  function buildSteps(k,init,adds){
+    var heap=init.slice().sort(function(a,b){return a-b;});
+    while(heap.length>k)heap.shift();
+    var steps=[],results=[];
+    steps.push({heap:heap.slice(),msg:'Min-heap of size k. Top = k-th largest. Init: '+JSON.stringify(init)+' → heap: '+JSON.stringify(heap)});
+    adds.forEach(function(val){
+      heap.push(val);heap.sort(function(a,b){return a-b;});
+      if(heap.length>k)heap.shift();
+      results.push(heap[0]);
+      steps.push({heap:heap.slice(),results:results.slice(),added:val,msg:'Add '+val+' → heap: ['+heap.join(',')+'] → kth largest: '+heap[0]});
+    });
+    steps.push({heap:heap.slice(),results:results.slice(),msg:'Results: ['+results.join(',')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'heap',label:'Min-heap size k · O(log k) per add'}],
+    inputs:[
+      {id:'k',lbl:'k',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defK;i.min=1;i.max=8;i.style.width='42px';return i;})()},
+      {id:'init',lbl:'Init stream',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defInit.join(',');i.style.width='90px';return i;})()},
+      {id:'adds',lbl:'Add stream',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defAdds.join(',');i.style.width='110px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var k=parseInt(vals.k)||defK;
+      var ini=(vals.init||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      var adds=(vals.adds||'').split(',').map(Number).filter(function(x){return!isNaN(x);});
+      return buildSteps(k,ini.length?ini:defInit.slice(),adds.length?adds:defAdds.slice());
+    },
+    buildSteps:function(){return buildSteps(defK,defInit.slice(),defAdds.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var h=s.heap||[],n=h.length,res=s.results||[],cw=Math.min(52,Math.floor((W-40)/Math.max(n,1))),ch=38,sx=(W-n*cw)/2,sy=16;
+      h.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v,i===0?'pivot':'default');});
+      if(res.length)lbl(ctx,'kth so far: '+res[res.length-1],W/2,sy+ch+18,'#34D399',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P198 Find K Closest Elements ───────────────────────── */
+function initFindKClosest(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defArr=[1,2,3,4,5],defK=4,defX=3;
+  function buildSteps(arr,k,x){
+    var lo=0,hi=arr.length-k,steps=[];
+    steps.push({arr:arr,lo:lo,hi:hi,msg:'Binary search on window start. Invariant: if arr[mid+k]-x < x-arr[mid], left boundary is too far left — shift right.'});
+    while(lo<hi){
+      var mid=Math.floor((lo+hi)/2);
+      var leftDist=Math.abs(arr[mid]-x),rightDist=Math.abs(arr[mid+k]-x);
+      steps.push({arr:arr,lo:lo,hi:hi,mid:mid,msg:'mid='+mid+' arr[mid]='+arr[mid]+' arr[mid+k]='+arr[mid+k]+' leftDist='+leftDist+' rightDist='+rightDist});
+      if(arr[mid+k]-x<x-arr[mid])lo=mid+1;
+      else hi=mid;
+    }
+    var result=arr.slice(lo,lo+k);
+    steps.push({arr:arr,lo:lo,hi:hi,result:result,msg:'Window starts at '+lo+'. Result: ['+result.join(',')+']'});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:110,
+    approaches:[{key:'bs',label:'Binary Search O(log(n-k)+k)'},{key:'twoptr',label:'Two Pointers O(n)'}],
+    inputs:[
+      {id:'arr',lbl:'Array (sorted)',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defArr.join(',');i.style.width='110px';return i;})()},
+      {id:'k',lbl:'k',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defK;i.min=1;i.max=8;i.style.width='42px';return i;})()},
+      {id:'x',lbl:'x',elem:(function(){var i=document.createElement('input');i.type='number';i.value=defX;i.style.width='42px';return i;})()}
+    ],
+    onInputs:function(vals){
+      var a=(vals.arr||'').split(',').map(Number).filter(function(x){return!isNaN(x);}).sort(function(a,b){return a-b;});
+      var k=parseInt(vals.k)||defK,x=parseInt(vals.x)||defX;
+      return buildSteps(a.length?a:defArr.slice(),Math.min(k,a.length||defArr.length),x);
+    },
+    buildSteps:function(){return buildSteps(defArr.slice(),defK,defX);},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var a=s.arr||[],n=a.length,lo=s.lo||0,hi=s.hi!=null?s.hi:n,res=s.result||[];
+      var cw=Math.min(52,Math.floor((W-40)/n)),ch=40,sx=(W-n*cw)/2,sy=16;
+      a.forEach(function(v,i){cell(ctx,sx+i*cw,sy,cw-2,ch,v,res.length&&i>=lo&&i<lo+defK?'found':i===s.mid?'active':i>=lo&&i<=hi?'visited':'default');});
+      lbl(ctx,'lo='+lo+' hi='+hi+(s.mid!=null?' mid='+s.mid:''),W/2,sy+ch+18,'#A78BFA',11,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P199 Median of Data Stream ─────────────────────────── */
+function initMedianDataStream(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defNums=[5,15,1,3];
+  function buildSteps(nums){
+    var small=[],large=[],steps=[],results=[];
+    steps.push({small:[],large:[],msg:'Two heaps: maxHeap (small, left half) and minHeap (large, right half). Balance sizes ±1. Median = top of larger heap or average of both tops.'});
+    nums.forEach(function(val){
+      small.push(val);small.sort(function(a,b){return b-a;});
+      large.push(small.shift());large.sort(function(a,b){return a-b;});
+      if(large.length>small.length){small.push(large.shift());small.sort(function(a,b){return b-a;});}
+      var med=small.length>large.length?small[0]:(small[0]+large[0])/2;
+      results.push(med);
+      steps.push({small:small.slice(),large:large.slice(),results:results.slice(),val:val,msg:'Add '+val+' → small(max):['+small.slice(0,3).join(',')+'] large(min):['+large.slice(0,3).join(',')+'] median='+med});
+    });
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:120,
+    approaches:[{key:'twoheap',label:'Two Heaps O(log n) add · O(1) median'}],
+    inputs:[{id:'nums',lbl:'Stream',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defNums.join(',');i.style.width='130px';return i;})()}],
+    onInputs:function(vals){var a=(vals.nums||'').split(',').map(Number).filter(function(x){return!isNaN(x);});return buildSteps(a.length?a:defNums.slice());},
+    buildSteps:function(){return buildSteps(defNums.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var sm=s.small||[],lg=s.large||[],res=s.results||[];
+      var ns=Math.min(sm.length,4),nl=Math.min(lg.length,4),cw=50,ch=38;
+      var sx=W/2-nl*cw-10,lx=W/2+10;
+      sm.slice(0,4).forEach(function(v,i){cell(ctx,sx+(ns-1-i)*cw,20,cw-2,ch,v,i===0?'pivot':'default');});
+      lg.slice(0,4).forEach(function(v,i){cell(ctx,lx+i*cw,20,cw-2,ch,v,i===0?'active':'default');});
+      lbl(ctx,'max-heap',W/2-nl*cw/2-20,20+ch+14,'#A78BFA',9,'center');
+      lbl(ctx,'min-heap',W/2+nl*cw/2+20,20+ch+14,'#34D399',9,'center');
+      if(res.length)lbl(ctx,'median: '+res[res.length-1],W/2,20+ch+30,'#F5F3FF',12,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── P200 Largest Rectangle Histogram II ────────────────── */
+function initLargestRectHistogramII(id){
+  var container=document.getElementById(id);if(!container)return;
+  var defH=[2,1,5,6,2,3];
+  function buildSteps(heights){
+    var n=heights.length,stack=[],maxA=0,steps=[];
+    steps.push({h:heights,stack:[],maxA:0,msg:'Monotonic stack: maintain increasing heights. When a shorter bar appears, pop and compute area using popped bar as the shortest.'});
+    for(var i=0;i<=n;i++){
+      var cur=i<n?heights[i]:0;
+      while(stack.length&&(i===n||cur<heights[stack[stack.length-1]])){
+        var h=heights[stack.pop()],w=stack.length?i-stack[stack.length-1]-1:i;
+        maxA=Math.max(maxA,h*w);
+        steps.push({h:heights,stack:stack.slice(),cur:i,maxA:maxA,msg:'Pop h='+h+' w='+w+' area='+h*w+' max='+maxA});
+      }
+      stack.push(i);
+      if(i<n)steps.push({h:heights,stack:stack.slice(),cur:i,maxA:maxA,msg:'Push index '+i+' (h='+cur+')'});
+    }
+    steps.push({h:heights,stack:[],maxA:maxA,msg:'Largest rectangle area: '+maxA});
+    return steps;
+  }
+  makeProbUI(container,{canvasW:560,canvasH:160,
+    approaches:[{key:'stack',label:'Monotonic Stack O(n)'}],
+    inputs:[{id:'h',lbl:'Heights',elem:(function(){var i=document.createElement('input');i.type='text';i.value=defH.join(',');i.style.width='130px';return i;})()}],
+    onInputs:function(vals){var a=(vals.h||'').split(',').map(Number).filter(function(x){return!isNaN(x)&&x>=0;});return buildSteps(a.length?a:defH.slice());},
+    buildSteps:function(){return buildSteps(defH.slice());},
+    onStep:function(s,ctx,W,H){
+      bg(ctx,W,H);
+      var h=s.h||[],n=h.length,stk=new Set(s.stack||[]),maxH=Math.max.apply(null,h)||1;
+      var cw=Math.min(44,Math.floor((W-40)/n)),barMax=H-28,sx=(W-n*cw)/2;
+      h.forEach(function(v,i){var bh=Math.round(v/maxH*(barMax-10));if(bh>0){ctx.fillStyle=i===s.cur?CS.active.g0:stk.has(i)?CS.sorted.g0:CS.default.g0;ctx.strokeStyle=i===s.cur?CS.active.sk:stk.has(i)?CS.sorted.sk:CS.default.sk;ctx.lineWidth=1;ctx.fillRect(sx+i*cw,barMax-bh,cw-1,bh);ctx.strokeRect(sx+i*cw,barMax-bh,cw-1,bh);lbl(ctx,v,sx+i*cw+cw/2,barMax-bh-8,'#A78BFA',9,'center');}});
+      lbl(ctx,'max area: '+s.maxA,W/2,H-10,'#34D399',13,'center');
+    },
+    onReset:function(ctx,W,H){bg(ctx,W,H);}
+  });
+}
+
+/* ── Export ────��───────────────────────────────────────────── */
 window.DSAProbs={
   twoSum:initTwoSum,
   bestStock:initBestStock,
@@ -10634,6 +11377,26 @@ window.DSAProbs={
   redundantConnection:initRedundantConnection,
   graphValidTree:initGraphValidTree,
   surroundedRegions:initSurroundedRegions,
+  wallsAndGates:initWallsAndGates,
+  networkDelayTime:initNetworkDelayTime,
+  swimInRisingWater:initSwimInRisingWater,
+  shortestBridge:initShortestBridge,
+  minCostConnectPoints:initMinCostConnectPoints,
+  evaluateDivision:initEvaluateDivision,
+  trappingRainWater:initTrappingRainWater,
+  findAllDisappeared:initFindAllDisappeared,
+  firstMissingPositive:initFirstMissingPositive,
+  countPrimes:initCountPrimes,
+  longestIncPathMatrix:initLongestIncPathMatrix,
+  uniquePaths2:initUniquePaths2,
+  stoneGame:initStoneGame,
+  validParenString2:initValidParenString2,
+  removeInvalidParens:initRemoveInvalidParens,
+  arithmeticSlices:initArithmeticSlices,
+  kthLargestStream:initKthLargestStream,
+  findKClosest:initFindKClosest,
+  medianDataStream:initMedianDataStream,
+  largestRectHistogramII:initLargestRectHistogramII,
 };
 
 /* Auto-init problems.html inline demos if present */
@@ -10819,6 +11582,26 @@ window.DSAProbs={
     if(document.getElementById('prob-redundant-connection'))initRedundantConnection('prob-redundant-connection');
     if(document.getElementById('prob-graph-valid-tree'))initGraphValidTree('prob-graph-valid-tree');
     if(document.getElementById('prob-surrounded-regions'))initSurroundedRegions('prob-surrounded-regions');
+    if(document.getElementById('prob-walls-and-gates'))initWallsAndGates('prob-walls-and-gates');
+    if(document.getElementById('prob-network-delay-time'))initNetworkDelayTime('prob-network-delay-time');
+    if(document.getElementById('prob-swim-rising-water'))initSwimInRisingWater('prob-swim-rising-water');
+    if(document.getElementById('prob-shortest-bridge'))initShortestBridge('prob-shortest-bridge');
+    if(document.getElementById('prob-min-cost-connect'))initMinCostConnectPoints('prob-min-cost-connect');
+    if(document.getElementById('prob-evaluate-division'))initEvaluateDivision('prob-evaluate-division');
+    if(document.getElementById('prob-trapping-rain-water'))initTrappingRainWater('prob-trapping-rain-water');
+    if(document.getElementById('prob-find-all-disappeared'))initFindAllDisappeared('prob-find-all-disappeared');
+    if(document.getElementById('prob-first-missing-positive'))initFirstMissingPositive('prob-first-missing-positive');
+    if(document.getElementById('prob-count-primes'))initCountPrimes('prob-count-primes');
+    if(document.getElementById('prob-longest-inc-path-matrix'))initLongestIncPathMatrix('prob-longest-inc-path-matrix');
+    if(document.getElementById('prob-unique-paths-2'))initUniquePaths2('prob-unique-paths-2');
+    if(document.getElementById('prob-stone-game'))initStoneGame('prob-stone-game');
+    if(document.getElementById('prob-valid-paren-string-2'))initValidParenString2('prob-valid-paren-string-2');
+    if(document.getElementById('prob-remove-invalid-parens'))initRemoveInvalidParens('prob-remove-invalid-parens');
+    if(document.getElementById('prob-arithmetic-slices'))initArithmeticSlices('prob-arithmetic-slices');
+    if(document.getElementById('prob-kth-largest-stream'))initKthLargestStream('prob-kth-largest-stream');
+    if(document.getElementById('prob-find-k-closest'))initFindKClosest('prob-find-k-closest');
+    if(document.getElementById('prob-median-data-stream'))initMedianDataStream('prob-median-data-stream');
+    if(document.getElementById('prob-largest-rect-histogram-ii'))initLargestRectHistogramII('prob-largest-rect-histogram-ii');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
