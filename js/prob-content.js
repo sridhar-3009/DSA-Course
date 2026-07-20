@@ -301,4 +301,294 @@ window.PROB_DATA = {
   rel:[[213,'House Robber II','med','Houses in a circle — split into two linear DPs'],[337,'House Robber III','med','Houses on a binary tree — DFS DP'],[198,'House Robber','med','This problem'],[740,'Delete and Earn','med','Map to house robber on value frequency']]
 }
 
+
+/* ─────────────────────────────────────────────────────────
+   P11  LC#78  Subsets                                 Med
+───────────────────────────────────────────────────────── */
+,'p-subsets': {
+  lc:78, asked:'Facebook · Amazon · Microsoft',
+  stmt:'Given an integer array <code>nums</code> of unique elements, return <em>all possible subsets</em> (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
+  ex:[
+    ['nums = [1,2,3]','[[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]]','2³ = 8 subsets total'],
+    ['nums = [0]','[[], [0]]','Two subsets: empty set and {0}']
+  ],
+  constraints:['1 ≤ nums.length ≤ 10','−10 ≤ nums[i] ≤ 10','All nums[i] are unique'],
+  approaches:[
+    {n:'Bit Masking',t:'O(n×2ⁿ)',s:'O(n×2ⁿ)',
+     steps:['Each number from 0 to 2ⁿ−1 represents a bitmask where bit i = include nums[i]','Loop over all 2ⁿ masks and build each subset from set bits']},
+    {n:'Backtracking',t:'O(n×2ⁿ)',s:'O(n)',best:true,
+     steps:['Start with an empty current subset and index=0','At each step, choose to include nums[index] (recurse) or not','After recursing in, pop nums[index] to backtrack (exclude path)','Base case: add a copy of current to result whenever we advance index'],
+     py:'def subsets(nums):\n    result, current = [], []\n    def backtrack(idx):\n        result.append(current[:])  # snapshot — every state is a valid subset\n        for i in range(idx, len(nums)):\n            current.append(nums[i])\n            backtrack(i + 1)\n            current.pop()  # undo / backtrack\n    backtrack(0)\n    return result',
+     js:'function subsets(nums) {\n    const result = [], current = [];\n    function backtrack(idx) {\n        result.push([...current]);\n        for (let i = idx; i < nums.length; i++) {\n            current.push(nums[i]);\n            backtrack(i + 1);\n            current.pop();\n        }\n    }\n    backtrack(0);\n    return result;\n}'}
+  ],
+  cards:[
+    ['🌳','Decision tree: include or skip','At each element, branch into two choices. The recursion tree has 2ⁿ leaves — one per subset. Backtracking explores all branches without missing any.'],
+    ['📸','Copy before appending','result.push(current[:]) (Python) or result.push([...current]) (JS) — always snapshot the current array. Pushing the reference and mutating it later gives wrong results.'],
+    ['↩','Backtrack = undo last choice','After the recursive call with nums[i] included, pop it off current. This restores state so the next iteration can try the next element without nums[i].'],
+    ['🔢','2ⁿ subsets for n unique elements','The power set of {a,b,c} has 2³=8 members including the empty set. Time and space are both O(n × 2ⁿ) — unavoidable since you must output every subset.']
+  ],
+  pats:['Backtracking / decision tree','Include-or-skip branching','Power set enumeration'],
+  rel:[[90,'Subsets II','med','Same but with duplicates — sort + skip dups'],[46,'Permutations','med','All orderings instead of all subsets'],[77,'Combinations','med','Choose exactly k elements'],[39,'Combination Sum','med','Subsets summing to target, elements reusable']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P12  LC#46  Permutations                            Med
+───────────────────────────────────────────────────────── */
+'p-permutations': {
+  lc:46, asked:'Microsoft · Facebook · Amazon',
+  stmt:'Given an array <code>nums</code> of distinct integers, return all possible permutations in any order.',
+  ex:[
+    ['nums = [1,2,3]','[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]','3! = 6 permutations'],
+    ['nums = [0,1]','[[0,1],[1,0]]','2! = 2 permutations']
+  ],
+  constraints:['1 ≤ nums.length ≤ 6','−10 ≤ nums[i] ≤ 10','All integers in nums are unique'],
+  approaches:[
+    {n:'Backtracking with used[]',t:'O(n×n!)',s:'O(n)',best:true,
+     steps:['Track which elements have been placed using a boolean used[] array','At each recursion level, try every unused element as the next position','When current length equals n, record the permutation','Undo: mark used[i]=false after the recursive call'],
+     py:'def permute(nums):\n    result, current, used = [], [], [False]*len(nums)\n    def backtrack():\n        if len(current) == len(nums):\n            result.append(current[:])\n            return\n        for i, n in enumerate(nums):\n            if not used[i]:\n                used[i] = True\n                current.append(n)\n                backtrack()\n                current.pop()\n                used[i] = False\n    backtrack()\n    return result',
+     js:'function permute(nums) {\n    const result = [], current = [], used = new Array(nums.length).fill(false);\n    function backtrack() {\n        if (current.length === nums.length) {\n            result.push([...current]); return;\n        }\n        for (let i = 0; i < nums.length; i++) {\n            if (!used[i]) {\n                used[i] = true;\n                current.push(nums[i]);\n                backtrack();\n                current.pop();\n                used[i] = false;\n            }\n        }\n    }\n    backtrack();\n    return result;\n}'}
+  ],
+  cards:[
+    ['🔄','n! permutations for n elements','3 elements → 6, 6 elements → 720. Output size itself is O(n × n!), which is the minimum time needed just to write the answer.'],
+    ['✅','used[] prevents re-picking','Unlike subsets (where each element is optional), permutations use every element exactly once. A boolean array tracks what\'s in the current partial permutation.'],
+    ['↩','Backtrack restores used[]','After recursing with element i, set used[i]=false and pop current. This is the fundamental backtracking "undo" step — state before the choice is restored exactly.'],
+    ['🔀','Alternative: swap-in-place','Swap nums[start] with nums[i], recurse on start+1, swap back. Avoids the used[] array but scrambles the input order — harder to reason about.']
+  ],
+  pats:['Backtracking with used-set','State restoration after recursion','n! enumeration'],
+  rel:[[47,'Permutations II','med','Permutations with duplicates — sort + skip'],[31,'Next Permutation','med','Find the lexicographically next arrangement'],[60,'Permutation Sequence','hard','Find the k-th permutation directly'],[78,'Subsets','med','Pick any subset rather than all elements']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P13  LC#704  Binary Search                          Easy
+───────────────────────────────────────────────────────── */
+'p-binary-search': {
+  lc:704, asked:'Google · Amazon · Bloomberg',
+  stmt:'Given an array of integers <code>nums</code> sorted in ascending order and an integer <code>target</code>, write a function to search for <code>target</code> in <code>nums</code>. Return the index if found, otherwise return <code>-1</code>.',
+  ex:[
+    ['nums = [-1,0,3,5,9,12], target = 9','4','9 is at index 4'],
+    ['nums = [-1,0,3,5,9,12], target = 2','-1','2 is not in the array']
+  ],
+  constraints:['1 ≤ nums.length ≤ 10⁴','−10⁴ ≤ nums[i], target ≤ 10⁴','All values in nums are unique','nums is sorted in ascending order'],
+  approaches:[
+    {n:'Linear Scan',t:'O(n)',s:'O(1)',
+     steps:['Check every element — works but ignores the sorted property']},
+    {n:'Binary Search',t:'O(log n)',s:'O(1)',best:true,
+     steps:['Set left=0, right=n−1','While left ≤ right: compute mid = left + (right-left)//2 (avoids overflow)','If nums[mid] == target, return mid','If nums[mid] < target, search right half: left = mid+1','If nums[mid] > target, search left half: right = mid−1','Return -1 if loop ends without finding target'],
+     py:'def search(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1',
+     js:'function search(nums, target) {\n    let left = 0, right = nums.length - 1;\n    while (left <= right) {\n        const mid = left + Math.floor((right - left) / 2);\n        if (nums[mid] === target) return mid;\n        else if (nums[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}'}
+  ],
+  cards:[
+    ['➗','Halves the search space every step','Each iteration eliminates half the remaining elements. On 1 billion elements, binary search takes at most 30 comparisons. Linear scan would need 1 billion.'],
+    ['⚠','mid = left + (right−left)//2 avoids overflow','(left + right) // 2 overflows in languages where integers are 32-bit (C++, Java). The safe formula is standard practice even in Python for consistency.'],
+    ['🔒','Invariant: target is in [left, right]','The loop maintains this invariant at all times. When left > right, the search space is empty and the target is absent.'],
+    ['📐','The template has many variants','Same skeleton → find first/last occurrence, find insertion point (bisect_left), search rotated array, find answer in monotonic function space.']
+  ],
+  pats:['Binary search on sorted array','Eliminate-half invariant','Two-pointer convergence'],
+  rel:[[33,'Search in Rotated Sorted Array','med','Binary search with pivot detection'],[153,'Find Min in Rotated Sorted Array','med','Binary search on unsorted-looking array'],[34,'First and Last Position','med','Two binary searches: first and last index'],[875,'Koko Eating Bananas','med','Binary search on answer space']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P14  LC#53  Maximum Subarray (Kadane's)             Med
+───────────────────────────────────────────────────────── */
+'p-max-subarray': {
+  lc:53, asked:'Amazon · Microsoft · Apple · LinkedIn',
+  stmt:'Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.',
+  ex:[
+    ['nums = [-2,1,-3,4,-1,2,1,-5,4]','6','Subarray [4,−1,2,1] has sum = 6'],
+    ['nums = [1]','1','Single element'],
+    ['nums = [5,4,-1,7,8]','23','Entire array']
+  ],
+  constraints:['1 ≤ nums.length ≤ 10⁵','−10⁴ ≤ nums[i] ≤ 10⁴'],
+  approaches:[
+    {n:'Brute Force',t:'O(n²)',s:'O(1)',
+     steps:['Try all (i, j) pairs, compute subarray sum — O(n²) or O(n³) naive']},
+    {n:"Kadane's Algorithm",t:'O(n)',s:'O(1)',best:true,
+     steps:['Track curSum = best sum ending at the current position','At each element: curSum = max(nums[i], curSum + nums[i])','If curSum < 0, reset it: starting fresh is better than extending a negative prefix','Track maxSum = max(maxSum, curSum) at each step'],
+     py:'def maxSubArray(nums):\n    cur_sum = max_sum = nums[0]\n    for num in nums[1:]:\n        cur_sum = max(num, cur_sum + num)  # extend or restart\n        max_sum = max(max_sum, cur_sum)\n    return max_sum',
+     js:'function maxSubArray(nums) {\n    let curSum = nums[0], maxSum = nums[0];\n    for (let i = 1; i < nums.length; i++) {\n        curSum = Math.max(nums[i], curSum + nums[i]);\n        maxSum = Math.max(maxSum, curSum);\n    }\n    return maxSum;\n}'}
+  ],
+  cards:[
+    ['⚡',"Kadane's key insight",'At each position, ask: "Is it better to extend the running sum or start fresh?" If curSum + nums[i] < nums[i], the prefix is hurting — discard it.'],
+    ['🔄','Equivalent to: reset when curSum < 0','max(nums[i], curSum + nums[i]) is the same as: if curSum < 0 then curSum = nums[i] else curSum += nums[i]. Either form is correct.'],
+    ['🗺','Divide and Conquer alternative','Split at midpoint, answer is in left half, right half, or crosses mid. O(n log n) — elegant but Kadane\'s is simpler and faster.'],
+    ['📍','Track start/end for indices','If the problem asks for the actual subarray (not just the sum), maintain start/end/tempStart indices alongside curSum and update on reset and on new maximum.']
+  ],
+  pats:["Kadane's algorithm",'Running best with fresh-start decision','Greedy: extend vs restart','DP: dp[i] = best sum ending at i'],
+  rel:[[152,'Maximum Product Subarray','med','Same idea but with products — track min too'],[918,'Maximum Sum Circular Subarray','med','Kadane on circular array'],[121,'Best Time to Buy & Sell Stock','easy','Kadane on difference array'],[560,'Subarray Sum = K','med','Hash map of prefix sums for exact target']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P15  LC#15  3Sum                                    Med
+───────────────────────────────────────────────────────── */
+'p-three-sum': {
+  lc:15, asked:'Facebook · Amazon · Google · Microsoft',
+  stmt:'Given an integer array <code>nums</code>, return all triplets <code>[nums[i], nums[j], nums[k]]</code> such that <code>i ≠ j ≠ k</code> and <code>nums[i] + nums[j] + nums[k] == 0</code>. The solution set must not contain duplicate triplets.',
+  ex:[
+    ['nums = [-1,0,1,2,-1,-4]','[[-1,-1,2],[-1,0,1]]','Two distinct triplets summing to 0'],
+    ['nums = [0,0,0]','[[0,0,0]]','One triplet: all zeros'],
+    ['nums = [1,2,-2,-1]','[]','No triplet sums to zero']
+  ],
+  constraints:['3 ≤ nums.length ≤ 3000','−10⁵ ≤ nums[i] ≤ 10⁵'],
+  approaches:[
+    {n:'Brute Force (3 loops)',t:'O(n³)',s:'O(n)',
+     steps:['Try all (i,j,k) triples — O(n³). Add to a set to de-duplicate.']},
+    {n:'Sort + Two Pointers',t:'O(n²)',s:'O(n)',best:true,
+     steps:['Sort the array — O(n log n). This allows de-duplication via skip-duplicates.','Fix index i (the first element of the triplet) from 0 to n−3','Set left = i+1, right = n−1, then run two-pointer search for -(nums[i])','If sum < 0: left++; if sum > 0: right--; if sum == 0: record and skip duplicates on both pointers','Skip duplicate values of nums[i] in the outer loop (if nums[i] == nums[i-1], skip)'],
+     py:'def threeSum(nums):\n    nums.sort()\n    result = []\n    for i in range(len(nums) - 2):\n        if i > 0 and nums[i] == nums[i-1]:\n            continue  # skip duplicate pivot\n        left, right = i + 1, len(nums) - 1\n        while left < right:\n            s = nums[i] + nums[left] + nums[right]\n            if s == 0:\n                result.append([nums[i], nums[left], nums[right]])\n                while left < right and nums[left] == nums[left+1]: left += 1\n                while left < right and nums[right] == nums[right-1]: right -= 1\n                left += 1; right -= 1\n            elif s < 0:\n                left += 1\n            else:\n                right -= 1\n    return result',
+     js:'function threeSum(nums) {\n    nums.sort((a, b) => a - b);\n    const result = [];\n    for (let i = 0; i < nums.length - 2; i++) {\n        if (i > 0 && nums[i] === nums[i-1]) continue;\n        let left = i+1, right = nums.length-1;\n        while (left < right) {\n            const s = nums[i] + nums[left] + nums[right];\n            if (s === 0) {\n                result.push([nums[i], nums[left], nums[right]]);\n                while (left < right && nums[left] === nums[left+1]) left++;\n                while (left < right && nums[right] === nums[right-1]) right--;\n                left++; right--;\n            } else if (s < 0) left++;\n            else right--;\n        }\n    }\n    return result;\n}'}
+  ],
+  cards:[
+    ['🔀','Sort enables deduplication + two pointers','After sorting, equal values are adjacent — you can skip duplicates with a simple equality check. Sorted order also lets two pointers converge correctly.'],
+    ['📌','Fix one, two-pointer for the other two','Reduce 3Sum → 2Sum by fixing nums[i]. The two-pointer on the remaining subarray runs in O(n), giving O(n²) total.'],
+    ['🚫','Skip duplicates in the outer AND inner loops','If nums[i] == nums[i-1] (i>0), skip. After finding a triplet, skip equal values at left and right before moving pointers — otherwise the same triplet is added multiple times.'],
+    ['🏷','Base cases: early termination','If nums[i] > 0, break — the remaining values are all positive, so no triplet can sum to 0. Shaves constant time off the tail.']
+  ],
+  pats:['Sort + two-pointer','Fix one element, reduce k-Sum','Deduplication by adjacent-equal skip'],
+  rel:[[1,'Two Sum','easy','Two-pointer / hash map, no duplicates concern'],[16,'3Sum Closest','med','Same structure but minimise |sum - target|'],[18,'4Sum','med','Fix two elements, two-pointer on the rest'],[259,'3Sum Smaller','med','Count triplets summing < target']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P16  LC#1143  Longest Common Subsequence            Med
+───────────────────────────────────────────────────────── */
+'p-lcs': {
+  lc:1143, asked:'Amazon · Google · Microsoft',
+  stmt:'Given two strings <code>text1</code> and <code>text2</code>, return the length of their longest common subsequence. A subsequence is a sequence derived from a string by deleting some (or no) characters without changing the relative order of the remaining characters.',
+  ex:[
+    ['text1 = "abcde", text2 = "ace"','3','"ace" is a common subsequence of length 3'],
+    ['text1 = "abc", text2 = "abc"','3','The whole string is its own LCS'],
+    ['text1 = "abc", text2 = "def"','0','No common subsequence']
+  ],
+  constraints:['1 ≤ text1.length, text2.length ≤ 1000','text1 and text2 consist of only lowercase English characters'],
+  approaches:[
+    {n:'Recursion (no memo)',t:'O(2^(m+n))',s:'O(m+n)',
+     steps:['lcs(i,j): if chars match, 1+lcs(i+1,j+1); else max(lcs(i+1,j), lcs(i,j+1))','Exponential recomputation']},
+    {n:'2D DP (bottom-up)',t:'O(m×n)',s:'O(m×n)',best:true,
+     steps:['Create dp[m+1][n+1] initialised to 0','Fill row by row: if text1[i-1]==text2[j-1], dp[i][j]=1+dp[i-1][j-1]','Else dp[i][j]=max(dp[i-1][j], dp[i][j-1])','Answer is dp[m][n]'],
+     py:'def longestCommonSubsequence(text1, text2):\n    m, n = len(text1), len(text2)\n    dp = [[0]*(n+1) for _ in range(m+1)]\n    for i in range(1, m+1):\n        for j in range(1, n+1):\n            if text1[i-1] == text2[j-1]:\n                dp[i][j] = 1 + dp[i-1][j-1]\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    return dp[m][n]',
+     js:'function longestCommonSubsequence(text1, text2) {\n    const m = text1.length, n = text2.length;\n    const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));\n    for (let i = 1; i <= m; i++)\n        for (let j = 1; j <= n; j++)\n            dp[i][j] = text1[i-1]===text2[j-1]\n                ? 1+dp[i-1][j-1]\n                : Math.max(dp[i-1][j], dp[i][j-1]);\n    return dp[m][n];\n}'}
+  ],
+  cards:[
+    ['🔲','2D DP grid is intuitive','Rows = text1, columns = text2. dp[i][j] = LCS of text1[0..i-1] and text2[0..j-1]. The boundary row/column is all zeros (empty string has no common chars).'],
+    ['🔀','Two cases per cell','Match: diagonal + 1. No match: max of left (skip text2 char) and above (skip text1 char). This captures all ways to skip characters.'],
+    ['💾','Space optimizable to O(n)','You only ever read dp[i-1][*] when computing dp[i][*]. Keep two 1D arrays (prev, curr) or roll in-place — same correctness, half the space.'],
+    ['↩','Reconstruct actual LCS','Backtrack from dp[m][n]: if chars matched, go diagonal and prepend the char; else follow the larger neighbor. Path gives the actual subsequence.']
+  ],
+  pats:['2D interval/string DP','Match-or-skip recurrence','Sequence alignment'],
+  rel:[[72,'Edit Distance','med','LCS extended to insertions and deletions'],[516,'Longest Palindromic Subsequence','med','LCS(s, reverse(s))'],[1035,'Uncrossed Lines','med','Identical to LCS — visual disguise'],[583,'Delete Op for Two Strings','med','Minimum deletions = m+n - 2*LCS']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P17  LC#238  Product of Array Except Self           Med
+───────────────────────────────────────────────────────── */
+'p-product-except-self': {
+  lc:238, asked:'Facebook · Amazon · Microsoft · Apple',
+  stmt:'Given an integer array <code>nums</code>, return an array <code>answer</code> where <code>answer[i]</code> is the product of all elements of <code>nums</code> except <code>nums[i]</code>. You must solve it in O(n) time without using division.',
+  ex:[
+    ['nums = [1,2,3,4]','[24,12,8,6]','answer[0]=2×3×4=24, answer[1]=1×3×4=12, ...'],
+    ['nums = [-1,1,0,-3,3]','[0,0,9,0,0]','Zero causes all others to be 0 except index with the zero']
+  ],
+  constraints:['2 ≤ nums.length ≤ 10⁵','−30 ≤ nums[i] ≤ 30','The product of any prefix or suffix fits in a 32-bit integer'],
+  approaches:[
+    {n:'Division trick',t:'O(n)',s:'O(1)',
+     steps:['Compute total product, divide by nums[i] — BANNED: division not allowed + fails on zeros']},
+    {n:'Prefix × Suffix products',t:'O(n)',s:'O(1) extra',best:true,
+     steps:['Pass 1 (left→right): answer[i] = product of all elements LEFT of i (prefix product)','Pass 2 (right→left): multiply answer[i] by the running suffix product (product of all elements RIGHT of i)','The output array itself is used for the prefix pass — no extra O(n) array needed'],
+     py:'def productExceptSelf(nums):\n    n = len(nums)\n    answer = [1] * n\n    # Pass 1: prefix products\n    prefix = 1\n    for i in range(n):\n        answer[i] = prefix\n        prefix *= nums[i]\n    # Pass 2: multiply by suffix products\n    suffix = 1\n    for i in range(n-1, -1, -1):\n        answer[i] *= suffix\n        suffix *= nums[i]\n    return answer',
+     js:'function productExceptSelf(nums) {\n    const n = nums.length, answer = new Array(n).fill(1);\n    let prefix = 1;\n    for (let i = 0; i < n; i++) {\n        answer[i] = prefix;\n        prefix *= nums[i];\n    }\n    let suffix = 1;\n    for (let i = n-1; i >= 0; i--) {\n        answer[i] *= suffix;\n        suffix *= nums[i];\n    }\n    return answer;\n}'}
+  ],
+  cards:[
+    ['✂','Split every element\'s product into left × right','product_except_self[i] = (product of nums[0..i-1]) × (product of nums[i+1..n-1]). These two halves can be computed independently in two passes.'],
+    ['💡','Use the output array as prefix storage','After pass 1, answer[i] holds the prefix product up to i-1. Pass 2 multiplies in the suffix — no extra array needed. Output array counts as O(1) extra space.'],
+    ['🚫','Division forbidden — and zeros break it','Division would fail if nums contains a zero. The prefix×suffix approach handles zeros naturally: any answer[i] where i is a zero-position will be 0.'],
+    ['2️⃣','Two clean passes','Each pass is O(n). Total = O(n) time, O(1) extra space. Simple and elegant — a favourite interview problem for its counter-intuitive "no division" constraint.']
+  ],
+  pats:['Prefix × suffix product','Two-pass scan','Use output array to save space'],
+  rel:[[42,'Trapping Rain Water','hard','Prefix/suffix max — same two-pass idea'],[152,'Maximum Product Subarray','med','Product along one direction, track min/max'],[724,'Find Pivot Index','easy','Prefix sum version of same split idea'],[1352,'Product of Last K','med','Maintain running product in a queue']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P18  LC#11  Container With Most Water               Med
+───────────────────────────────────────────────────────── */
+'p-container-water': {
+  lc:11, asked:'Amazon · Google · Bloomberg · Adobe',
+  stmt:'You are given an integer array <code>height</code> of length n. There are n vertical lines drawn such that the two endpoints of the i-th line are (i, 0) and (i, height[i]). Find two lines that together with the x-axis form a container that holds the most water. Return the maximum amount of water a container can store.',
+  ex:[
+    ['height = [1,8,6,2,5,4,8,3,7]','49','Lines at index 1 (h=8) and 8 (h=7): min(8,7)×(8-1)=49'],
+    ['height = [1,1]','1','min(1,1)×(1-0)=1']
+  ],
+  constraints:['n == height.length','2 ≤ n ≤ 10⁵','0 ≤ height[i] ≤ 10⁴'],
+  approaches:[
+    {n:'Brute Force',t:'O(n²)',s:'O(1)',
+     steps:['Try every pair (i,j), compute min(h[i],h[j])×(j-i)','Track maximum area found']},
+    {n:'Two Pointers',t:'O(n)',s:'O(1)',best:true,
+     steps:['Start with left=0, right=n-1 (widest container possible)','Area = min(height[left], height[right]) × (right - left)','Update maxArea. To try and improve, move the pointer with the SHORTER line inward','Rationale: moving the taller side can only make things worse (width decreases AND bottleneck stays the same or worsens)'],
+     py:'def maxArea(height):\n    left, right = 0, len(height) - 1\n    max_area = 0\n    while left < right:\n        area = min(height[left], height[right]) * (right - left)\n        max_area = max(max_area, area)\n        if height[left] < height[right]:\n            left += 1\n        else:\n            right -= 1\n    return max_area',
+     js:'function maxArea(height) {\n    let left = 0, right = height.length - 1, maxArea = 0;\n    while (left < right) {\n        const area = Math.min(height[left], height[right]) * (right - left);\n        maxArea = Math.max(maxArea, area);\n        if (height[left] < height[right]) left++;\n        else right--;\n    }\n    return maxArea;\n}'}
+  ],
+  cards:[
+    ['📐','Area = width × min(height)','The bottleneck is always the shorter of the two lines. Making the container wider while keeping the short line guarantees a worse or equal result — so move inward from the shorter side.'],
+    ['↔','Why move the shorter side?','Suppose left < right in height. Moving left inward might find a taller line, increasing area. Moving right inward can only shrink width while the bottleneck (left) stays the same — guaranteed to be worse.'],
+    ['🏆','Greedy proof by contradiction','Can we miss the optimal pair by moving the shorter side? No — if optimal is (i,j) and we\'re at (l,r) with l<i and r>j, all pointers we\'ll reach include (i,j).'],
+    ['📏','Start widest and converge','Beginning at the widest possible gap maximises the chance of a large area. The algorithm never re-examines eliminated positions — each step discards a "provably non-optimal" boundary.']
+  ],
+  pats:['Two-pointer greedy convergence','Eliminate dominated choices','Width × min-height optimisation'],
+  rel:[[42,'Trapping Rain Water','hard','Every cell traps water independently — prefix/suffix max or stack'],[407,'Trapping Rain Water II','hard','3D extension — BFS with min-heap'],[84,'Largest Rectangle in Histogram','hard','Stack-based area maximisation']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P19  LC#55  Jump Game                               Med
+───────────────────────────────────────────────────────── */
+'p-jump-game': {
+  lc:55, asked:'Amazon · Google · Microsoft',
+  stmt:'You are given an integer array <code>nums</code>. You are initially positioned at the first index, and each element represents your maximum jump length at that position. Return <code>true</code> if you can reach the last index, or <code>false</code> otherwise.',
+  ex:[
+    ['nums = [2,3,1,1,4]','true','Jump 1 from 0→1, then 3 from 1→4 (last index)'],
+    ['nums = [3,2,1,0,4]','false','Every path leads to index 3 where you\'re stuck (jump=0)']
+  ],
+  constraints:['1 ≤ nums.length ≤ 10⁴','0 ≤ nums[i] ≤ 10⁵'],
+  approaches:[
+    {n:'DP (backward)',t:'O(n²)',s:'O(n)',
+     steps:['Mark last index as "good". From n-2 down to 0: mark good if any reachable index from here is good','O(n²) in worst case']},
+    {n:'Greedy (maxReach)',t:'O(n)',s:'O(1)',best:true,
+     steps:['Track maxReach = farthest index reachable so far','Scan left to right: at index i, if i > maxReach we\'re stuck — return false','Update maxReach = max(maxReach, i + nums[i])','If we reach the end of the loop, return true'],
+     py:'def canJump(nums):\n    max_reach = 0\n    for i, jump in enumerate(nums):\n        if i > max_reach:\n            return False  # stuck — can\'t reach index i\n        max_reach = max(max_reach, i + jump)\n    return True',
+     js:'function canJump(nums) {\n    let maxReach = 0;\n    for (let i = 0; i < nums.length; i++) {\n        if (i > maxReach) return false;\n        maxReach = Math.max(maxReach, i + nums[i]);\n    }\n    return true;\n}'}
+  ],
+  cards:[
+    ['🎯','Track the farthest reach','maxReach is the key variable. At each step, it tells you the farthest position currently reachable. If i > maxReach, no sequence of jumps can get you to index i.'],
+    ['⚡','O(n) greedy beats O(n²) DP','The greedy works because: if you can reach index i, you can also reach anything ≤ i. The max-reach captures all reachable positions in a single value.'],
+    ['🔄','Extends to Jump Game II (min jumps)','For LC#45, track the end of the current "jump range". When you pass that end, increment jumps and set new range end to current maxReach.'],
+    ['0️⃣','Zeros are the obstacle','A 0 at position i means you can\'t jump from that position. The only issue is if you\'re forced to land there (all paths lead through it) with no bypass.']
+  ],
+  pats:['Greedy running maximum','Reachability with single variable','Interval coverage greedy'],
+  rel:[[45,'Jump Game II','med','Minimum jumps to reach end — greedy BFS levels'],[1306,'Jump Game III','med','Jump ±k, can you reach index with value 0?'],[1345,'Jump Game IV','hard','BFS with index-value map for long jumps'],[55,'Jump Game','med','This problem']]
+},
+
+/* ─────────────────────────────────────────────────────────
+   P20  LC#39  Combination Sum                         Med
+───────────────────────────────────────────────────────── */
+'p-combination-sum': {
+  lc:39, asked:'Amazon · Google · Bloomberg',
+  stmt:'Given an array of distinct integers <code>candidates</code> and a target integer <code>target</code>, return a list of all unique combinations of candidates where the chosen numbers sum to target. The same number may be chosen from candidates an unlimited number of times. Combinations may be returned in any order.',
+  ex:[
+    ['candidates = [2,3,6,7], target = 7','[[2,2,3],[7]]','2+2+3=7 and 7=7'],
+    ['candidates = [2,3,5], target = 8','[[2,2,2,2],[2,3,3],[3,5]]','Three combinations']
+  ],
+  constraints:['1 ≤ candidates.length ≤ 30','2 ≤ candidates[i] ≤ 40','All candidates are distinct','1 ≤ target ≤ 40'],
+  approaches:[
+    {n:'Backtracking',t:'O(N^(T/M))',s:'O(T/M)',best:true,
+     steps:['Sort candidates to enable early stopping (optional but helpful)','Backtrack with current combination and remaining target','At each step, try candidates from index start onward (allows reuse, prevents duplicates)','If remaining == 0: record the combination','If remaining < 0 (or candidate > remaining): prune — stop exploring this branch'],
+     py:'def combinationSum(candidates, target):\n    result = []\n    def backtrack(start, current, remaining):\n        if remaining == 0:\n            result.append(current[:])\n            return\n        for i in range(start, len(candidates)):\n            c = candidates[i]\n            if c > remaining:\n                break  # sorted: larger candidates won\'t work either\n            current.append(c)\n            backtrack(i, current, remaining - c)  # i, not i+1 (reuse allowed)\n            current.pop()\n    candidates.sort()\n    backtrack(0, [], target)\n    return result',
+     js:'function combinationSum(candidates, target) {\n    candidates.sort((a,b) => a-b);\n    const result = [];\n    function backtrack(start, current, remaining) {\n        if (remaining === 0) { result.push([...current]); return; }\n        for (let i = start; i < candidates.length; i++) {\n            if (candidates[i] > remaining) break;\n            current.push(candidates[i]);\n            backtrack(i, current, remaining - candidates[i]);\n            current.pop();\n        }\n    }\n    backtrack(0, [], target);\n    return result;\n}'}
+  ],
+  cards:[
+    ['♻','Pass i (not i+1) to allow reuse','The key difference from Subsets or Permutations: pass the SAME index i to the recursive call so the same candidate can be selected again in the next position.'],
+    ['✂','Sort + break prunes the tree','Sorting ensures that once candidates[i] > remaining, all subsequent candidates are also too large. The break exits early instead of exploring dead branches.'],
+    ['🌳','Recursion tree has O(N^(T/M)) nodes','N = number of candidates, T = target, M = minimum candidate value. At each node up to N children, and depth is at most T/M.'],
+    ['🔢','Combination Sum II vs this','LC#40 has duplicates in candidates and each element can only be used once. Fix: sort, skip if candidates[i]==candidates[i-1] and i>start.']
+  ],
+  pats:['Backtracking with reuse','Start-index to avoid duplicate combos','Prune on sorted candidates'],
+  rel:[[40,'Combination Sum II','med','No reuse, skip duplicates — sort+backtrack'],[216,'Combination Sum III','med','Exactly k numbers, digits 1-9'],[377,'Combination Sum IV','med','Count combos (order matters) — DP'],[78,'Subsets','med','No target, include all sizes']]
+}
+
 }; // end PROB_DATA
