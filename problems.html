@@ -260,6 +260,161 @@
 
 /* ── Divider (kept for compatibility) ─────────────────── */
 .prob-divider{height:1px;background:linear-gradient(to right,transparent,var(--p-border),transparent);margin:2rem 0;}
+
+/* ── Rich content: problem statement & examples ───────── */
+.ps-stmt{font-size:.9rem;color:var(--p-muted);line-height:1.7;margin:14px 0;}
+.ps-stmt code{font-family:var(--p-mono);font-size:.85em;padding:.1em .35em;
+  background:var(--p-surf2);border-radius:4px;color:var(--p-acc-hi);}
+.ps-examples{display:flex;flex-direction:column;gap:10px;margin:14px 0;}
+.ps-ex{background:var(--p-surf2);border:1px solid var(--p-border);
+  border-radius:var(--p-r-sm);padding:12px 16px;}
+.ps-ex-label{font:700 .65rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--p-muted);margin-bottom:8px;}
+.ps-ex-row{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin:3px 0;}
+.ps-ex-key{font:600 .72rem var(--p-mono);color:var(--p-muted);min-width:60px;}
+.ps-ex-val{font:600 .83rem var(--p-mono);color:var(--p-teal);}
+.ps-ex-why{font-size:.8rem;color:var(--p-muted);margin-top:6px;line-height:1.5;}
+.ps-constraints{margin:14px 0;}
+.ps-constraints-label{font:700 .65rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--p-muted);margin-bottom:8px;}
+.ps-constraints ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px;}
+.ps-constraints li{font:500 .8rem var(--p-mono);color:var(--p-muted);
+  padding-left:1.2rem;position:relative;}
+.ps-constraints li::before{content:'•';position:absolute;left:0;color:var(--p-accent);}
+
+/* ── Approach tabs ────────────────────────────────────── */
+.ps-approach-row{display:flex;gap:6px;margin:16px 0 0;flex-wrap:wrap;}
+.ps-atab{
+  padding:.35rem .9rem;border-radius:20px;cursor:pointer;
+  font:600 .72rem var(--p-mono);border:1px solid var(--p-border);
+  background:var(--p-surf2);color:var(--p-muted);
+  transition:all .14s;letter-spacing:.03em;
+}
+.ps-atab:hover{border-color:var(--p-accent);color:var(--p-soft);}
+.ps-atab.active{
+  border-color:var(--p-border2);background:var(--p-acc-lo);
+  color:var(--p-acc-hi);box-shadow:0 0 10px rgba(139,92,246,.18);
+}
+.ps-atab.best-tab::after{content:' ✓';color:var(--p-green);font-size:.7em;}
+.ps-panels{margin:12px 0 0;}
+.ps-panel{display:none;}
+.ps-panel.active{display:block;}
+.ps-tc-row{display:flex;gap:.6rem;margin-bottom:12px;flex-wrap:wrap;}
+.ps-tc-chip{
+  font:600 .68rem var(--p-mono);padding:.22rem .75rem;border-radius:20px;
+  border:1px solid var(--p-border);background:var(--p-surf2);color:var(--p-muted);
+  letter-spacing:.03em;
+}
+.ps-tc-chip.best{border-color:rgba(52,211,153,.35);background:var(--p-grn-lo);color:var(--p-green);}
+
+/* ── Steps list ───────────────────────────────────────── */
+.ps-steps{margin:10px 0 14px;display:flex;flex-direction:column;gap:7px;}
+.ps-step{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:.86rem;color:var(--p-muted);line-height:1.55;
+}
+.ps-step-num{
+  flex:none;width:20px;height:20px;border-radius:50%;
+  background:var(--p-acc-lo);border:1px solid var(--p-border2);
+  font:700 .65rem var(--p-mono);display:flex;align-items:center;justify-content:center;
+  color:var(--p-acc-hi);margin-top:.1rem;
+}
+
+/* ── Code blocks ──────────────────────────────────────── */
+.ps-code-tabs{display:flex;gap:0;margin-bottom:0;}
+.ps-ctab{
+  padding:.35rem .9rem;font:600 .7rem var(--p-mono);cursor:pointer;
+  border:1px solid var(--p-border);border-bottom:none;
+  background:var(--p-surf2);color:var(--p-muted);
+  border-radius:var(--p-r-sm) var(--p-r-sm) 0 0;
+  transition:all .12s;
+}
+.ps-ctab.active{background:var(--p-bg);border-color:var(--p-border);color:var(--p-acc-hi);}
+.ps-code-wrap{
+  background:var(--p-bg);border:1px solid var(--p-border);
+  border-radius:0 var(--p-r-sm) var(--p-r-sm) var(--p-r-sm);
+  overflow:hidden;position:relative;
+}
+.ps-code-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 14px;background:var(--p-surf2);border-bottom:1px solid var(--p-border);
+}
+.ps-lang{font:700 .62rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--p-muted);}
+.ps-copy{
+  font:600 .67rem var(--p-mono);padding:.22rem .65rem;border-radius:5px;
+  border:1px solid var(--p-border);background:none;color:var(--p-muted);
+  cursor:pointer;transition:all .13s;letter-spacing:.03em;
+}
+.ps-copy:hover{border-color:var(--p-accent);color:var(--p-acc-hi);}
+.ps-code-wrap pre{
+  margin:0;padding:16px;overflow-x:auto;
+  font:400 .82rem/1.7 var(--p-mono);color:var(--p-text);
+}
+.ps-code-pane{display:none;}
+.ps-code-pane.active{display:block;}
+
+/* Syntax highlight tokens */
+.tk-kw{color:#c792ea;}.tk-fn{color:#82aaff;}.tk-st{color:#c3e88d;}
+.tk-cm{color:var(--p-muted);font-style:italic;}.tk-nm{color:#f78c6c;}
+.tk-ty{color:#ffcb6b;}.tk-op{color:var(--p-soft);}.tk-va{color:var(--p-text);}
+.tk-hl{background:rgba(139,92,246,.18);border-radius:3px;padding:0 3px;}
+
+/* ── Complexity comparison table ──────────────────────── */
+.ps-cmplx{margin:20px 0 0;}
+.ps-cmplx-title{font:700 .65rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--p-muted);margin-bottom:10px;}
+.ps-ctable{width:100%;border-collapse:collapse;font-size:.82rem;overflow-x:auto;display:block;}
+.ps-ctable th{font:700 .66rem var(--p-mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--p-muted);padding:7px 12px;border-bottom:1px solid var(--p-border);text-align:left;}
+.ps-ctable td{padding:8px 12px;border-bottom:1px solid var(--p-border);color:var(--p-muted);vertical-align:middle;}
+.ps-ctable tr:last-child td{border-bottom:none;}
+.ps-ctable tr.best-row td{color:var(--p-text);}
+.ps-cbar-wrap{width:120px;display:inline-block;vertical-align:middle;}
+.ps-cbar{height:6px;border-radius:3px;min-width:4px;}
+.cbar-grn{background:var(--p-green);}.cbar-amb{background:var(--p-amber);}.cbar-red{background:var(--p-red);}
+.badge-best{font:700 .62rem var(--p-mono);padding:.15rem .55rem;border-radius:20px;
+  background:var(--p-grn-lo);color:var(--p-green);border:1px solid rgba(52,211,153,.3);
+  letter-spacing:.04em;margin-left:6px;}
+
+/* ── Insight cards grid ───────────────────────────────── */
+.ps-cards{margin:20px 0 0;}
+.ps-cards-title{font:700 .65rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--p-muted);margin-bottom:10px;}
+.ps-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.ps-card{
+  background:var(--p-surf2);border:1px solid var(--p-border);
+  border-radius:var(--p-r-sm);padding:14px 16px;
+}
+.ps-card-icon{font-size:1.1rem;margin-bottom:7px;}
+.ps-card-title{font:700 .82rem var(--p-mono);color:var(--p-text);margin-bottom:5px;}
+.ps-card-body{font-size:.8rem;color:var(--p-muted);line-height:1.6;}
+
+/* ── Pattern recognition ──────────────────────────────── */
+.ps-pats{margin:20px 0 0;}
+.ps-pats-title{font:700 .65rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--p-muted);margin-bottom:10px;}
+.ps-pats-row{display:flex;gap:7px;flex-wrap:wrap;}
+.ps-pat{
+  font:600 .72rem var(--p-mono);padding:.3rem .85rem;border-radius:20px;
+  background:var(--p-acc-lo);border:1px solid var(--p-border2);color:var(--p-acc-hi);
+  letter-spacing:.03em;
+}
+
+/* ── Related problems ─────────────────────────────────── */
+.ps-related{margin:20px 0 0;}
+.ps-related-title{font:700 .65rem var(--p-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--p-muted);margin-bottom:10px;}
+.ps-rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;}
+.ps-rel-card{
+  background:var(--p-surf2);border:1px solid var(--p-border);
+  border-radius:var(--p-r-sm);padding:11px 14px;text-decoration:none;
+  transition:border-color .14s,background .14s;
+}
+.ps-rel-card:hover{border-color:var(--p-accent);background:var(--p-acc-lo);}
+.ps-rel-num{font:700 .65rem var(--p-mono);color:var(--p-muted);margin-bottom:3px;}
+.ps-rel-title{font:700 .85rem var(--p-mono);color:var(--p-text);margin-bottom:4px;}
+.ps-rel-diff{font:700 .65rem var(--p-mono);letter-spacing:.04em;}
+.ps-rel-hint{font-size:.75rem;color:var(--p-muted);margin-top:4px;line-height:1.45;}
   </style>
 </head>
 <body>
@@ -6899,10 +7054,13 @@
 })();
 </script>
 
+<script src="js/prob-content.js"></script>
 <script>
-/* ── Visual enhancer: upgrades existing DOM without touching 200 sections ── */
+/* ── Rich content renderer — injects detailed content around canvas demos ── */
 (function(){
-  /* 1. Wrap every canvas demo with a mock browser chrome header */
+  var D=window.PROB_DATA||{};
+
+  /* ── 1. Demo browser chrome header ─────────────────────── */
   document.querySelectorAll('.prob-demo').forEach(function(d){
     if(d.querySelector('.prob-demo-header'))return;
     var hdr=document.createElement('div');
@@ -6916,7 +7074,7 @@
     d.insertBefore(hdr,d.firstChild);
   });
 
-  /* 2. Color .prob-section-num chips by difficulty keyword */
+  /* ── 2. Difficulty color on number chips ────────────────── */
   document.querySelectorAll('.prob-section-num').forEach(function(el){
     var t=el.textContent.toLowerCase();
     if(t.indexOf('easy')!==-1)el.classList.add('easy');
@@ -6924,27 +7082,17 @@
     else if(t.indexOf('med')!==-1)el.classList.add('medium');
   });
 
-  /* 3. Upgrade quiz options to the new card style */
+  /* ── 3. Quiz card upgrade ───────────────────────────────── */
   document.querySelectorAll('.quiz-section').forEach(function(qs){
     qs.querySelectorAll('.quiz-question').forEach(function(qq,qi){
-      /* add question number label if not present */
       if(!qq.querySelector('.quiz-q-num')){
         var lbl=document.createElement('div');
-        lbl.className='quiz-q-num';
-        lbl.textContent='Q'+(qi+1);
+        lbl.className='quiz-q-num';lbl.textContent='Q'+(qi+1);
         qq.insertBefore(lbl,qq.firstChild);
       }
-
-      /* find a <p> or first text node that is the question text */
-      var qText=qq.querySelector('.quiz-q-text');
-      if(!qText){
-        /* promote the first <strong> or plain-text node into a q-text div */
-        var firstP=qq.querySelector('p');
-        if(firstP){firstP.className='quiz-q-text';}
-      }
-
-      /* upgrade bare <button> options into rich option cards */
-      var buttons=qq.querySelectorAll('button.quiz-btn,button:not(.quiz-option)');
+      var firstP=qq.querySelector('p');
+      if(firstP&&!firstP.classList.contains('quiz-q-text'))firstP.className='quiz-q-text';
+      var buttons=qq.querySelectorAll('button:not(.quiz-option)');
       if(buttons.length){
         var optWrap=qq.querySelector('.quiz-options');
         if(!optWrap){
@@ -6952,16 +7100,13 @@
           optWrap.className='quiz-options';
           buttons[0].parentNode.insertBefore(optWrap,buttons[0]);
         }
-        var letters=['A','B','C','D'];
+        var lets=['A','B','C','D'];
         buttons.forEach(function(btn,bi){
-          if(btn.classList.contains('quiz-option'))return;
           btn.classList.add('quiz-option');
-          /* prepend letter badge */
           if(!btn.querySelector('.opt-letter')){
-            var badge=document.createElement('span');
-            badge.className='opt-letter';
-            badge.textContent=letters[bi]||String(bi+1);
-            btn.insertBefore(badge,btn.firstChild);
+            var b=document.createElement('span');
+            b.className='opt-letter';b.textContent=lets[bi]||String(bi+1);
+            btn.insertBefore(b,btn.firstChild);
           }
           optWrap.appendChild(btn);
         });
@@ -6969,15 +7114,189 @@
     });
   });
 
-  /* 4. Add a thin progress strip to the very top of the page */
+  /* ── 4. Progress strip ──────────────────────────────────── */
   var strip=document.createElement('div');
   strip.className='prob-progress-strip';
   var fill=document.createElement('div');
-  fill.className='prob-progress-fill';
-  /* 200/250 = 80% */
-  fill.style.width='80%';
+  fill.className='prob-progress-fill';fill.style.width='80%';
   strip.appendChild(fill);
   document.body.insertBefore(strip,document.body.firstChild);
+
+  /* ── 5. Rich content injection ──────────────────────────── */
+  document.querySelectorAll('.prob-section').forEach(function(sec){
+    var d=D[sec.id];if(!d)return;
+    var pid=sec.id.replace(/[^a-z0-9]/g,'');
+
+    /* (a) Statement + examples + constraints — after .prob-complexity */
+    var cmpl=sec.querySelector('.prob-complexity');
+    if(cmpl){
+      var sh='<div class="ps-stmt-block">';
+      if(d.stmt)sh+='<div class="ps-stmt">'+d.stmt+'</div>';
+      if(d.ex&&d.ex.length){
+        sh+='<div class="ps-examples">';
+        d.ex.forEach(function(e,i){
+          sh+='<div class="ps-ex"><div class="ps-ex-label">Example '+(i+1)+'</div>'
+            +'<div class="ps-ex-row"><span class="ps-ex-key">Input</span><span class="ps-ex-val">'+H(e[0])+'</span></div>'
+            +'<div class="ps-ex-row"><span class="ps-ex-key">Output</span><span class="ps-ex-val">'+H(e[1])+'</span></div>'
+            +(e[2]?'<div class="ps-ex-why">'+H(e[2])+'</div>':'')
+            +'</div>';
+        });
+        sh+='</div>';
+      }
+      if(d.constraints&&d.constraints.length){
+        sh+='<div class="ps-constraints"><div class="ps-constraints-label">Constraints</div><ul>'
+          +d.constraints.map(function(c){return'<li>'+H(c)+'</li>';}).join('')+'</ul></div>';
+      }
+      sh+='</div>';
+      cmpl.insertAdjacentHTML('afterend',sh);
+    }
+
+    /* (b) Approach tabs + code — before .prob-demo */
+    var demo=sec.querySelector('.prob-demo');
+    if(demo&&d.approaches&&d.approaches.length){
+      var ah='<div class="ps-approach-row">';
+      var ph='';
+      d.approaches.forEach(function(a,i){
+        var isB=!!a.best,isF=i===0;
+        ah+='<div class="ps-atab'+(isF?' active':'')+(isB?' best-tab':'')+'" data-pid="'+pid+'" data-idx="'+i+'">'
+          +H(a.n)+'</div>';
+        ph+='<div class="ps-panel'+(isF?' active':'')+'" data-pid="'+pid+'" data-idx="'+i+'">';
+        ph+='<div class="ps-tc-row">'
+          +'<span class="ps-tc-chip'+(isB?' best':'')+'">Time: '+H(a.t||'—')+'</span>'
+          +'<span class="ps-tc-chip'+(isB?' best':'')+'">Space: '+H(a.s||'—')+'</span>'
+          +(isB?'<span class="badge-best">OPTIMAL</span>':'')+'</div>';
+        if(a.steps&&a.steps.length){
+          ph+='<div class="ps-steps">'+a.steps.map(function(st,si){
+            return'<div class="ps-step"><span class="ps-step-num">'+(si+1)+'</span><span>'+H(st)+'</span></div>';
+          }).join('')+'</div>';
+        }
+        if(a.py||a.js){
+          var gid=pid+'_'+i;
+          var hasTwo=!!(a.py&&a.js);
+          if(hasTwo) ph+='<div class="ps-code-tabs">'
+            +'<div class="ps-ctab active" data-gid="'+gid+'" data-lang="py">Python</div>'
+            +'<div class="ps-ctab" data-gid="'+gid+'" data-lang="js">JavaScript</div>'
+            +'</div>';
+          ph+='<div class="ps-code-wrap">'
+            +'<div class="ps-code-hdr">'
+            +'<span class="ps-lang">'+(hasTwo?'Python / JS':a.py?'Python':'JavaScript')+'</span>'
+            +'<button class="ps-copy">Copy</button></div>';
+          if(a.py) ph+='<div class="ps-code-pane active" data-gid="'+gid+'" data-lang="py"><pre>'+E(a.py)+'</pre></div>';
+          if(a.js) ph+='<div class="ps-code-pane'+(a.py?'':' active')+'" data-gid="'+gid+'" data-lang="js"><pre>'+E(a.js)+'</pre></div>';
+          ph+='</div>';
+        }
+        ph+='</div>';
+      });
+      ah+='</div><div class="ps-panels">'+ph+'</div>';
+      demo.insertAdjacentHTML('beforebegin',ah);
+    }
+
+    /* (c) Complexity table + cards + patterns + related — after .prob-demo */
+    if(demo){
+      var post='';
+      if(d.approaches&&d.approaches.length>1) post+=buildCmplx(d.approaches);
+      if(d.cards&&d.cards.length) post+=buildCards(d.cards);
+      if(d.pats&&d.pats.length) post+=buildPats(d.pats);
+      if(d.rel&&d.rel.length) post+=buildRel(d.rel);
+      if(post) demo.insertAdjacentHTML('afterend',post);
+    }
+
+    /* ── Wire approach tab clicks ── */
+    sec.querySelectorAll('.ps-atab').forEach(function(tab){
+      tab.addEventListener('click',function(){
+        var p2=tab.dataset.pid;
+        sec.querySelectorAll('.ps-atab[data-pid="'+p2+'"]').forEach(function(t){t.classList.remove('active');});
+        sec.querySelectorAll('.ps-panel[data-pid="'+p2+'"]').forEach(function(p){p.classList.remove('active');});
+        tab.classList.add('active');
+        var target=sec.querySelector('.ps-panel[data-pid="'+p2+'"][data-idx="'+tab.dataset.idx+'"]');
+        if(target)target.classList.add('active');
+      });
+    });
+
+    /* ── Wire code language tabs ── */
+    sec.querySelectorAll('.ps-ctab').forEach(function(ct){
+      ct.addEventListener('click',function(){
+        var g=ct.dataset.gid;
+        sec.querySelectorAll('.ps-ctab[data-gid="'+g+'"]').forEach(function(t){t.classList.remove('active');});
+        sec.querySelectorAll('.ps-code-pane[data-gid="'+g+'"]').forEach(function(p){p.classList.remove('active');});
+        ct.classList.add('active');
+        var tgt=sec.querySelector('.ps-code-pane[data-gid="'+g+'"][data-lang="'+ct.dataset.lang+'"]');
+        if(tgt)tgt.classList.add('active');
+      });
+    });
+
+    /* ── Copy buttons ── */
+    sec.querySelectorAll('.ps-copy').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var wrap=btn.closest('.ps-code-wrap');
+        var pre=wrap&&wrap.querySelector('.ps-code-pane.active pre');
+        if(!pre)return;
+        navigator.clipboard.writeText(pre.textContent).then(function(){
+          btn.textContent='Copied!';
+          setTimeout(function(){btn.textContent='Copy';},1600);
+        }).catch(function(){});
+      });
+    });
+  });
+
+  /* ── Helpers ─────────────────────────────────────────── */
+  function H(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function E(s){return H(s);}
+
+  var TW={'O(1)':7,'O(log n)':22,'O(√n)':30,'O(n)':45,'O(n log n)':65,'O(n²)':85,'O(2ⁿ)':94,'O(n!)':100};
+  function tw(tc){
+    if(!tc)return 50;
+    var keys=Object.keys(TW);
+    for(var i=0;i<keys.length;i++){if(tc.indexOf(keys[i])!==-1)return TW[keys[i]];}
+    return 50;
+  }
+  function tc2c(tc){var w=tw(tc);return w<=45?'cbar-grn':w<=65?'cbar-amb':'cbar-red';}
+
+  function buildCmplx(aprs){
+    var h='<div class="ps-cmplx"><div class="ps-cmplx-title">Complexity Comparison</div>'
+      +'<div style="overflow-x:auto"><table class="ps-ctable">'
+      +'<tr><th>Approach</th><th>Time</th><th>Space</th><th style="min-width:110px">Visual (Time)</th><th></th></tr>';
+    aprs.forEach(function(a){
+      h+='<tr'+(a.best?' class="best-row"':'')+'>'
+        +'<td>'+H(a.n)+'</td><td>'+H(a.t||'—')+'</td><td>'+H(a.s||'—')+'</td>'
+        +'<td><div class="ps-cbar-wrap"><div class="ps-cbar '+tc2c(a.t)+'" style="width:'+tw(a.t)+'%"></div></div></td>'
+        +'<td>'+(a.best?'<span class="badge-best">Best</span>':'')+'</td></tr>';
+    });
+    return h+'</table></div></div>';
+  }
+
+  function buildCards(cards){
+    return'<div class="ps-cards"><div class="ps-cards-title">Key Insights</div>'
+      +'<div class="ps-cards-grid">'
+      +cards.map(function(c){
+        return'<div class="ps-card">'
+          +'<div class="ps-card-icon">'+c[0]+'</div>'
+          +'<div class="ps-card-title">'+H(c[1])+'</div>'
+          +'<div class="ps-card-body">'+H(c[2])+'</div>'
+          +'</div>';
+      }).join('')+'</div></div>';
+  }
+
+  function buildPats(pats){
+    return'<div class="ps-pats"><div class="ps-pats-title">Pattern Recognition</div>'
+      +'<div class="ps-pats-row">'
+      +pats.map(function(p){return'<span class="ps-pat">'+H(p)+'</span>';}).join('')
+      +'</div></div>';
+  }
+
+  function buildRel(rel){
+    return'<div class="ps-related"><div class="ps-related-title">Related Problems</div>'
+      +'<div class="ps-rel-grid">'
+      +rel.map(function(r){
+        var dc=r[2]==='easy'?'diff-easy':r[2]==='hard'?'diff-hard':'diff-med';
+        return'<div class="ps-rel-card">'
+          +'<div class="ps-rel-num">LC #'+r[0]+'</div>'
+          +'<div class="ps-rel-title">'+H(r[1])+'</div>'
+          +'<div class="ps-rel-diff '+dc+'">'+r[2].charAt(0).toUpperCase()+r[2].slice(1)+'</div>'
+          +'<div class="ps-rel-hint">'+H(r[3])+'</div>'
+          +'</div>';
+      }).join('')+'</div></div>';
+  }
 })();
 </script>
 </body>
